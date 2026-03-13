@@ -11,10 +11,7 @@ mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('✅ MongoDB Connected!'))
   .catch(err => console.log('❌ Error:', err));
 
-// Simple route
-app.get('/', (req, res) => {
-  res.send('Server chal raha hai! 🚀');
-});
+  
 // Contact form save karna
 const contactSchema = new mongoose.Schema({
   name: String,
