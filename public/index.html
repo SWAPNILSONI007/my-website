@@ -1,128 +1,786 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Website</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: Arial, sans-serif;
-            background: #0f0f1a;
-            color: white;
-            min-height: 100vh;
-        }
-        header {
-            background: #1a1a2e;
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        header h1 { color: #e94560; font-size: 24px; }
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin-left: 20px;
-            font-size: 16px;
-        }
-        nav a:hover { color: #e94560; }
-        .hero {
-            text-align: center;
-            padding: 100px 20px;
-        }
-        .hero h2 {
-            font-size: 48px;
-            margin-bottom: 20px;
-            color: #e94560;
-        }
-        .hero p {
-            font-size: 18px;
-            color: #aaa;
-            margin-bottom: 40px;
-        }
-        .btn {
-            background: #e94560;
-            color: white;
-            padding: 15px 40px;
-            border: none;
-            border-radius: 5px;
-            font-size: 18px;
-            cursor: pointer;
-            text-decoration: none;
-        }
-        .btn:hover { background: #c73652; }
-        .contact {
-            background: #1a1a2e;
-            padding: 60px 40px;
-            text-align: center;
-        }
-        .contact h3 { font-size: 32px; margin-bottom: 20px; }
-        input, textarea {
-            width: 100%;
-            max-width: 500px;
-            padding: 12px;
-            margin: 10px 0;
-            background: #0f0f1a;
-            border: 1px solid #e94560;
-            color: white;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        footer {
-            text-align: center;
-            padding: 20px;
-            color: #aaa;
-            background: #1a1a2e;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Navyra Jewellers</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #fdf8f2;
+      --bg2: #f5ede0;
+      --text: #1a1008;
+      --text2: #6b5744;
+      --gold: #b8860b;
+      --gold2: #d4a843;
+      --accent: #8b1a1a;
+      --card: #ffffff;
+      --border: #e8d5b7;
+      --nav: rgba(253,248,242,0.95);
+      --shadow: rgba(184,134,11,0.15);
+      --flash-bg: #1a0a0a;
+      --flash-text: #fdf8f2;
+    }
+    [data-theme="dark"] {
+      --bg: #0d0a06;
+      --bg2: #1a1208;
+      --text: #f5e6cc;
+      --text2: #c4a882;
+      --gold: #d4a843;
+      --gold2: #f0c060;
+      --accent: #c0392b;
+      --card: #1e1508;
+      --border: #3d2e1a;
+      --nav: rgba(13,10,6,0.95);
+      --shadow: rgba(212,168,67,0.2);
+      --flash-bg: #0a0000;
+      --flash-text: #fdf8f2;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.4s, color 0.4s;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 1000;
+      background: var(--nav);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 5%;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 70px;
+      transition: background 0.4s;
+    }
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 300;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      text-decoration: none;
+    }
+    .logo span { font-style: italic; color: var(--text); }
+    .nav-links {
+      display: flex; gap: 2rem; list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none; color: var(--text2);
+      font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-right { display: flex; align-items: center; gap: 1rem; }
+
+    .theme-btn {
+      background: none; border: 1px solid var(--border);
+      border-radius: 50px; padding: 6px 14px;
+      cursor: pointer; color: var(--text2);
+      font-size: 0.8rem; letter-spacing: 0.05em;
+      transition: all 0.3s;
+    }
+    .theme-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+    .cart-btn {
+      position: relative; background: none; border: none;
+      cursor: pointer; color: var(--text); font-size: 1.3rem;
+    }
+    .cart-count {
+      position: absolute; top: -6px; right: -8px;
+      background: var(--gold); color: #fff;
+      border-radius: 50%; width: 18px; height: 18px;
+      font-size: 0.65rem; display: flex; align-items: center; justify-content: center;
+      font-family: 'Jost', sans-serif;
+    }
+
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--text); transition: 0.3s; }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      padding: 120px 5% 80px;
+      background: linear-gradient(160deg, var(--bg) 0%, var(--bg2) 100%);
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 70% 30%, rgba(184,134,11,0.08) 0%, transparent 60%),
+                  radial-gradient(ellipse at 20% 80%, rgba(139,26,26,0.05) 0%, transparent 50%);
+    }
+    .hero-tag {
+      font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1.5rem;
+      animation: fadeUp 0.8s ease both;
+    }
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 300; line-height: 1.05;
+      animation: fadeUp 0.8s ease 0.1s both;
+    }
+    .hero h1 em { font-style: italic; color: var(--gold); }
+    .hero p {
+      margin-top: 1.5rem; max-width: 520px;
+      color: var(--text2); font-size: 1rem; line-height: 1.8;
+      animation: fadeUp 0.8s ease 0.2s both;
+    }
+    .hero-btns {
+      display: flex; gap: 1rem; margin-top: 2.5rem; flex-wrap: wrap; justify-content: center;
+      animation: fadeUp 0.8s ease 0.3s both;
+    }
+    .btn-primary {
+      background: var(--gold); color: #fff;
+      border: none; padding: 14px 36px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;
+      cursor: pointer; transition: all 0.3s; text-decoration: none;
+    }
+    .btn-primary:hover { background: var(--gold2); transform: translateY(-2px); }
+    .btn-secondary {
+      background: none; color: var(--text);
+      border: 1px solid var(--border); padding: 14px 36px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;
+      cursor: pointer; transition: all 0.3s; text-decoration: none;
+    }
+    .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* FLASH SALE */
+    .flash-sale {
+      background: var(--flash-bg);
+      color: var(--flash-text);
+      padding: 60px 5%;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .flash-sale::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(45deg, rgba(184,134,11,0.03) 0px, rgba(184,134,11,0.03) 1px, transparent 1px, transparent 40px);
+    }
+    .flash-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--accent); color: #fff;
+      padding: 6px 16px; font-size: 0.75rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      margin-bottom: 1rem;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(192,57,43,0.4); }
+      50% { box-shadow: 0 0 0 8px rgba(192,57,43,0); }
+    }
+    .flash-sale h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 300; margin-bottom: 0.5rem;
+    }
+    .countdown {
+      display: flex; gap: 1.5rem; justify-content: center;
+      margin: 2rem 0;
+    }
+    .count-box {
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .count-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem; font-weight: 300; color: var(--gold2);
+      line-height: 1;
+    }
+    .count-label { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.6; }
+    .count-sep { font-size: 2rem; color: var(--gold2); align-self: center; margin-top: -10px; }
+
+    .flash-products {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem; margin-top: 2.5rem; max-width: 900px; margin-inline: auto;
+    }
+    .flash-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(184,134,11,0.2);
+      padding: 1.5rem; text-align: center;
+      transition: all 0.3s;
+    }
+    .flash-card:hover { border-color: var(--gold2); transform: translateY(-4px); }
+    .flash-emoji { font-size: 3rem; margin-bottom: 1rem; }
+    .flash-card h4 { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 400; }
+    .price-row { display: flex; gap: 1rem; justify-content: center; align-items: center; margin: 0.5rem 0; }
+    .old-price { text-decoration: line-through; opacity: 0.5; font-size: 0.9rem; }
+    .new-price { color: var(--gold2); font-size: 1.1rem; font-weight: 500; }
+    .discount-badge {
+      background: var(--accent); color: #fff;
+      font-size: 0.7rem; padding: 2px 8px; letter-spacing: 0.1em;
+    }
+
+    /* CATEGORIES */
+    .section { padding: 80px 5%; }
+    .section-header { text-align: center; margin-bottom: 3rem; }
+    .section-tag {
+      font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 0.75rem;
+    }
+    .section-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 300;
+    }
+    .section-header p { color: var(--text2); margin-top: 0.75rem; }
+
+    .categories {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+    }
+    .cat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 2rem 1rem;
+      text-align: center; cursor: pointer;
+      transition: all 0.3s;
+    }
+    .cat-card:hover { border-color: var(--gold); box-shadow: 0 8px 30px var(--shadow); transform: translateY(-4px); }
+    .cat-emoji { font-size: 2.5rem; margin-bottom: 0.75rem; }
+    .cat-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 400; }
+    .cat-card p { font-size: 0.75rem; color: var(--text2); margin-top: 0.25rem; }
+
+    /* PRODUCTS */
+    .products-bg { background: var(--bg2); }
+    .filter-tabs {
+      display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center;
+      margin-bottom: 2.5rem;
+    }
+    .filter-tab {
+      background: none; border: 1px solid var(--border);
+      padding: 8px 20px; cursor: pointer;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text2); transition: all 0.3s;
+    }
+    .filter-tab.active, .filter-tab:hover {
+      background: var(--gold); border-color: var(--gold); color: #fff;
+    }
+
+    .products-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+    .product-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+    .product-card:hover { box-shadow: 0 12px 40px var(--shadow); transform: translateY(-4px); }
+    .product-img {
+      height: 200px; background: var(--bg2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 5rem; position: relative; overflow: hidden;
+    }
+    .product-badge {
+      position: absolute; top: 12px; left: 12px;
+      background: var(--gold); color: #fff;
+      font-size: 0.65rem; padding: 4px 10px; letter-spacing: 0.1em;
+    }
+    .product-badge.sale { background: var(--accent); }
+    .product-info { padding: 1.25rem; }
+    .product-type { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); }
+    .product-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem; font-weight: 400; margin: 0.25rem 0;
+    }
+    .product-price { font-size: 1rem; color: var(--text2); }
+    .product-price s { opacity: 0.5; margin-right: 0.5rem; }
+    .product-price strong { color: var(--gold); }
+    .product-actions { display: flex; gap: 0.5rem; margin-top: 1rem; }
+    .add-cart-btn {
+      flex: 1; background: var(--gold); color: #fff; border: none;
+      padding: 10px; cursor: pointer;
+      font-family: 'Jost', sans-serif; font-size: 0.8rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      transition: all 0.3s;
+    }
+    .add-cart-btn:hover { background: var(--gold2); }
+    .whatsapp-btn {
+      background: #25d366; color: #fff; border: none;
+      padding: 10px 14px; cursor: pointer; font-size: 1rem;
+      transition: all 0.3s;
+    }
+    .whatsapp-btn:hover { background: #128c7e; }
+
+    /* FLOATING WHATSAPP */
+    .wa-float {
+      position: fixed; bottom: 30px; right: 30px; z-index: 999;
+      background: #25d366; color: #fff;
+      width: 60px; height: 60px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; text-decoration: none;
+      box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+      transition: all 0.3s;
+      animation: floatBounce 2s infinite;
+    }
+    .wa-float:hover { transform: scale(1.1); }
+    @keyframes floatBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    /* CONTACT */
+    .contact-section { background: var(--bg); }
+    .contact-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
+      max-width: 900px; margin: 0 auto;
+    }
+    .contact-info h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem; font-weight: 300; margin-bottom: 1.5rem;
+    }
+    .contact-item { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+    .contact-icon { font-size: 1.3rem; }
+    .contact-item h4 { font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); }
+    .contact-item p { color: var(--text2); margin-top: 0.25rem; }
+
+    .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+    .form-input {
+      background: var(--bg2); border: 1px solid var(--border);
+      padding: 12px 16px; color: var(--text);
+      font-family: 'Jost', sans-serif; font-size: 0.9rem;
+      transition: border-color 0.3s; outline: none;
+    }
+    .form-input:focus { border-color: var(--gold); }
+    .form-input::placeholder { color: var(--text2); }
+    textarea.form-input { min-height: 120px; resize: vertical; }
+    .submit-btn {
+      background: var(--gold); color: #fff; border: none;
+      padding: 14px; cursor: pointer;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;
+      transition: all 0.3s;
+    }
+    .submit-btn:hover { background: var(--gold2); }
+
+    /* CART SIDEBAR */
+    .cart-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+    }
+    .cart-overlay.open { opacity: 1; pointer-events: all; }
+    .cart-sidebar {
+      position: fixed; top: 0; right: -420px; width: 420px; max-width: 100vw;
+      height: 100vh; background: var(--card);
+      z-index: 2001; transition: right 0.4s ease;
+      display: flex; flex-direction: column;
+      border-left: 1px solid var(--border);
+    }
+    .cart-sidebar.open { right: 0; }
+    .cart-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.5rem; border-bottom: 1px solid var(--border);
+    }
+    .cart-header h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem; font-weight: 300;
+    }
+    .close-cart { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text); }
+    .cart-items { flex: 1; overflow-y: auto; padding: 1rem 1.5rem; }
+    .cart-item {
+      display: flex; gap: 1rem; padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .cart-item-emoji { font-size: 2.5rem; }
+    .cart-item-info { flex: 1; }
+    .cart-item-name { font-family: 'Cormorant Garamond', serif; font-size: 1rem; }
+    .cart-item-price { color: var(--gold); font-size: 0.9rem; margin-top: 0.25rem; }
+    .cart-item-remove { background: none; border: none; color: var(--text2); cursor: pointer; font-size: 1.1rem; }
+    .cart-empty { text-align: center; padding: 3rem; color: var(--text2); }
+    .cart-empty p { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; }
+    .cart-footer { padding: 1.5rem; border-top: 1px solid var(--border); }
+    .cart-total { display: flex; justify-content: space-between; margin-bottom: 1rem; }
+    .cart-total span { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; }
+    .cart-total strong { color: var(--gold); }
+    .checkout-btn {
+      width: 100%; background: #25d366; color: #fff; border: none;
+      padding: 14px; cursor: pointer;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;
+    }
+
+    /* FOOTER */
+    footer {
+      background: #0d0a06; color: #c4a882;
+      padding: 3rem 5% 1.5rem;
+      text-align: center;
+    }
+    footer .logo { display: block; margin-bottom: 1rem; }
+    footer p { font-size: 0.8rem; opacity: 0.6; margin-top: 0.5rem; }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* MOBILE */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .nav-links.open {
+        display: flex; flex-direction: column;
+        position: fixed; top: 70px; left: 0; right: 0;
+        background: var(--nav); padding: 2rem;
+        border-bottom: 1px solid var(--border);
+        gap: 1.5rem;
+      }
+      .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .countdown { gap: 0.75rem; }
+      .count-num { font-size: 2rem; }
+      .cart-sidebar { width: 100vw; }
+    }
+
+    .success-msg {
+      background: #d4edda; color: #155724; border: 1px solid #c3e6cb;
+      padding: 12px 16px; margin-top: 1rem; display: none;
+    }
+  </style>
 </head>
 <body>
 
-    <header>
-        <h1>AV Academy</h1>
-        <nav>
-            <a href="#">Home</a>
-            <a href="#">About</a>
-            <a href="#">Contact</a>
-        </nav>
-    </header>
+<!-- FLOATING WHATSAPP -->
+<a href="https://wa.me/918004703038" target="_blank" class="wa-float" title="Order on WhatsApp">💬</a>
 
-    <div class="hero">
-        <h2>Welcome to AV Academy</h2>
-        <p>3D Art | Game Design | Digital Marketing | Lucknow, UP</p>
-        <a href="#contact" class="btn">Contact Us</a>
+<!-- CART OVERLAY -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <h3>Your Cart</h3>
+    <button class="close-cart" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty"><p>Your cart is empty</p><p style="font-size:0.85rem;margin-top:0.5rem">Add some beautiful pieces!</p></div>
+  </div>
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="cart-total">
+      <span>Total</span>
+      <strong id="cartTotal">₹0</strong>
     </div>
+    <button class="checkout-btn" onclick="checkoutWhatsApp()">💬 Order via WhatsApp</button>
+  </div>
+</div>
 
-    <div class="contact" id="contact">
-        <h3>Contact Us</h3>
-        <input type="text" placeholder="Aapka Naam" id="name" /><br>
-        <input type="email" placeholder="Aapka Email" id="email" /><br>
-        <textarea rows="5" placeholder="Aapka Message" id="message"></textarea><br>
-        <button class="btn" onclick="sendMessage()">Send Message</button>
-        <p id="response" style="margin-top:20px; color:#4caf50;"></p>
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">Navyra <span>Jewellers</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#categories">Collections</a></li>
+    <li><a href="#products">Shop</a></li>
+    <li><a href="#flash">Flash Sale</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
+    <button class="cart-btn" onclick="openCart()">
+      🛒 <span class="cart-count" id="cartCount">0</span>
+    </button>
+    <button class="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-tag">✦ Timeless Elegance Since 2010 ✦</p>
+  <h1>Crafted for<br><em>Every Occasion</em></h1>
+  <p>Discover our exquisite collection of gold, diamond, and fashion jewellery — from traditional to contemporary, for the woman who celebrates herself.</p>
+  <div class="hero-btns">
+    <a href="#products" class="btn-primary">Shop Now</a>
+    <a href="#flash" class="btn-secondary">⚡ Flash Sale</a>
+  </div>
+</section>
+
+<!-- FLASH SALE -->
+<section class="flash-sale" id="flash">
+  <div class="flash-tag">⚡ Flash Sale — Limited Time</div>
+  <h2>Up to 40% Off<br>Selected Pieces</h2>
+  <div class="countdown">
+    <div class="count-box"><span class="count-num" id="hours">00</span><span class="count-label">Hours</span></div>
+    <span class="count-sep">:</span>
+    <div class="count-box"><span class="count-num" id="minutes">00</span><span class="count-label">Minutes</span></div>
+    <span class="count-sep">:</span>
+    <div class="count-box"><span class="count-num" id="seconds">00</span><span class="count-label">Seconds</span></div>
+  </div>
+  <div class="flash-products">
+    <div class="flash-card">
+      <div class="flash-emoji">💍</div>
+      <h4>Diamond Solitaire Ring</h4>
+      <div class="price-row">
+        <span class="old-price">₹45,000</span>
+        <span class="new-price">₹27,000</span>
+        <span class="discount-badge">40% OFF</span>
+      </div>
+      <button class="add-cart-btn" style="margin-top:0.75rem" onclick="addToCart('Diamond Solitaire Ring', 27000, '💍')">Add to Cart</button>
     </div>
+    <div class="flash-card">
+      <div class="flash-emoji">📿</div>
+      <h4>Pearl Choker Necklace</h4>
+      <div class="price-row">
+        <span class="old-price">₹8,500</span>
+        <span class="new-price">₹5,950</span>
+        <span class="discount-badge">30% OFF</span>
+      </div>
+      <button class="add-cart-btn" style="margin-top:0.75rem" onclick="addToCart('Pearl Choker Necklace', 5950, '📿')">Add to Cart</button>
+    </div>
+    <div class="flash-card">
+      <div class="flash-emoji">✨</div>
+      <h4>Gold Jhumka Earrings</h4>
+      <div class="price-row">
+        <span class="old-price">₹12,000</span>
+        <span class="new-price">₹8,400</span>
+        <span class="discount-badge">30% OFF</span>
+      </div>
+      <button class="add-cart-btn" style="margin-top:0.75rem" onclick="addToCart('Gold Jhumka Earrings', 8400, '✨')">Add to Cart</button>
+    </div>
+  </div>
+</section>
 
-    <footer>
-        <p>© 2026 AV Academy | Lucknow, UP | 9675903348</p>
-    </footer>
+<!-- CATEGORIES -->
+<section class="section" id="categories">
+  <div class="section-header">
+    <p class="section-tag">✦ Browse By</p>
+    <h2>Our Collections</h2>
+    <p>From bridal sets to everyday elegance</p>
+  </div>
+  <div class="categories">
+    <div class="cat-card" onclick="filterProducts('rings')"><div class="cat-emoji">💍</div><h3>Rings</h3><p>Gold & Diamond</p></div>
+    <div class="cat-card" onclick="filterProducts('necklaces')"><div class="cat-emoji">📿</div><h3>Necklaces</h3><p>Sets & Singles</p></div>
+    <div class="cat-card" onclick="filterProducts('earrings')"><div class="cat-emoji">✨</div><h3>Earrings</h3><p>Studs & Jhumkas</p></div>
+    <div class="cat-card" onclick="filterProducts('bangles')"><div class="cat-emoji">🪬</div><h3>Bangles</h3><p>Gold & Artificial</p></div>
+    <div class="cat-card" onclick="filterProducts('bridal')"><div class="cat-emoji">👑</div><h3>Bridal</h3><p>Complete Sets</p></div>
+    <div class="cat-card" onclick="filterProducts('all')"><div class="cat-emoji">🌟</div><h3>All Items</h3><p>Full Collection</p></div>
+  </div>
+</section>
 
-    <script>
-        async function sendMessage() {
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const message = document.getElementById('message').value;
+<!-- PRODUCTS -->
+<section class="section products-bg" id="products">
+  <div class="section-header">
+    <p class="section-tag">✦ Shop Now</p>
+    <h2>Featured Jewellery</h2>
+  </div>
+  <div class="filter-tabs">
+    <button class="filter-tab active" onclick="filterProducts('all', this)">All</button>
+    <button class="filter-tab" onclick="filterProducts('gold', this)">Gold</button>
+    <button class="filter-tab" onclick="filterProducts('diamond', this)">Diamond</button>
+    <button class="filter-tab" onclick="filterProducts('artificial', this)">Fashion</button>
+    <button class="filter-tab" onclick="filterProducts('bridal', this)">Bridal</button>
+  </div>
+  <div class="products-grid" id="productsGrid"></div>
+</section>
 
-            const res = await fetch('/contact', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, email, message })
-            });
+<!-- CONTACT -->
+<section class="section contact-section" id="contact">
+  <div class="section-header">
+    <p class="section-tag">✦ Get In Touch</p>
+    <h2>Contact Us</h2>
+  </div>
+  <div class="contact-grid">
+    <div class="contact-info">
+      <h3>We'd love to hear from you</h3>
+      <div class="contact-item">
+        <span class="contact-icon">📍</span>
+        <div><h4>Visit Us</h4><p>Navyra Jewellers, Main Market<br>Lucknow, Uttar Pradesh</p></div>
+      </div>
+      <div class="contact-item">
+        <span class="contact-icon">📞</span>
+        <div><h4>Call / WhatsApp</h4><p>+91 8004703038</p></div>
+      </div>
+      <div class="contact-item">
+        <span class="contact-icon">🕐</span>
+        <div><h4>Timings</h4><p>Mon–Sat: 10am – 8pm<br>Sunday: 11am – 6pm</p></div>
+      </div>
+    </div>
+    <div>
+      <form class="contact-form" onsubmit="submitForm(event)">
+        <input type="text" class="form-input" placeholder="Your Name" required />
+        <input type="tel" class="form-input" placeholder="Phone Number" required />
+        <input type="text" class="form-input" placeholder="Subject" />
+        <textarea class="form-input" placeholder="Your Message"></textarea>
+        <button type="submit" class="submit-btn">Send Message</button>
+        <div class="success-msg" id="successMsg">✅ Message sent! We'll contact you soon.</div>
+      </form>
+    </div>
+  </div>
+</section>
 
-            const data = await res.json();
-            document.getElementById('response').innerText = data.msg;
-        }
-    </script>
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="logo">Navyra <span>Jewellers</span></a>
+  <p>Crafted with love for every celebration</p>
+  <p style="margin-top:1rem">© 2026 Navyra Jewellers. All rights reserved.</p>
+</footer>
 
+<script>
+  // THEME TOGGLE
+  function toggleTheme() {
+    const html = document.documentElement;
+    const btn = document.getElementById('themeBtn');
+    if (html.dataset.theme === 'light') {
+      html.dataset.theme = 'dark';
+      btn.textContent = '☀️ Light';
+    } else {
+      html.dataset.theme = 'light';
+      btn.textContent = '🌙 Dark';
+    }
+  }
+
+  // MOBILE MENU
+  function toggleMenu() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+
+  // COUNTDOWN
+  const saleEnd = new Date(Date.now() + 18 * 60 * 60 * 1000);
+  function updateCountdown() {
+    const diff = saleEnd - Date.now();
+    if (diff <= 0) return;
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    document.getElementById('hours').textContent = String(h).padStart(2,'0');
+    document.getElementById('minutes').textContent = String(m).padStart(2,'0');
+    document.getElementById('seconds').textContent = String(s).padStart(2,'0');
+  }
+  setInterval(updateCountdown, 1000);
+  updateCountdown();
+
+  // PRODUCTS DATA
+  const products = [
+    { id:1, name:'22K Gold Necklace Set', type:'gold', category:'necklaces', emoji:'📿', price:85000, badge:'New', badgeType:'new' },
+    { id:2, name:'Diamond Engagement Ring', type:'diamond', category:'rings', emoji:'💍', price:120000, oldPrice:150000, badge:'Sale', badgeType:'sale' },
+    { id:3, name:'Kundan Bridal Set', type:'bridal', category:'bridal', emoji:'👑', price:45000, badge:'Trending', badgeType:'new' },
+    { id:4, name:'Gold Jhumka Earrings', type:'gold', category:'earrings', emoji:'✨', price:18000 },
+    { id:5, name:'Fashion Pearl Choker', type:'artificial', category:'necklaces', emoji:'🌸', price:1200, oldPrice:1800, badge:'Sale', badgeType:'sale' },
+    { id:6, name:'Diamond Tennis Bracelet', type:'diamond', category:'bangles', emoji:'💎', price:95000 },
+    { id:7, name:'Gold Bangles Set (6pc)', type:'gold', category:'bangles', emoji:'🪬', price:32000, badge:'Bestseller', badgeType:'new' },
+    { id:8, name:'Oxidised Silver Earrings', type:'artificial', category:'earrings', emoji:'🌿', price:850 },
+    { id:9, name:'Polki Bridal Necklace', type:'bridal', category:'bridal', emoji:'🌟', price:78000, badge:'New', badgeType:'new' },
+    { id:10, name:'Rose Gold Ring', type:'gold', category:'rings', emoji:'💗', price:22000 },
+    { id:11, name:'Diamond Nose Pin', type:'diamond', category:'earrings', emoji:'✦', price:15000, oldPrice:18000, badge:'Sale', badgeType:'sale' },
+    { id:12, name:'Meenakari Bangles', type:'artificial', category:'bangles', emoji:'🎨', price:650 },
+  ];
+
+  let currentFilter = 'all';
+
+  function renderProducts(filter = 'all') {
+    const grid = document.getElementById('productsGrid');
+    const filtered = filter === 'all' ? products : products.filter(p => p.type === filter || p.category === filter);
+    grid.innerHTML = filtered.map(p => `
+      <div class="product-card">
+        <div class="product-img">
+          ${p.badge ? `<span class="product-badge ${p.badgeType === 'sale' ? 'sale' : ''}">${p.badge}</span>` : ''}
+          ${p.emoji}
+        </div>
+        <div class="product-info">
+          <p class="product-type">${p.type}</p>
+          <h3 class="product-name">${p.name}</h3>
+          <p class="product-price">
+            ${p.oldPrice ? `<s>₹${p.oldPrice.toLocaleString()}</s>` : ''}
+            <strong>₹${p.price.toLocaleString()}</strong>
+          </p>
+          <div class="product-actions">
+            <button class="add-cart-btn" onclick="addToCart('${p.name}', ${p.price}, '${p.emoji}')">Add to Cart</button>
+            <a href="https://wa.me/918004703038?text=Hi! I'm interested in ${encodeURIComponent(p.name)} for ₹${p.price.toLocaleString()}" target="_blank" class="whatsapp-btn">💬</a>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function filterProducts(filter, btn) {
+    currentFilter = filter;
+    renderProducts(filter);
+    if (btn) {
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+    }
+    document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  renderProducts();
+
+  // CART
+  let cart = [];
+
+  function addToCart(name, price, emoji) {
+    cart.push({ name, price, emoji });
+    updateCart();
+    openCart();
+  }
+
+  function updateCart() {
+    const count = cart.length;
+    document.getElementById('cartCount').textContent = count;
+    const itemsEl = document.getElementById('cartItems');
+    const footerEl = document.getElementById('cartFooter');
+
+    if (count === 0) {
+      itemsEl.innerHTML = '<div class="cart-empty"><p>Your cart is empty</p></div>';
+      footerEl.style.display = 'none';
+    } else {
+      itemsEl.innerHTML = cart.map((item, i) => `
+        <div class="cart-item">
+          <span class="cart-item-emoji">${item.emoji}</span>
+          <div class="cart-item-info">
+            <p class="cart-item-name">${item.name}</p>
+            <p class="cart-item-price">₹${item.price.toLocaleString()}</p>
+          </div>
+          <button class="cart-item-remove" onclick="removeFromCart(${i})">✕</button>
+        </div>
+      `).join('');
+      const total = cart.reduce((s, i) => s + i.price, 0);
+      document.getElementById('cartTotal').textContent = '₹' + total.toLocaleString();
+      footerEl.style.display = 'block';
+    }
+  }
+
+  function removeFromCart(i) {
+    cart.splice(i, 1);
+    updateCart();
+  }
+
+  function openCart() {
+    document.getElementById('cartOverlay').classList.add('open');
+    document.getElementById('cartSidebar').classList.add('open');
+  }
+
+  function closeCart() {
+    document.getElementById('cartOverlay').classList.remove('open');
+    document.getElementById('cartSidebar').classList.remove('open');
+  }
+
+  function checkoutWhatsApp() {
+    const items = cart.map(i => `• ${i.name} — ₹${i.price.toLocaleString()}`).join('\n');
+    const total = cart.reduce((s, i) => s + i.price, 0);
+    const msg = `Hi Navyra Jewellers! 💍\n\nI'd like to order:\n${items}\n\nTotal: ₹${total.toLocaleString()}\n\nPlease confirm availability.`;
+    window.open(`https://wa.me/918004703038?text=${encodeURIComponent(msg)}`, '_blank');
+  }
+
+  // CONTACT FORM
+  function submitForm(e) {
+    e.preventDefault();
+    const msg = document.getElementById('successMsg');
+    msg.style.display = 'block';
+    e.target.reset();
+    setTimeout(() => msg.style.display = 'none', 4000);
+  }
+</script>
 </body>
 </html>
