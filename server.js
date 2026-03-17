@@ -6,11 +6,12 @@ const path = require('path');
 const app = express();
 app.use(express.json());
 
-// MongoDB connect
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('✅ MongoDB Connected!'))
-  .catch(err => console.log('❌ Error:', err));
-
+// MongoDB connect (optional - won't crash if fails)
+if (process.env.MONGODB_URI) {
+  mongoose.connect(process.env.MONGODB_URI)
+    .then(() => console.log('✅ MongoDB Connected!'))
+    .catch(err => console.log('❌ MongoDB Error:', err));
+}
 // Routes API
 app.use('/api/products', require('./routes/products'));
 app.use('/api/contact', require('./routes/contact'));
