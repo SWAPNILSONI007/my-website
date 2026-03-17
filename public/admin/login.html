@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin Login — Navyra</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#faf8f5;--bg2:#f2ede6;--text:#1c1814;--text2:#6b5f52;--silver:#8a8a9a;--gold:#c9a84c;--card:#ffffff;--border:#e8e0d5;}
+[data-theme="dark"]{--bg:#0e0d0c;--bg2:#161412;--text:#f0ebe3;--text2:#a89b8c;--silver:#9a9aaa;--gold:#d4aa5a;--card:#1a1816;--border:#2a2520;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;transition:background .4s;}
+.login-card{background:var(--card);border:1px solid var(--border);padding:3rem;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.08);}
+.login-logo{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:400;text-align:center;margin-bottom:.25rem;}
+.login-logo span{color:var(--silver);font-style:italic;}
+.login-sub{text-align:center;font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--silver);margin-bottom:2.5rem;}
+.form-group{margin-bottom:1.25rem;}
+.form-group label{display:block;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text2);margin-bottom:.5rem;}
+.form-input{width:100%;background:var(--bg2);border:1px solid var(--border);padding:12px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.9rem;outline:none;transition:border-color .3s;}
+.form-input:focus{border-color:var(--silver);}
+.form-input::placeholder{color:var(--text2);opacity:.6;}
+.login-btn{width:100%;background:var(--text);color:var(--bg);border:none;padding:14px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;transition:all .3s;margin-top:.5rem;}
+.login-btn:hover{opacity:.85;}
+.error-msg{display:none;background:#fdecea;color:#c0392b;border:1px solid #f5c6cb;padding:10px 14px;margin-top:1rem;font-size:.85rem;text-align:center;}
+.back-link{display:block;text-align:center;margin-top:1.5rem;font-size:.78rem;color:var(--text2);text-decoration:none;letter-spacing:.08em;}
+.back-link:hover{color:var(--text);}
+</style>
+</head>
+<body>
+<div class="login-card">
+  <h1 class="login-logo">Navyra <span>Admin</span></h1>
+  <p class="login-sub">Secure Access Only</p>
+  <form onsubmit="doLogin(event)">
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" class="form-input" id="username" placeholder="navyra_admin" required/>
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" class="form-input" id="password" placeholder="••••••••" required/>
+    </div>
+    <button type="submit" class="login-btn">Login to Dashboard</button>
+    <div class="error-msg" id="errorMsg">❌ Wrong username or password</div>
+  </form>
+  <a href="/" class="back-link">← Back to Website</a>
+</div>
+<script>
+async function doLogin(e){
+  e.preventDefault();
+  const username=document.getElementById('username').value;
+  const password=document.getElementById('password').value;
+  try{
+    const res=await fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
+    const data=await res.json();
+    if(data.success){
+      localStorage.setItem('navyra_admin_token',data.token);
+      window.location.href='/admin/dashboard';
+    }else{
+      document.getElementById('errorMsg').style.display='block';
+    }
+  }catch(e){
+    document.getElementById('errorMsg').style.display='block';
+  }
+}
+// If already logged in redirect
+if(localStorage.getItem('navyra_admin_token')){window.location.href='/admin/dashboard';}
+</script>
+</body>
+</html>
