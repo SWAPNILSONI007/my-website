@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Shop — Navyra Jewellers</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#faf8f5;--bg2:#f2ede6;--text:#1c1814;--text2:#6b5f52;--silver:#8a8a9a;--silver2:#b8b8cc;--gold:#c9a84c;--card:#ffffff;--border:#e8e0d5;--nav-bg:rgba(250,248,245,0.96);--shadow:rgba(0,0,0,0.06);}
+[data-theme="dark"]{--bg:#0e0d0c;--bg2:#161412;--text:#f0ebe3;--text2:#a89b8c;--silver:#9a9aaa;--silver2:#6a6a7a;--gold:#d4aa5a;--card:#1a1816;--border:#2a2520;--nav-bg:rgba(14,13,12,0.96);--shadow:rgba(0,0,0,0.3);}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);transition:background .4s,color .4s;}
+
+/* NAV */
+nav{position:fixed;top:0;width:100%;z-index:1000;background:var(--nav-bg);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);height:68px;display:flex;align-items:center;padding:0 5%;gap:2rem;}
+.logo{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:400;color:var(--text);text-decoration:none;letter-spacing:.05em;flex-shrink:0;}
+.logo span{color:var(--silver);font-style:italic;}
+.nav-links{display:flex;gap:.25rem;list-style:none;flex:1;justify-content:center;align-items:center;}
+.nav-links li{position:relative;}
+.nav-links a{text-decoration:none;color:var(--text2);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;padding:.4rem .9rem;display:block;transition:color .3s;white-space:nowrap;}
+.nav-links a:hover,.nav-links a.active{color:var(--text);}
+.dropdown{position:relative;}
+.dropdown-menu{position:absolute;top:100%;left:0;background:var(--card);border:1px solid var(--border);min-width:190px;opacity:0;pointer-events:none;transform:translateY(-6px);transition:all .25s;z-index:100;box-shadow:0 8px 30px var(--shadow);}
+.dropdown:hover .dropdown-menu{opacity:1;pointer-events:all;transform:translateY(0);}
+.dropdown-menu a{display:block;padding:.7rem 1.25rem;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);text-decoration:none;border-bottom:1px solid var(--border);transition:all .2s;}
+.dropdown-menu a:last-child{border-bottom:none;}
+.dropdown-menu a:hover{color:var(--text);background:var(--bg2);padding-left:1.6rem;}
+.coming-soon-tag{font-size:.55rem;background:var(--border);color:var(--text2);padding:2px 5px;border-radius:2px;margin-left:5px;}
+.nav-right{display:flex;align-items:center;gap:.75rem;flex-shrink:0;}
+.theme-toggle{background:none;border:1px solid var(--border);width:36px;height:36px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;color:var(--text2);transition:all .3s;border-radius:50%;}
+.theme-toggle:hover{border-color:var(--silver);}
+.cart-btn{position:relative;background:none;border:none;cursor:pointer;color:var(--text);font-size:1.2rem;padding:4px;}
+.cart-badge{position:absolute;top:-4px;right:-6px;background:var(--gold);color:#fff;border-radius:50%;width:16px;height:16px;font-size:.6rem;display:flex;align-items:center;justify-content:center;}
+.hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;background:none;border:none;padding:4px;}
+.hamburger span{display:block;width:22px;height:1.5px;background:var(--text);}
+
+/* PAGE HEADER */
+.page-header{padding:100px 5% 40px;border-bottom:1px solid var(--border);}
+.breadcrumb{font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text2);margin-bottom:1rem;}
+.breadcrumb a{color:var(--text2);text-decoration:none;}
+.breadcrumb a:hover{color:var(--text);}
+.page-header h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:400;}
+.page-header p{color:var(--text2);margin-top:.5rem;}
+
+/* SHOP LAYOUT */
+.shop-layout{display:grid;grid-template-columns:240px 1fr;gap:3rem;padding:3rem 5%;max-width:1400px;margin:0 auto;}
+
+/* SIDEBAR */
+.sidebar{}
+.sidebar-section{margin-bottom:2rem;padding-bottom:2rem;border-bottom:1px solid var(--border);}
+.sidebar-section:last-child{border-bottom:none;}
+.sidebar-title{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--silver);margin-bottom:1rem;}
+.cat-filter{display:flex;flex-direction:column;gap:.25rem;}
+.cat-filter-btn{background:none;border:none;text-align:left;padding:.6rem .75rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.85rem;color:var(--text2);transition:all .2s;border-left:2px solid transparent;}
+.cat-filter-btn:hover,.cat-filter-btn.active{color:var(--text);border-left-color:var(--silver);background:var(--bg2);}
+.price-inputs{display:flex;gap:.5rem;align-items:center;}
+.price-input{width:80px;background:var(--bg2);border:1px solid var(--border);padding:8px 10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.8rem;outline:none;}
+.price-input:focus{border-color:var(--silver);}
+.price-sep{color:var(--text2);font-size:.8rem;}
+.apply-price{margin-top:.75rem;background:var(--text);color:var(--bg);border:none;padding:8px 16px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;transition:all .3s;width:100%;}
+.apply-price:hover{background:var(--silver2);}
+.sort-select{width:100%;background:var(--bg2);border:1px solid var(--border);padding:10px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none;cursor:pointer;}
+
+/* PRODUCTS */
+.shop-main{}
+.shop-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;}
+.results-count{font-size:.85rem;color:var(--text2);}
+.view-toggle{display:flex;gap:.5rem;}
+.view-btn{background:none;border:1px solid var(--border);width:36px;height:36px;cursor:pointer;color:var(--text2);font-size:.9rem;transition:all .2s;display:flex;align-items:center;justify-content:center;}
+.view-btn.active,.view-btn:hover{background:var(--text);border-color:var(--text);color:var(--bg);}
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.5rem;}
+.products-grid.list-view{grid-template-columns:1fr;}
+.product-card{background:var(--card);border:1px solid var(--border);overflow:hidden;transition:all .3s;cursor:pointer;}
+.product-card:hover{box-shadow:0 16px 48px var(--shadow);transform:translateY(-4px);}
+.product-img{height:200px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:4.5rem;position:relative;overflow:hidden;}
+.list-view .product-img{height:140px;width:140px;flex-shrink:0;}
+.list-view .product-card{display:flex;}
+.list-view .product-body{flex:1;}
+.img-inner{transition:transform .4s;}
+.product-card:hover .img-inner{transform:scale(1.08);}
+.badge{position:absolute;top:10px;left:10px;font-size:.6rem;padding:3px 8px;letter-spacing:.1em;text-transform:uppercase;}
+.badge-new{background:var(--text);color:var(--bg);}
+.badge-sale{background:#c0392b;color:#fff;}
+.product-body{padding:1.25rem;}
+.product-cat{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--silver);margin-bottom:.3rem;}
+.product-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:400;margin-bottom:.5rem;}
+.product-price{display:flex;align-items:center;gap:.5rem;margin-bottom:1rem;}
+.price-old{font-size:.8rem;color:var(--text2);text-decoration:line-through;}
+.price-new{font-size:.95rem;color:var(--text);font-weight:500;}
+.product-actions{display:flex;gap:.5rem;}
+.btn-cart{flex:1;background:var(--text);color:var(--bg);border:none;padding:9px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;transition:all .3s;}
+.btn-cart:hover{background:var(--silver2);}
+.btn-wa{background:#25d366;color:#fff;border:none;padding:9px 12px;cursor:pointer;font-size:.85rem;transition:all .3s;}
+.btn-wa:hover{background:#128c7e;}
+.btn-detail{flex:1;background:none;color:var(--text);border:1px solid var(--border);padding:9px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;transition:all .3s;text-decoration:none;text-align:center;}
+.btn-detail:hover{border-color:var(--text);}
+
+/* No products */
+.no-products{text-align:center;padding:4rem;color:var(--text2);grid-column:1/-1;}
+.no-products p{font-family:'Playfair Display',serif;font-size:1.3rem;}
+
+/* CART SIDEBAR */
+.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:2000;opacity:0;pointer-events:none;transition:opacity .3s;}
+.cart-overlay.open{opacity:1;pointer-events:all;}
+.cart-sidebar{position:fixed;top:0;right:-440px;width:440px;max-width:100vw;height:100vh;background:var(--card);z-index:2001;transition:right .4s ease;display:flex;flex-direction:column;border-left:1px solid var(--border);}
+.cart-sidebar.open{right:0;}
+.cart-head{display:flex;justify-content:space-between;align-items:center;padding:1.5rem;border-bottom:1px solid var(--border);}
+.cart-head h3{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:400;}
+.cart-close{background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text);}
+.cart-body{flex:1;overflow-y:auto;padding:1rem 1.5rem;}
+.cart-empty{text-align:center;padding:3rem;color:var(--text2);}
+.cart-empty p{font-family:'Playfair Display',serif;font-size:1.2rem;}
+.cart-item{display:flex;gap:1rem;padding:1rem 0;border-bottom:1px solid var(--border);align-items:center;}
+.cart-item-emoji{font-size:2.5rem;flex-shrink:0;}
+.cart-item-info{flex:1;}
+.cart-item-name{font-family:'Playfair Display',serif;font-size:.95rem;}
+.cart-item-price{color:var(--silver);font-size:.85rem;margin-top:.2rem;}
+.cart-item-remove{background:none;border:none;color:var(--text2);cursor:pointer;font-size:1rem;}
+.cart-foot{padding:1.5rem;border-top:1px solid var(--border);}
+.cart-total-row{display:flex;justify-content:space-between;margin-bottom:1rem;}
+.cart-total-row span{font-family:'Playfair Display',serif;font-size:1.1rem;}
+.cart-total-row strong{color:var(--gold);}
+.btn-checkout{width:100%;background:#25d366;color:#fff;border:none;padding:14px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;}
+
+/* MOBILE */
+.mobile-menu{display:none;position:fixed;top:68px;left:0;right:0;background:var(--nav-bg);border-bottom:1px solid var(--border);padding:1.5rem 5%;z-index:999;flex-direction:column;gap:1rem;}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{text-decoration:none;color:var(--text2);font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;padding:.5rem 0;border-bottom:1px solid var(--border);}
+.mobile-filters{display:none;}
+
+/* WA FLOAT */
+.wa-float{position:fixed;bottom:28px;right:28px;z-index:999;background:#25d366;color:#fff;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;text-decoration:none;box-shadow:0 4px 20px rgba(37,211,102,.35);animation:bounce 2.5s infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+@media(max-width:900px){
+  .shop-layout{grid-template-columns:1fr;}
+  .sidebar{display:none;}
+  .mobile-filters{display:block;margin-bottom:1.5rem;}
+}
+@media(max-width:768px){
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+}
+</style>
+</head>
+<body>
+
+<a href="https://wa.me/918004703038" target="_blank" class="wa-float">💬</a>
+
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-head"><h3>Your Cart</h3><button class="cart-close" onclick="closeCart()">✕</button></div>
+  <div class="cart-body" id="cartBody"><div class="cart-empty"><p>Your cart is empty</p></div></div>
+  <div class="cart-foot" id="cartFoot" style="display:none">
+    <div class="cart-total-row"><span>Total</span><strong id="cartTotal">₹0</strong></div>
+    <button class="btn-checkout" onclick="checkoutWA()">💬 Order via WhatsApp</button>
+  </div>
+</div>
+
+<nav>
+  <a href="/" class="logo">Navyra <span>Jewellers</span></a>
+  <ul class="nav-links">
+    <li class="dropdown"><a href="#">Collections ▾</a>
+      <div class="dropdown-menu">
+        <a href="/shop?cat=pendant">Pendant</a>
+        <a href="/shop?cat=ear-jewellery">Ear Jewellery</a>
+        <a href="/shop?cat=rings">Rings</a>
+        <a href="/shop?cat=anklets">Anklets</a>
+        <a href="/shop?cat=bracelets">Bracelets</a>
+        <a href="/shop?cat=necklaces">Necklaces</a>
+        <a href="/shop?cat=hair-accessories">Hair Accessories</a>
+        <a href="#">Gold <span class="coming-soon-tag">Soon</span></a>
+      </div>
+    </li>
+    <li><a href="/shop" class="active">Shop</a></li>
+    <li><a href="/flash-sale">Sale ⚡</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="/contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    <button class="cart-btn" onclick="openCart()">🛒 <span class="cart-badge" id="cartCount">0</span></button>
+    <button class="hamburger" onclick="toggleMobile()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/shop">Shop All</a>
+  <a href="/shop?cat=pendant">Pendant</a>
+  <a href="/shop?cat=ear-jewellery">Ear Jewellery</a>
+  <a href="/shop?cat=rings">Rings</a>
+  <a href="/shop?cat=anklets">Anklets</a>
+  <a href="/shop?cat=bracelets">Bracelets</a>
+  <a href="/shop?cat=necklaces">Necklaces</a>
+  <a href="/shop?cat=hair-accessories">Hair Accessories</a>
+  <a href="/flash-sale">Sale ⚡</a>
+  <a href="/about">About</a>
+  <a href="/contact">Contact</a>
+</div>
+
+<div class="page-header">
+  <p class="breadcrumb"><a href="/">Home</a> / Shop</p>
+  <h1>All Collections</h1>
+  <p>Handpicked sterling silver jewellery</p>
+</div>
+
+<div class="shop-layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <p class="sidebar-title">Categories</p>
+      <div class="cat-filter">
+        <button class="cat-filter-btn active" onclick="setCategory('all',this)">All Products</button>
+        <button class="cat-filter-btn" onclick="setCategory('pendant',this)">Pendant</button>
+        <button class="cat-filter-btn" onclick="setCategory('ear-jewellery',this)">Ear Jewellery</button>
+        <button class="cat-filter-btn" onclick="setCategory('rings',this)">Rings</button>
+        <button class="cat-filter-btn" onclick="setCategory('anklets',this)">Anklets</button>
+        <button class="cat-filter-btn" onclick="setCategory('bracelets',this)">Bracelets</button>
+        <button class="cat-filter-btn" onclick="setCategory('necklaces',this)">Necklaces</button>
+        <button class="cat-filter-btn" onclick="setCategory('hair-accessories',this)">Hair Accessories</button>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <p class="sidebar-title">Price Range</p>
+      <div class="price-inputs">
+        <input type="number" class="price-input" id="minPrice" placeholder="Min" value="0"/>
+        <span class="price-sep">—</span>
+        <input type="number" class="price-input" id="maxPrice" placeholder="Max" value="10000"/>
+      </div>
+      <button class="apply-price" onclick="applyPriceFilter()">Apply</button>
+    </div>
+    <div class="sidebar-section">
+      <p class="sidebar-title">Sort By</p>
+      <select class="sort-select" id="sortSelect" onchange="sortProducts()">
+        <option value="newest">Newest First</option>
+        <option value="price-low">Price: Low to High</option>
+        <option value="price-high">Price: High to Low</option>
+      </select>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="shop-main">
+    <!-- Mobile filters -->
+    <div class="mobile-filters">
+      <select class="sort-select" onchange="setCategory(this.value,null)" style="margin-bottom:.75rem">
+        <option value="all">All Categories</option>
+        <option value="pendant">Pendant</option>
+        <option value="ear-jewellery">Ear Jewellery</option>
+        <option value="rings">Rings</option>
+        <option value="anklets">Anklets</option>
+        <option value="bracelets">Bracelets</option>
+        <option value="necklaces">Necklaces</option>
+        <option value="hair-accessories">Hair Accessories</option>
+      </select>
+      <select class="sort-select" onchange="document.getElementById('sortSelect').value=this.value;sortProducts()">
+        <option value="newest">Newest First</option>
+        <option value="price-low">Price: Low to High</option>
+        <option value="price-high">Price: High to Low</option>
+      </select>
+    </div>
+
+    <div class="shop-toolbar">
+      <p class="results-count" id="resultsCount">Loading...</p>
+      <div class="view-toggle">
+        <button class="view-btn active" onclick="setView('grid',this)" title="Grid">⊞</button>
+        <button class="view-btn" onclick="setView('list',this)" title="List">☰</button>
+      </div>
+    </div>
+    <div class="products-grid" id="productsGrid">
+      <div class="no-products"><p>Loading products...</p></div>
+    </div>
+  </main>
+</div>
+
+<script>
+const EMOJI={pendant:'🔮','ear-jewellery':'✨',rings:'💍',anklets:'🌿',bracelets:'🪬',necklaces:'📿','hair-accessories':'🌸'};
+let allProducts=[];
+let filtered=[];
+let currentCat='all';
+let minP=0,maxP=10000;
+let cart=[];
+
+// Read URL param
+const urlCat=new URLSearchParams(location.search).get('cat');
+if(urlCat)currentCat=urlCat;
+
+async function loadProducts(){
+  try{
+    const res=await fetch('/api/products');
+    allProducts=await res.json();
+  }catch(e){
+    allProducts=[
+      {_id:'1',name:'Silver Moon Pendant',category:'pendant',price:1299,originalPrice:1800,inStock:true,badge:'New'},
+      {_id:'2',name:'Jhumka Earrings Set',category:'ear-jewellery',price:899,inStock:true,badge:'Bestseller'},
+      {_id:'3',name:'Twisted Band Ring',category:'rings',price:699,originalPrice:999,inStock:true,badge:'Sale'},
+      {_id:'4',name:'Layered Anklet',category:'anklets',price:599,inStock:true},
+      {_id:'5',name:'Charm Bracelet',category:'bracelets',price:1099,inStock:true,badge:'New'},
+      {_id:'6',name:'Silver Choker Set',category:'necklaces',price:1499,originalPrice:1999,inStock:true,badge:'Sale'},
+      {_id:'7',name:'Floral Hair Pin Set',category:'hair-accessories',price:399,inStock:true},
+      {_id:'8',name:'Lotus Pendant',category:'pendant',price:999,inStock:true,badge:'Featured'},
+      {_id:'9',name:'Oxidised Stud Earrings',category:'ear-jewellery',price:449,inStock:true},
+      {_id:'10',name:'Adjustable Toe Ring',category:'rings',price:299,inStock:true},
+      {_id:'11',name:'Beaded Anklet',category:'anklets',price:449,inStock:true,badge:'New'},
+      {_id:'12',name:'Kada Bracelet',category:'bracelets',price:1299,inStock:true},
+    ];
+  }
+  // Set active sidebar button
+  if(currentCat!=='all'){
+    document.querySelectorAll('.cat-filter-btn').forEach(b=>{
+      b.classList.remove('active');
+      if(b.textContent.toLowerCase().replace(' ','-')===currentCat||b.onclick?.toString().includes(`'${currentCat}'`))b.classList.add('active');
+    });
+  }
+  applyFilters();
+}
+
+function applyFilters(){
+  filtered=allProducts.filter(p=>{
+    const catOk=currentCat==='all'||p.category===currentCat;
+    const priceOk=p.price>=minP&&p.price<=maxP;
+    return catOk&&priceOk;
+  });
+  sortProducts(false);
+  renderProducts();
+}
+
+function sortProducts(render=true){
+  const sort=document.getElementById('sortSelect').value;
+  if(sort==='price-low')filtered.sort((a,b)=>a.price-b.price);
+  else if(sort==='price-high')filtered.sort((a,b)=>b.price-a.price);
+  else filtered.sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0));
+  if(render)renderProducts();
+}
+
+function renderProducts(){
+  const grid=document.getElementById('productsGrid');
+  document.getElementById('resultsCount').textContent=`${filtered.length} product${filtered.length!==1?'s':''}`;
+  if(!filtered.length){
+    grid.innerHTML='<div class="no-products"><p>No products found</p><p style="font-size:.85rem;margin-top:.5rem;font-family:\'DM Sans\'">Try a different category or price range</p></div>';
+    return;
+  }
+  grid.innerHTML=filtered.map(p=>{
+    const emoji=p.emoji||EMOJI[p.category]||'💎';
+    return`<div class="product-card">
+      <div class="product-img">
+        ${p.badge?`<span class="badge ${p.badge==='Sale'?'badge-sale':'badge-new'}">${p.badge}</span>`:''}
+        <span class="img-inner">${emoji}</span>
+      </div>
+      <div class="product-body">
+        <p class="product-cat">${(p.category||'').replace('-',' ')}</p>
+        <h3 class="product-name">${p.name}</h3>
+        <div class="product-price">
+          ${p.originalPrice?`<span class="price-old">₹${p.originalPrice.toLocaleString()}</span>`:''}
+          <span class="price-new">₹${p.price.toLocaleString()}</span>
+        </div>
+        <div class="product-actions">
+          <a href="/product?id=${p._id}" class="btn-detail">View</a>
+          <button class="btn-cart" onclick="addToCart('${p.name}',${p.price},'${emoji}','${p._id}')">Add to Cart</button>
+          <a href="https://wa.me/918004703038?text=Hi! I want to order ${encodeURIComponent(p.name)} for ₹${p.price}" target="_blank" class="btn-wa">💬</a>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function setCategory(cat,btn){
+  currentCat=cat;
+  document.querySelectorAll('.cat-filter-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  applyFilters();
+}
+
+function applyPriceFilter(){
+  minP=parseInt(document.getElementById('minPrice').value)||0;
+  maxP=parseInt(document.getElementById('maxPrice').value)||999999;
+  applyFilters();
+}
+
+function setView(view,btn){
+  const grid=document.getElementById('productsGrid');
+  grid.classList.toggle('list-view',view==='list');
+  document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// Cart
+function addToCart(name,price,emoji,id){
+  cart.push({name,price,emoji,id});
+  updateCart();openCart();
+}
+function updateCart(){
+  document.getElementById('cartCount').textContent=cart.length;
+  const body=document.getElementById('cartBody');
+  const foot=document.getElementById('cartFoot');
+  if(!cart.length){body.innerHTML='<div class="cart-empty"><p>Your cart is empty</p></div>';foot.style.display='none';return;}
+  body.innerHTML=cart.map((i,idx)=>`<div class="cart-item"><span class="cart-item-emoji">${i.emoji}</span><div class="cart-item-info"><p class="cart-item-name">${i.name}</p><p class="cart-item-price">₹${i.price.toLocaleString()}</p></div><button class="cart-item-remove" onclick="removeFromCart(${idx})">✕</button></div>`).join('');
+  document.getElementById('cartTotal').textContent='₹'+cart.reduce((s,i)=>s+i.price,0).toLocaleString();
+  foot.style.display='block';
+}
+function removeFromCart(i){cart.splice(i,1);updateCart();}
+function openCart(){document.getElementById('cartOverlay').classList.add('open');document.getElementById('cartSidebar').classList.add('open');}
+function closeCart(){document.getElementById('cartOverlay').classList.remove('open');document.getElementById('cartSidebar').classList.remove('open');}
+function checkoutWA(){
+  const items=cart.map(i=>`• ${i.name} — ₹${i.price.toLocaleString()}`).join('\n');
+  const total=cart.reduce((s,i)=>s+i.price,0);
+  window.open(`https://wa.me/918004703038?text=${encodeURIComponent(`Hi Navyra Jewellers!\n\nOrder:\n${items}\n\nTotal: ₹${total.toLocaleString()}`)}`, '_blank');
+}
+
+function toggleTheme(){
+  const h=document.documentElement;
+  const btn=document.getElementById('themeBtn');
+  if(h.dataset.theme==='light'){h.dataset.theme='dark';btn.textContent='☀️';}
+  else{h.dataset.theme='light';btn.textContent='🌙';}
+}
+function toggleMobile(){document.getElementById('mobileMenu').classList.toggle('open');}
+
+loadProducts();
+</script>
+</body>
+</html>
