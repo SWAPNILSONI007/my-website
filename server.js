@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-const fs = require('fs');
 
 const app = express();
 app.use(express.json());
@@ -12,28 +11,23 @@ mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('✅ MongoDB Connected!'))
   .catch(err => console.log('❌ Error:', err));
 
-// Serve index.html
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+// Routes API
+app.use('/api/products', require('./routes/products'));
+app.use('/api/contact', require('./routes/contact'));
+app.use('/api/admin', require('./routes/admin'));
 
-// Contact form
-const contactSchema = new mongoose.Schema({
-  name: String, email: String, message: String,
-  date: { type: Date, default: Date.now }
-});
-const Contact = mongoose.model('Contact', contactSchema);
+// HTML Pages
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
+app.get('/shop', (req, res) => res.sendFile(path.join(__dirname, 'public', 'shop.html')));
+app.get('/flash-sale', (req, res) => res.sendFile(path.join(__dirname, 'public', 'flash-sale.html')));
+app.get('/about', (req, res) => res.sendFile(path.join(__dirname, 'public', 'about.html')));
+app.get('/contact', (req, res) => res.sendFile(path.join(__dirname, 'public', 'contact.html')));
+app.get('/product', (req, res) => res.sendFile(path.join(__dirname, 'public', 'product.html')));
+app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'public', 'admin', 'login.html')));
+app.get('/admin/dashboard', (req, res) => res.sendFile(path.join(__dirname, 'public', 'admin', 'dashboard.html')));
 
-app.post('/contact', async (req, res) => {
-  try {
-    const { name, email, message } = req.body;
-    const newContact = new Contact({ name, email, message });
-    await newContact.save();
-    res.json({ msg: '✅ Message mil gaya!' });
-  } catch (err) {
-    res.json({ msg: '❌ Error aaya' });
-  }
-});
+// Static files
+app.use(express.static(path.join(__dirname, 'public')));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🌐 Server on port ${PORT}`));
