@@ -290,11 +290,11 @@ textarea{resize:vertical;min-height:80px;}
 
 <script>
 // Auth check
-const token = localStorage.getItem('navyra-token');
+const token = localStorage.getItem('navyra_admin_token');
 if(!token) window.location.href = '/admin';
 
 function logout(){
-  localStorage.removeItem('navyra-token');
+  localStorage.removeItem('navyra_admin_token');
   window.location.href = '/admin';
 }
 
