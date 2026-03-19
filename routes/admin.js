@@ -24,8 +24,3 @@ router.post('/verify', (req, res) => {
 });
 
 module.exports = router;
-```
-
-**2. `.env` mein ek line aur add karo:**
-```
-ADMIN_TOKEN=navyra-secret-2026
