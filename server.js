@@ -8,7 +8,7 @@ app.use(express.json());
 
 // MongoDB connect
 if(process.env.MONGODB_URI){
-  mongoose.connect(process.env.MONGODB_URI)
+  mongoose.connect(process.env.MONGODB_URI, { serverSelectionTimeoutMS: 3000 })
     .then(()=>console.log('✅ MongoDB Connected!'))
     .catch(err=>console.log('❌ Error:',err));
 }
