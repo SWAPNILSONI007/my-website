@@ -10,7 +10,7 @@ pages.forEach(p => {
   // Replace fetch with AbortController wrapper
   content = content.replace(
     /const res=await fetch\('\/api\/products'\);/g,
-    \`const controller = new AbortController(); setTimeout(() => controller.abort(), 2000); const res = await fetch('/api/products', { signal: controller.signal });\`
+    `const controller = new AbortController(); setTimeout(() => controller.abort(), 2000); const res = await fetch('/api/products', { signal: controller.signal });`
   );
 
   fs.writeFileSync(fp, content);
@@ -22,7 +22,7 @@ const pFp = path.join(__dirname, 'public/product.html');
 let pContent = fs.readFileSync(pFp, 'utf8');
 pContent = pContent.replace(
   /const r=await fetch\(\`\/api\/products\/\$\{id\}\`\);/g,
-  \`const controller = new AbortController(); setTimeout(() => controller.abort(), 2000); const r = await fetch(\\\`/api/products/\\\${id}\\\`, { signal: controller.signal });\`
+  `const controller = new AbortController(); setTimeout(() => controller.abort(), 2000); const r = await fetch(\`/api/products/\${id}\`, { signal: controller.signal });`
 );
 fs.writeFileSync(pFp, pContent);
 console.log('Fixed fetch timeout on public/product.html');

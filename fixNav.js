@@ -163,9 +163,9 @@ pages.forEach(p => {
   }
 
   if (content.includes('function toggleTheme()')) {
-    content = content.replace(/function toggleTheme\(\)\{[\s\S]*?(?=(function |<\/script>))/, jsToReplace + '\\n');
+    content = content.replace(/function toggleTheme\(\)\{[\s\S]*?(?=(function |<\/script>))/, jsToReplace + '\n');
   } else {
-    content = content.replace(/<\/body>/, '<script>\\n' + jsToReplace + '\\n</script>\\n</body>');
+    content = content.replace(/<\/body>/, '<script>\n' + jsToReplace + '\n</script>\n</body>');
   }
 
   fs.writeFileSync(fp, content);

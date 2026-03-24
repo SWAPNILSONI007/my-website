@@ -23,7 +23,7 @@ function updateCart(){
   const body=document.getElementById('cartBody'),foot=document.getElementById('cartFoot'),tot=document.getElementById('cartTotal');
   if(!body)return;
   if(!cart.length){body.innerHTML='<div class="cart-empty"><p>Your cart is empty</p></div>';if(foot)foot.style.display='none';return;}
-  body.innerHTML=cart.map((i,idx)=>\`<div class="cart-item"><span class="cart-item-emoji">\${i.emoji||'✨'}</span><div class="cart-item-info"><p class="cart-item-name">\${i.name}</p><p class="cart-item-price">₹\${i.price.toLocaleString()}</p></div><button class="cart-item-remove" onclick="removeFromCart(\${idx})">✕</button></div>\`).join('');
+  body.innerHTML=cart.map((i,idx)=>\\\`<div class="cart-item"><span class="cart-item-emoji">\\\${i.emoji||'✨'}</span><div class="cart-item-info"><p class="cart-item-name">\\\${i.name}</p><p class="cart-item-price">₹\\\${i.price.toLocaleString()}</p></div><button class="cart-item-remove" onclick="removeFromCart(\\\${idx})">✕</button></div>\\\`).join('');
   if(tot)tot.textContent='₹'+cart.reduce((s,i)=>s+i.price,0).toLocaleString();
   if(foot)foot.style.display='block';
 }
@@ -31,9 +31,9 @@ function removeFromCart(i){cart.splice(i,1);updateCart();}
 function openCart(){const o=document.getElementById('cartOverlay'),s=document.getElementById('cartSidebar');if(o)o.classList.add('open');if(s)s.classList.add('open');}
 function closeCart(){const o=document.getElementById('cartOverlay'),s=document.getElementById('cartSidebar');if(o)o.classList.remove('open');if(s)s.classList.remove('open');}
 function checkoutWA(){
-  const items=cart.map(i=>\`• \${i.name} — ₹\${i.price.toLocaleString()}\`).join('\\n');
+  const items=cart.map(i=>\\\`• \\\${i.name} — ₹\\\${i.price.toLocaleString()}\\\`).join('\\n');
   const total=cart.reduce((s,i)=>s+i.price,0);
-  window.open(\`https://wa.me/918004703038?text=\${encodeURIComponent(\`Hi Navyra! Order:\\n\${items}\\nTotal: ₹\${total.toLocaleString()}\`)}\`, '_blank');
+  window.open(\\\`https://wa.me/918004703038?text=\\\${encodeURIComponent(\\\`Hi Navyra! Order:\\n\\\${items}\\nTotal: ₹\\\${total.toLocaleString()}\\\`)}\\\`, '_blank');
 }
 `;
 
