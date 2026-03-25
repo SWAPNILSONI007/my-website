@@ -509,21 +509,21 @@ async function loadOrders(){
     if(!orders.length){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:#999;padding:30px;">No orders yet</td></tr>';return;}
     tbody.innerHTML=orders.map(o=>`
       <tr>
-        <td><div style="font-size:11px;color:#888;">\${o._id}</div><div>\${new Date(o.createdAt).toLocaleString('en-IN')}</div></td>
-        <td><strong>\${o.customerName}</strong><br><span style="font-size:11px;color:#666;">\${o.customerMobile}</span><br><span style="font-size:11px;color:#666;white-space:normal;display:inline-block;max-width:200px;">\${o.customerAddress}, \${o.customerCity} - \${o.customerPin}</span></td>
-        <td><div style="max-height:80px;overflow-y:auto;font-size:12px;">\${o.items.map(i=>\`\${i.emoji} 1x \${i.name}\`).join('<br>')}</div></td>
-        <td><strong>₹\${o.totalAmount.toLocaleString()}</strong></td>
+        <td><div style="font-size:11px;color:#888;">${o._id}</div><div>${new Date(o.createdAt).toLocaleString('en-IN')}</div></td>
+        <td><strong>${o.customerName}</strong><br><span style="font-size:11px;color:#666;">${o.customerMobile}</span><br><span style="font-size:11px;color:#666;white-space:normal;display:inline-block;max-width:200px;">${o.customerAddress}, ${o.customerCity} - ${o.customerPin}</span></td>
+        <td><div style="max-height:80px;overflow-y:auto;font-size:12px;">${o.items.map(i=>`${i.emoji} 1x ${i.name}`).join('<br>')}</div></td>
+        <td><strong>₹${o.totalAmount.toLocaleString()}</strong></td>
         <td>
-          <select style="padding:4px;font-size:12px;width:105px;border-radius:2px;background:#fff;border:1px solid #ddd;" onchange="updateOrderStatus('\${o._id}',this.value)">
-            <option value="Pending" \${o.status==='Pending'?'selected':''}>Pending</option>
-            <option value="Processing" \${o.status==='Processing'?'selected':''}>Processing</option>
-            <option value="Shipped" \${o.status==='Shipped'?'selected':''}>Shipped</option>
-            <option value="Delivered" \${o.status==='Delivered'?'selected':''}>Delivered</option>
-            <option value="Cancelled" \${o.status==='Cancelled'?'selected':''}>Cancelled</option>
+          <select style="padding:4px;font-size:12px;width:105px;border-radius:2px;background:#fff;border:1px solid #ddd;" onchange="updateOrderStatus('${o._id}',this.value)">
+            <option value="Pending" ${o.status==='Pending'?'selected':''}>Pending</option>
+            <option value="Processing" ${o.status==='Processing'?'selected':''}>Processing</option>
+            <option value="Shipped" ${o.status==='Shipped'?'selected':''}>Shipped</option>
+            <option value="Delivered" ${o.status==='Delivered'?'selected':''}>Delivered</option>
+            <option value="Cancelled" ${o.status==='Cancelled'?'selected':''}>Cancelled</option>
           </select>
         </td>
         <td>
-          <a href="https://wa.me/91\${o.customerMobile.replace(/\\D/g,'')}?text=Hi%20\${encodeURIComponent(o.customerName)},%20this%20is%20regarding%20your%20Navyra%20Jewellers%20order%20\${o._id}..." target="_blank" class="btn btn-outline btn-sm" style="color:#25d366;border-color:#25d366;text-decoration:none;">💬 WA</a>
+          <a href="https://wa.me/91${o.customerMobile.replace(/\D/g,'')}?text=Hi%20${encodeURIComponent(o.customerName)},%20this%20is%20regarding%20your%20Navyra%20Jewellers%20order%20${o._id}..." target="_blank" class="btn btn-outline btn-sm" style="color:#25d366;border-color:#25d366;text-decoration:none;">💬 WA</a>
         </td>
       </tr>`).join('');
   }catch(e){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:#e74c3c;padding:30px;">Error loading orders</td></tr>';}
