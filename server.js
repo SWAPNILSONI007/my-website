@@ -15,6 +15,7 @@ if(process.env.MONGODB_URI){
 
 // API Routes
 app.use('/api/products', require('./routes/products'));
+app.use('/api/orders', require('./routes/orders'));
 app.use('/api/contact', require('./routes/contact'));
 app.use('/api/admin', require('./routes/admin'));
 

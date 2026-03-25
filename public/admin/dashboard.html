@@ -93,7 +93,8 @@ textarea{resize:vertical;min-height:80px;}
     <div class="nav-section">Products</div>
     <button class="nav-item" onclick="showPanel('add-product')">+ Add Product</button>
     <button class="nav-item" onclick="showPanel('manage-products')">🛍 Manage Products</button>
-    <div class="nav-section">Sales</div>
+    <div class="nav-section">Sales & Orders</div>
+    <button class="nav-item" onclick="showPanel('orders')">📦 Orders</button>
     <button class="nav-item" onclick="showPanel('flash-sale')">⚡ Flash Sale</button>
     <div class="nav-section">Messages</div>
     <button class="nav-item" onclick="showPanel('messages')">✉ Contact Messages</button>
@@ -211,6 +212,19 @@ textarea{resize:vertical;min-height:80px;}
       </div>
     </div>
 
+    <!-- Orders -->
+    <div id="panel-orders" class="panel">
+      <div class="panel-title">Orders</div>
+      <div class="panel-subtitle">Manage customer orders and update delivery status.</div>
+      <div class="table-card" style="overflow-x: auto;">
+        <div class="table-header"><h3>Recent Orders</h3><button class="btn btn-outline btn-sm" onclick="loadOrders()">🔄 Refresh</button></div>
+        <table style="min-width: 800px;">
+          <thead><tr><th>ID / Date</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="orders-table"><tr><td colspan="6" style="text-align:center;color:#999;padding:30px;">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
     <!-- Messages -->
     <div id="panel-messages" class="panel">
       <div class="panel-title">Contact Messages</div>
@@ -306,6 +320,7 @@ function showPanel(name){
   if(name==='manage-products') loadProducts();
   if(name==='flash-sale') loadFlash();
   if(name==='messages') loadMessages();
+  if(name==='orders') loadOrders();
   if(name==='dashboard') loadStats();
 }
 
@@ -484,6 +499,42 @@ function showAlert(id){
   const el=document.getElementById(id);
   el.style.display='block';
   setTimeout(()=>el.style.display='none',3000);
+}
+
+// Orders
+async function loadOrders(){
+  const tbody=document.getElementById('orders-table');
+  try{
+    const orders=await fetch('/api/orders').then(r=>r.json());
+    if(!orders.length){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:#999;padding:30px;">No orders yet</td></tr>';return;}
+    tbody.innerHTML=orders.map(o=>`
+      <tr>
+        <td><div style="font-size:11px;color:#888;">\${o._id}</div><div>\${new Date(o.createdAt).toLocaleString('en-IN')}</div></td>
+        <td><strong>\${o.customerName}</strong><br><span style="font-size:11px;color:#666;">\${o.customerMobile}</span><br><span style="font-size:11px;color:#666;white-space:normal;display:inline-block;max-width:200px;">\${o.customerAddress}, \${o.customerCity} - \${o.customerPin}</span></td>
+        <td><div style="max-height:80px;overflow-y:auto;font-size:12px;">\${o.items.map(i=>\`\${i.emoji} 1x \${i.name}\`).join('<br>')}</div></td>
+        <td><strong>₹\${o.totalAmount.toLocaleString()}</strong></td>
+        <td>
+          <select style="padding:4px;font-size:12px;width:105px;border-radius:2px;background:#fff;border:1px solid #ddd;" onchange="updateOrderStatus('\${o._id}',this.value)">
+            <option value="Pending" \${o.status==='Pending'?'selected':''}>Pending</option>
+            <option value="Processing" \${o.status==='Processing'?'selected':''}>Processing</option>
+            <option value="Shipped" \${o.status==='Shipped'?'selected':''}>Shipped</option>
+            <option value="Delivered" \${o.status==='Delivered'?'selected':''}>Delivered</option>
+            <option value="Cancelled" \${o.status==='Cancelled'?'selected':''}>Cancelled</option>
+          </select>
+        </td>
+        <td>
+          <a href="https://wa.me/91\${o.customerMobile.replace(/\\D/g,'')}?text=Hi%20\${encodeURIComponent(o.customerName)},%20this%20is%20regarding%20your%20Navyra%20Jewellers%20order%20\${o._id}..." target="_blank" class="btn btn-outline btn-sm" style="color:#25d366;border-color:#25d366;text-decoration:none;">💬 WA</a>
+        </td>
+      </tr>`).join('');
+  }catch(e){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:#e74c3c;padding:30px;">Error loading orders</td></tr>';}
+}
+async function updateOrderStatus(id, status){
+  try{
+    const res = await fetch('/api/orders/'+id, {method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({status})});
+    const data = await res.json();
+    if(data.success) alert('Order status updated rapidly');
+    else alert('Error updating status');
+  }catch(e){alert('Network error');}
 }
 
 // Init
