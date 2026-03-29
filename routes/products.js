@@ -5,6 +5,8 @@ const Product = require('../models/Product');
 // Get all products
 router.get('/', async (req, res) => {
   try {
+    const mongoose = require('mongoose');
+    if (mongoose.connection.readyState !== 1) return res.json([]);
     const { category } = req.query;
     const filter = category ? { category } : {};
     const products = await Product.find(filter).sort({ createdAt: -1 });
@@ -17,6 +19,8 @@ router.get('/', async (req, res) => {
 // Get flash sale products
 router.get('/flash-sale', async (req, res) => {
   try {
+    const mongoose = require('mongoose');
+    if (mongoose.connection.readyState !== 1) return res.json([]);
     const products = await Product.find({ isFlashSale: true });
     res.json(products);
   } catch (err) {

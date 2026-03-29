@@ -382,6 +382,7 @@ async function loadProducts(){
   const tbody=document.getElementById('products-table');
   try{
     const products=await fetch('/api/products').then(r=>r.json());
+    if(products.error) throw new Error(products.error);
     if(!products.length){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:#999;padding:30px;">No products yet</td></tr>';return;}
     tbody.innerHTML=products.map(p=>`
       <tr>
@@ -397,7 +398,7 @@ async function loadProducts(){
           </div>
         </td>
       </tr>`).join('');
-  }catch(e){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:#e74c3c;padding:30px;">Error loading products</td></tr>';}
+  }catch(e){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:#e74c3c;padding:30px;">Server Error / Waiting for MongoDB</td></tr>';}
 }
 
 // Delete product
@@ -459,6 +460,7 @@ async function loadFlash(){
   const tbody=document.getElementById('flash-table');
   try{
     const products=await fetch('/api/products').then(r=>r.json());
+    if(products.error) throw new Error(products.error);
     const flash=products.filter(p=>p.isFlashSale);
     if(!flash.length){tbody.innerHTML='<tr><td colspan="5" style="text-align:center;color:#999;padding:30px;">No flash sale items</td></tr>';return;}
     tbody.innerHTML=flash.map(p=>`
@@ -469,7 +471,7 @@ async function loadFlash(){
         <td>${p.flashSaleDiscount||0}% OFF</td>
         <td><button class="btn btn-danger btn-sm" onclick="removeFlash('${p._id}',${JSON.stringify(p).replace(/"/g,"'")})">Remove from Sale</button></td>
       </tr>`).join('');
-  }catch(e){}
+  }catch(e){tbody.innerHTML='<tr><td colspan="5" style="text-align:center;color:#e74c3c;padding:30px;">Server Error / Waiting for MongoDB</td></tr>';}
 }
 
 async function removeFlash(id){
