@@ -98,10 +98,15 @@ nav.nav-hidden{transform:translateY(-100%);}
 .section-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:400;}
 .section-header{margin-bottom:3rem;}
 .categories-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:1rem;}
-.cat-card{background:var(--card);border:1px solid var(--border);padding:2rem 1rem 1.5rem;text-align:center;cursor:pointer;transition:all .3s;text-decoration:none;color:var(--text);display:block;}
+.cat-card{background:var(--card);border:1px solid var(--border);overflow:hidden;text-align:center;cursor:pointer;transition:all .3s;text-decoration:none;color:var(--text);display:block;padding:0;}
 .cat-card:hover{border-color:var(--silver);transform:translateY(-4px);box-shadow:0 12px 40px var(--shadow);}
+.cat-card:hover .cat-img{transform:scale(1.06);}
+.cat-img-wrap{height:120px;overflow:hidden;background:var(--bg2);display:flex;align-items:center;justify-content:center;}
+.cat-img{width:100%;height:100%;object-fit:cover;transition:transform .4s cubic-bezier(.4,0,.2,1);}
+.cat-img-fallback{font-size:2rem;}
+.cat-body{padding:.9rem 1rem .9rem;}
 .cat-icon{font-size:2rem;margin-bottom:.75rem;display:block;}
-.cat-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:400;}
+.cat-name{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:400;}
 .cat-count{font-size:.7rem;color:var(--text2);margin-top:.25rem;letter-spacing:.08em;}
 
 /* FEATURED PRODUCTS */
@@ -492,14 +497,14 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
     <h2 class="section-title">Shop Our Collections</h2>
   </div>
   <div class="categories-grid">
-    <a href="/shop?cat=pendant" class="cat-card"><span class="cat-icon">🔮</span><span class="cat-name">Pendant</span></a>
-    <a href="/shop?cat=ear-jewellery" class="cat-card"><span class="cat-icon">✨</span><span class="cat-name">Ear Jewellery</span></a>
-    <a href="/shop?cat=rings" class="cat-card"><span class="cat-icon">💍</span><span class="cat-name">Rings</span></a>
-    <a href="/shop?cat=anklets" class="cat-card"><span class="cat-icon">🌿</span><span class="cat-name">Anklets</span></a>
-    <a href="/shop?cat=bracelets" class="cat-card"><span class="cat-icon">🪬</span><span class="cat-name">Bracelets</span></a>
-    <a href="/shop?cat=necklaces" class="cat-card"><span class="cat-icon">📿</span><span class="cat-name">Necklaces</span></a>
-    <a href="/shop?cat=hair-accessories" class="cat-card"><span class="cat-icon">🌸</span><span class="cat-name">Hair Accessories</span></a>
-    <a href="#" class="cat-card" style="opacity:.5;pointer-events:none"><span class="cat-icon">👑</span><span class="cat-name">Gold</span><span class="cat-count">Coming Soon</span></a>
+    <a href="/shop?cat=pendant" class="cat-card"><div class="cat-img-wrap"><img class="cat-img" src="/images/pendant.png" alt="Pendant" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span class="cat-img-fallback" style="display:none">🔮</span></div><div class="cat-body"><span class="cat-name">Pendant</span></div></a>
+    <a href="/shop?cat=ear-jewellery" class="cat-card"><div class="cat-img-wrap"><img class="cat-img" src="/images/ear-jewellery.png" alt="Ear Jewellery" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span class="cat-img-fallback" style="display:none">✨</span></div><div class="cat-body"><span class="cat-name">Ear Jewellery</span></div></a>
+    <a href="/shop?cat=rings" class="cat-card"><div class="cat-img-wrap"><img class="cat-img" src="/images/rings.png" alt="Rings" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span class="cat-img-fallback" style="display:none">💍</span></div><div class="cat-body"><span class="cat-name">Rings</span></div></a>
+    <a href="/shop?cat=anklets" class="cat-card"><div class="cat-img-wrap"><img class="cat-img" src="/images/anklets.png" alt="Anklets" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span class="cat-img-fallback" style="display:none">🌿</span></div><div class="cat-body"><span class="cat-name">Anklets</span></div></a>
+    <a href="/shop?cat=bracelets" class="cat-card"><div class="cat-img-wrap"><img class="cat-img" src="/images/bracelets.png" alt="Bracelets" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span class="cat-img-fallback" style="display:none">🪬</span></div><div class="cat-body"><span class="cat-name">Bracelets</span></div></a>
+    <a href="/shop?cat=necklaces" class="cat-card"><div class="cat-img-wrap"><img class="cat-img" src="/images/necklaces.png" alt="Necklaces" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span class="cat-img-fallback" style="display:none">📿</span></div><div class="cat-body"><span class="cat-name">Necklaces</span></div></a>
+    <a href="/shop?cat=hair-accessories" class="cat-card"><div class="cat-img-wrap"><img class="cat-img" src="/images/hair-accessories.png" alt="Hair Accessories" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span class="cat-img-fallback" style="display:none">🌸</span></div><div class="cat-body"><span class="cat-name">Hair Accessories</span></div></a>
+    <a href="#" class="cat-card" style="opacity:.5;pointer-events:none"><div class="cat-img-wrap"><span class="cat-img-fallback" style="display:block">👑</span></div><div class="cat-body"><span class="cat-name">Gold</span><span class="cat-count">Coming Soon</span></div></a>
   </div>
 </section>
 
@@ -752,14 +757,14 @@ async function loadProducts(){
   }catch(e){
     // Fallback demo products
     allProducts=[
-      {_id:'1',name:'Moon Pendant',category:'pendant',price:1299,originalPrice:1800,emoji:'🔮',badge:'New',inStock:true},
-      {_id:'2',name:'Jhumka Earrings',category:'ear-jewellery',price:899,emoji:'✨',badge:'Bestseller',inStock:true},
-      {_id:'3',name:'Twisted Band Ring',category:'rings',price:699,originalPrice:999,emoji:'💍',badge:'Sale',inStock:true},
-      {_id:'4',name:'Silver Anklet Chain',category:'anklets',price:599,emoji:'🌿',inStock:true},
-      {_id:'5',name:'Charm Bracelet',category:'bracelets',price:1099,emoji:'🪬',badge:'New',inStock:true},
-      {_id:'6',name:'Silver Choker',category:'necklaces',price:1499,originalPrice:1999,emoji:'📿',badge:'Sale',inStock:true},
-      {_id:'7',name:'Floral Hair Pin',category:'hair-accessories',price:399,emoji:'🌸',inStock:true},
-      {_id:'8',name:'Lotus Pendant',category:'pendant',price:999,emoji:'🔮',badge:'Featured',inStock:true},
+      {_id:'1',name:'Moon Pendant',category:'pendant',price:1299,originalPrice:1800,emoji:'🔮',badge:'New',inStock:true,image:'/images/pendant.png'},
+      {_id:'2',name:'Jhumka Earrings',category:'ear-jewellery',price:899,emoji:'✨',badge:'Bestseller',inStock:true,image:'/images/ear-jewellery.png'},
+      {_id:'3',name:'Twisted Band Ring',category:'rings',price:699,originalPrice:999,emoji:'💍',badge:'Sale',inStock:true,image:'/images/rings.png'},
+      {_id:'4',name:'Silver Anklet Chain',category:'anklets',price:599,emoji:'🌿',inStock:true,image:'/images/anklets.png'},
+      {_id:'5',name:'Charm Bracelet',category:'bracelets',price:1099,emoji:'🪬',badge:'New',inStock:true,image:'/images/bracelets.png'},
+      {_id:'6',name:'Silver Choker',category:'necklaces',price:1499,originalPrice:1999,emoji:'📿',badge:'Sale',inStock:true,image:'/images/necklaces.png'},
+      {_id:'7',name:'Floral Hair Pin',category:'hair-accessories',price:399,emoji:'🌸',inStock:true,image:'/images/hair-accessories.png'},
+      {_id:'8',name:'Lotus Pendant',category:'pendant',price:999,emoji:'🔮',badge:'Featured',inStock:true,image:'/images/pendant.png'},
     ];
   }
   renderProducts(currentFilter);
@@ -929,5 +934,7 @@ async function submitOrder(){
   }
 }
 </script>
+<!-- Navyra AI Chatbot -->
+<script src="/chatbot.js"></script>
 </body>
 </html>
