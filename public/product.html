@@ -261,6 +261,16 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
 </div>
 
 
+<section class="product-section">
+  <p class="breadcrumb"><a href="/">Home</a> / <a href="/shop">Shop</a> / <span id="breadProduct">Product</span></p>
+  <div class="product-layout">
+    <div class="product-visual">
+      <div class="main-img" id="mainImg">💎</div>
+      <div class="thumb-row">
+        <div class="thumb active" id="thumb1">💎</div>
+        <div class="thumb">✨</div>
+        <div class="thumb">🔮</div>
+      </div>
     </div>
     <div class="product-info" id="productInfo">
       <p style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--text2)">Loading product...</p>
@@ -515,6 +525,7 @@ async function submitOrder(){
     btn.textContent = 'Place Order (Cash on Delivery)'; btn.disabled = false;
   }
 }
+</script>
 <!-- Navyra AI Chatbot -->
 <script src="/chatbot.js"></script>
 </body>

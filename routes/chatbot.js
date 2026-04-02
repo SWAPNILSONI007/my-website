@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const Groq = require('groq-sdk');
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 // System prompt with full Navyra Jewellers context
 const SYSTEM_PROMPT = `You are Navyra, the friendly and knowledgeable AI assistant for Navyra Jewellers — a premium silver jewellery brand based in Lucknow, India.
@@ -57,31 +57,37 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'Message is required' });
     }
 
-    if (!process.env.GEMINI_API_KEY) {
-      return res.status(500).json({ 
+    if (!process.env.GROQ_API_KEY) {
+      return res.status(200).json({
         reply: "I'm currently unavailable. Please contact us on WhatsApp at +91 8004703038 for assistance! 💬"
       });
     }
 
-    const model = genAI.getGenerativeModel({ 
-      model: 'gemini-2.0-flash',
-      systemInstruction: SYSTEM_PROMPT
+    // Build messages array: system prompt + chat history + new message
+    const messages = [
+      { role: 'system', content: SYSTEM_PROMPT },
+      ...(history || []).map(msg => ({
+        role: msg.role === 'user' ? 'user' : 'assistant',
+        content: msg.text
+      })),
+      { role: 'user', content: message.trim() }
+    ];
+
+    const completion = await groq.chat.completions.create({
+      model: 'llama-3.1-8b-instant',
+      messages,
+      max_tokens: 300,
+      temperature: 0.7
     });
 
-    // Build chat history for context
-    const chatHistory = (history || []).map(msg => ({
-      role: msg.role === 'user' ? 'user' : 'model',
-      parts: [{ text: msg.text }]
-    }));
+    const reply = completion.choices[0]?.message?.content || "I'm sorry, I didn't catch that. Could you try again? ✨";
 
-    const chat = model.startChat({ history: chatHistory });
-    const result = await chat.sendMessage(message.trim());
-    const reply = result.response.text();
-
+    console.log(`✅ Groq chatbot replied successfully`);
     res.json({ reply });
+
   } catch (err) {
     console.error('Chatbot error:', err.message);
-    res.status(500).json({ 
+    res.status(200).json({
       reply: "I'm having a little trouble right now. Please try again or reach us on WhatsApp at +91 8004703038 ✨"
     });
   }
