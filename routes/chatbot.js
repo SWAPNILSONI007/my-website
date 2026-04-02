@@ -2,7 +2,15 @@ const express = require('express');
 const router = express.Router();
 const Groq = require('groq-sdk');
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+// Lazy init — won't crash server startup if key is missing
+let _groq = null;
+function getGroq() {
+  if (!_groq) {
+    if (!process.env.GROQ_API_KEY) return null;
+    _groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+  }
+  return _groq;
+}
 
 // System prompt with full Navyra Jewellers context
 const SYSTEM_PROMPT = `You are Navyra, the friendly and knowledgeable AI assistant for Navyra Jewellers — a premium silver jewellery brand based in Lucknow, India.
@@ -73,7 +81,7 @@ router.post('/', async (req, res) => {
       { role: 'user', content: message.trim() }
     ];
 
-    const completion = await groq.chat.completions.create({
+    const completion = await getGroq().chat.completions.create({
       model: 'llama-3.1-8b-instant',
       messages,
       max_tokens: 300,
