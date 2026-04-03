@@ -177,22 +177,24 @@
   }
 
   .nch-bubble-avatar {
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     background: rgba(201,168,76,0.1);
     border: 1px solid rgba(201,168,76,0.25);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     flex-shrink: 0;
     margin-bottom: 2px;
   }
   .nch-bubble-wrap.user .nch-bubble-avatar {
+    width: 22px;
+    height: 22px;
     background: var(--text, #1c1814);
     border-color: transparent;
-    font-size: 0.7rem;
+    font-size: 0.6rem;
     color: var(--bg, #faf8f5);
   }
 
@@ -214,6 +216,8 @@
     background: linear-gradient(135deg, #1c1814, #2a2218);
     color: #f0ebe3;
     border-bottom-right-radius: 4px;
+    font-size: 0.8rem;
+    padding: 8px 12px;
   }
   [data-theme="dark"] .nch-bubble-wrap.bot .nch-bubble {
     background: #1a1816;
@@ -242,12 +246,12 @@
     30% { transform: translateY(-5px); opacity: 1; }
   }
 
-  /* Quick replies */
+  /* Quick replies — rendered inside the message scroll area */
   .nch-quick-replies {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    padding: 0 14px 10px;
+    padding: 4px 0 2px;
   }
   .nch-qr {
     background: none;
@@ -332,6 +336,120 @@
     letter-spacing: 0.05em;
   }
 
+  /* ── Product Suggestion Cards ────────────────── */
+  .nch-suggestions-label {
+    padding: 4px 0 2px;
+    font-size: 0.68rem;
+    color: var(--text2, #6b5f52);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+  .nch-suggestions {
+    display: flex;
+    gap: 8px;
+    padding: 4px 0 2px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .nch-suggestions::-webkit-scrollbar { display: none; }
+  .nch-suggestion-card {
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    width: 130px;
+    background: var(--bg2, #f5f0e8);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 12px;
+    padding: 10px 10px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    animation: nch-fadeIn 0.35s ease;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .nch-suggestion-card:hover {
+    border-color: rgba(201,168,76,0.6);
+    box-shadow: 0 4px 16px rgba(201,168,76,0.12);
+  }
+  [data-theme="dark"] .nch-suggestion-card {
+    background: #1a1816;
+    border-color: rgba(201,168,76,0.2);
+  }
+  .nch-scard-emoji { font-size: 1.4rem; line-height: 1; margin-bottom: 2px; }
+  .nch-scard-name {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text, #1c1814);
+    line-height: 1.3;
+  }
+  [data-theme="dark"] .nch-scard-name { color: #f0ebe3; }
+  .nch-scard-price { font-size: 0.8rem; font-weight: 700; color: #c9a84c; }
+  .nch-scard-orig {
+    font-size: 0.65rem;
+    color: var(--text2, #9e8e7e);
+    text-decoration: line-through;
+  }
+  .nch-scard-btn {
+    margin-top: 5px;
+    background: linear-gradient(135deg, #c9a84c, #b8963e);
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 5px 0;
+    font-size: 0.7rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    letter-spacing: 0.04em;
+    transition: opacity 0.2s;
+    text-decoration: none;
+    display: block;
+  }
+  .nch-scard-btn:hover { opacity: 0.82; }
+
+  /* Primary card — the exact product the customer asked about */
+  .nch-primary-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 2px 0 0;
+    padding: 10px 12px;
+    background: var(--bg2, #f5f0e8);
+    border: 1.5px solid rgba(201,168,76,0.45);
+    border-left: 3px solid #c9a84c;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.22s;
+    animation: nch-fadeIn 0.35s ease;
+    cursor: pointer;
+  }
+  .nch-primary-card:hover {
+    border-color: #c9a84c;
+    box-shadow: 0 4px 18px rgba(201,168,76,0.18);
+    transform: translateY(-1px);
+  }
+  [data-theme="dark"] .nch-primary-card {
+    background: #1a1816;
+    border-color: rgba(201,168,76,0.4);
+    border-left-color: #c9a84c;
+  }
+  .nch-primary-emoji { font-size: 1.6rem; flex-shrink: 0; }
+  .nch-primary-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .nch-primary-arrow {
+    font-size: 1rem;
+    color: #c9a84c;
+    font-weight: 700;
+    flex-shrink: 0;
+    transition: transform 0.2s;
+  }
+  .nch-primary-card:hover .nch-primary-arrow { transform: translateX(3px); }
+
   @media (max-width: 420px) {
     #navyra-chat-window { right: 12px; bottom: 156px; width: calc(100vw - 24px); }
     #navyra-chat-btn { right: 12px; bottom: 90px; }
@@ -371,7 +489,6 @@
       <button class="nch-close-btn" onclick="navyraCloseChat()" aria-label="Close chat">✕</button>
     </div>
     <div class="nch-messages" id="navyraMsgs"></div>
-    <div class="nch-quick-replies" id="navyraQR"></div>
     <div class="nch-input-area">
       <textarea id="navyra-chat-input" placeholder="Ask me anything about jewellery..." rows="1" aria-label="Type your message"></textarea>
       <button class="nch-send-btn" id="navyraSendBtn" onclick="navyraSend()" aria-label="Send message">
@@ -394,7 +511,16 @@
   const input = document.getElementById('navyra-chat-input');
   const sendBtn = document.getElementById('navyraSendBtn');
   const dot = document.getElementById('navyraDot');
-  const qrContainer = document.getElementById('navyraQR');
+
+  // Suggestion slot + quick-replies live inside the scrollable messages div
+  const suggestSlot = document.createElement('div');
+  suggestSlot.id = 'navyraSuggestSlot';
+  msgs.appendChild(suggestSlot);
+
+  const qrContainer = document.createElement('div');
+  qrContainer.id = 'navyraQR';
+  qrContainer.className = 'nch-quick-replies';
+  msgs.appendChild(qrContainer);
 
   // ─── Init ────────────────────────────────────────────────────────────────────
   function navyraInit() {
@@ -450,6 +576,9 @@
   function navyraShowWelcome() {
     const greeting = getGreeting();
     navyraAddBotMessage(`${greeting} I'm Navyra, your personal jewellery advisor! ✨\n\nI can help you explore our sterling silver collections, check prices, delivery info, and more. What can I help you with today?`);
+    // Move suggest slot & QR to end of messages after the welcome bubble
+    msgs.appendChild(suggestSlot);
+    msgs.appendChild(qrContainer);
     renderQuickReplies();
   }
 
@@ -469,6 +598,10 @@
 
   window.navyraQuickReply = function (text) {
     qrContainer.innerHTML = '';
+    suggestSlot.innerHTML = '';
+    // move containers back to end so they stay below messages
+    msgs.appendChild(suggestSlot);
+    msgs.appendChild(qrContainer);
     navyraSendMessage(text);
   };
 
@@ -479,16 +612,26 @@
     input.value = '';
     input.style.height = 'auto';
     qrContainer.innerHTML = '';
+    suggestSlot.innerHTML = '';
+    // keep containers at the bottom of the scroll area
+    msgs.appendChild(suggestSlot);
+    msgs.appendChild(qrContainer);
     navyraSendMessage(text);
   };
 
   async function navyraSendMessage(text) {
     navyraAddUserMessage(text);
     chatHistory.push({ role: 'user', text });
+    // keep suggest/QR containers pinned to end
+    msgs.appendChild(suggestSlot);
+    msgs.appendChild(qrContainer);
 
     isTyping = true;
     sendBtn.disabled = true;
     const typingId = navyraShowTyping();
+    // keep suggest/QR containers pinned to end
+    msgs.appendChild(suggestSlot);
+    msgs.appendChild(qrContainer);
 
     try {
       const res = await fetch('/api/chatbot', {
@@ -502,14 +645,81 @@
       navyraRemoveTyping(typingId);
       navyraAddBotMessage(reply);
       chatHistory.push({ role: 'model', text: reply });
+      // keep suggest/QR containers pinned to end
+      msgs.appendChild(suggestSlot);
+      msgs.appendChild(qrContainer);
+
+      // Show the asked-about product + complementary suggestions
+      if (data.product || (data.suggestions && data.suggestions.length > 0)) {
+        setTimeout(() => renderSuggestions(data.product, data.suggestions || []), 300);
+      }
     } catch (err) {
       navyraRemoveTyping(typingId);
       navyraAddBotMessage("I'm having trouble connecting right now. Please reach us on WhatsApp at +91 8004703038 for immediate help! 💬");
+      msgs.appendChild(suggestSlot);
+      msgs.appendChild(qrContainer);
     }
 
     isTyping = false;
     sendBtn.disabled = false;
     input.focus();
+  }
+
+  // ── Product Cards (asked-about + complementary suggestions) ───────────────
+  function renderSuggestions(product, suggestions) {
+    suggestSlot.innerHTML = '';
+
+    // ── 1. Primary card: the product the customer asked about ────────────────
+    if (product) {
+      const primaryLabel = document.createElement('div');
+      primaryLabel.className = 'nch-suggestions-label';
+      primaryLabel.textContent = '💍 Here’s what you’re looking for';
+      suggestSlot.appendChild(primaryLabel);
+
+      const primaryCard = document.createElement('a');
+      primaryCard.className = 'nch-primary-card';
+      primaryCard.href = product.link;
+      primaryCard.target = '_blank';
+      primaryCard.innerHTML = `
+        <span class="nch-primary-emoji">${product.emoji}</span>
+        <span class="nch-primary-info">
+          <span class="nch-scard-name">${escapeHtml(product.name)}</span>
+          <span class="nch-scard-price">${product.price}${product.originalPrice
+            ? ` <span class="nch-scard-orig">${product.originalPrice}</span>` : ''}</span>
+        </span>
+        <span class="nch-primary-arrow">→</span>
+      `;
+      suggestSlot.appendChild(primaryCard);
+    }
+
+    // ── 2. Complementary suggestions row ────────────────────────────────
+    if (suggestions && suggestions.length > 0) {
+      const label = document.createElement('div');
+      label.className = 'nch-suggestions-label';
+      label.style.marginTop = product ? '6px' : '0';
+      label.textContent = '✨ You might also love';
+      suggestSlot.appendChild(label);
+
+      const row = document.createElement('div');
+      row.className = 'nch-suggestions';
+
+      suggestions.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'nch-suggestion-card';
+        card.innerHTML = `
+          <div class="nch-scard-emoji">${p.emoji}</div>
+          <div class="nch-scard-name">${escapeHtml(p.name)}</div>
+          <div class="nch-scard-price">${p.price}${p.originalPrice
+            ? ` <span class="nch-scard-orig">${p.originalPrice}</span>` : ''}</div>
+          <a class="nch-scard-btn" href="${p.link}" target="_blank">View →</a>
+        `;
+        row.appendChild(card);
+      });
+
+      suggestSlot.appendChild(row);
+    }
+
+    scrollToBottom();
   }
 
   function navyraAddUserMessage(text) {

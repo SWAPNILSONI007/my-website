@@ -12,6 +12,48 @@ function getGroq() {
   return _groq;
 }
 
+// ─── Product Catalog (used for recommendations) ───────────────────────────────
+const PRODUCTS = [
+  { id: 'ring',      name: 'Twisted Band Ring',   price: '₹699',   originalPrice: '₹999',  emoji: '💍', category: 'rings',      tags: ['ring', 'band', 'twisted', 'finger'],           link: '/shop.html' },
+  { id: 'anklet',   name: 'Silver Anklet Chain',  price: '₹599',   originalPrice: null,     emoji: '✨', category: 'anklets',    tags: ['anklet', 'chain', 'foot', 'payal'],            link: '/shop.html' },
+  { id: 'bracelet', name: 'Charm Bracelet',        price: '₹1,099', originalPrice: null,     emoji: '📿', category: 'bracelets',  tags: ['bracelet', 'charm', 'wrist', 'hand'],          link: '/shop.html' },
+  { id: 'earring',  name: 'Jhumka Earrings',       price: '₹899',   originalPrice: null,     emoji: '💎', category: 'earrings',   tags: ['earring', 'jhumka', 'ear', 'jhoomka'],         link: '/shop.html' },
+  { id: 'choker',   name: 'Silver Choker',         price: '₹1,499', originalPrice: '₹1,999', emoji: '💫', category: 'necklaces',  tags: ['choker', 'necklace', 'neck', 'collar'],        link: '/shop.html' },
+  { id: 'moonpend', name: 'Moon Pendant',           price: '₹1,299', originalPrice: null,     emoji: '🌙', category: 'pendants',   tags: ['pendant', 'moon', 'necklace', 'locket'],       link: '/shop.html' },
+  { id: 'lotus',    name: 'Lotus Pendant',          price: '₹999',   originalPrice: null,     emoji: '🪷', category: 'pendants',   tags: ['pendant', 'lotus', 'flower', 'necklace'],      link: '/shop.html' },
+  { id: 'hairpin',  name: 'Floral Hair Pin',        price: '₹399',   originalPrice: null,     emoji: '🌸', category: 'hair',       tags: ['hair', 'pin', 'floral', 'clip', 'accessory'],  link: '/shop.html' },
+];
+
+// Complementary product map: if customer bought/asked about X, suggest Y
+const COMPLEMENTS = {
+  ring:      ['bracelet', 'earring', 'anklet'],
+  anklet:    ['ring', 'bracelet', 'earring'],
+  bracelet:  ['ring', 'earring', 'anklet'],
+  earring:   ['choker', 'moonpend', 'lotus'],
+  choker:    ['earring', 'moonpend', 'lotus'],
+  moonpend:  ['earring', 'choker', 'lotus'],
+  lotus:     ['earring', 'choker', 'moonpend'],
+  hairpin:   ['earring', 'lotus', 'moonpend'],
+};
+
+// Detect which product the message/history is about
+function detectProduct(text) {
+  const lower = text.toLowerCase();
+  for (const p of PRODUCTS) {
+    if (p.tags.some(t => lower.includes(t))) return p;
+  }
+  return null;
+}
+
+// Get recommendation cards for a detected product
+function getRecommendations(productId, count = 2) {
+  const complementIds = COMPLEMENTS[productId] || [];
+  return complementIds
+    .slice(0, count)
+    .map(id => PRODUCTS.find(p => p.id === id))
+    .filter(Boolean);
+}
+
 // System prompt with full Navyra Jewellers context
 const SYSTEM_PROMPT = `You are Navyra, the friendly and knowledgeable AI assistant for Navyra Jewellers — a premium silver jewellery brand based in Lucknow, India.
 
@@ -51,6 +93,7 @@ YOUR PERSONALITY:
 - Speak in a friendly, conversational tone
 - Keep responses concise (2–4 sentences) unless asked for details
 - Always help customers find the right piece or answer their questions
+- When a customer orders or asks about a specific piece, briefly mention that it pairs beautifully with other items, but keep it natural and not pushy
 - If asked about something you don't know, suggest contacting via WhatsApp
 - Use ✨ and 💍 sparingly for warmth
 - Respond in the same language the customer uses (Hindi or English)
@@ -67,7 +110,8 @@ router.post('/', async (req, res) => {
 
     if (!process.env.GROQ_API_KEY) {
       return res.status(200).json({
-        reply: "I'm currently unavailable. Please contact us on WhatsApp at +91 8004703038 for assistance! 💬"
+        reply: "I'm currently unavailable. Please contact us on WhatsApp at +91 8004703038 for assistance! 💬",
+        suggestions: []
       });
     }
 
@@ -90,13 +134,28 @@ router.post('/', async (req, res) => {
 
     const reply = completion.choices[0]?.message?.content || "I'm sorry, I didn't catch that. Could you try again? ✨";
 
-    console.log(`✅ Groq chatbot replied successfully`);
-    res.json({ reply });
+    // ── Product Recommendation Logic ──────────────────────────────────────────
+    // Prioritise the user's own message first, then check the reply/history
+    const userContext = message;
+    const fullContext = [
+      message,
+      reply,
+      ...(history || []).slice(-4).map(h => h.text)
+    ].join(' ');
+
+    // Try to detect the product the user specifically asked about
+    const askedProduct   = detectProduct(userContext) || detectProduct(fullContext);
+    const suggestions    = askedProduct ? getRecommendations(askedProduct.id, 2) : [];
+
+    console.log(`✅ Groq chatbot replied | product: ${askedProduct?.name || 'none'} | suggestions: ${suggestions.length}`);
+    // Return the asked-about product separately so the frontend shows it as the main card
+    res.json({ reply, product: askedProduct || null, suggestions });
 
   } catch (err) {
     console.error('Chatbot error:', err.message);
     res.status(200).json({
-      reply: "I'm having a little trouble right now. Please try again or reach us on WhatsApp at +91 8004703038 ✨"
+      reply: "I'm having a little trouble right now. Please try again or reach us on WhatsApp at +91 8004703038 ✨",
+      suggestions: []
     });
   }
 });
