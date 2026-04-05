@@ -9,9 +9,13 @@ let memoryOrders = [];
 // Create order
 router.post('/', async (req, res) => {
   try {
-    const { customerName, customerMobile, customerAddress, customerCity, customerPin, items, totalAmount, paymentMethod, paymentId, paymentStatus } = req.body;
+    const { customerName, customerEmail, customerMobile, customerAddress, customerLandmark, customerCity, customerState, customerPin, items, totalAmount, paymentMethod, paymentId, razorpayOrderId, paymentStatus } = req.body;
     if (!customerName || !customerMobile || !customerAddress || !items || items.length === 0) {
       return res.status(400).json({ success: false, message: 'Missing required fields' });
+    }
+    // Basic email validation (if provided)
+    if (customerEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) {
+      return res.status(400).json({ success: false, message: 'Invalid email format' });
     }
     
     // Fallback if DB disconnected
@@ -19,9 +23,10 @@ router.post('/', async (req, res) => {
       console.log('MongoDB disconnected, using in-memory fallback for order.');
       const newOrder = { 
         _id: 'ORD-' + Math.floor(Math.random() * 90000 + 10000), 
-        customerName, customerMobile, customerAddress, customerCity, customerPin, items, totalAmount,
+        customerName, customerEmail: customerEmail || '', customerMobile, customerAddress, customerLandmark: customerLandmark || '', customerCity, customerState: customerState || '', customerPin, items, totalAmount,
         paymentMethod: paymentMethod || 'COD',
         paymentId: paymentId || '',
+        razorpayOrderId: razorpayOrderId || '',
         paymentStatus: paymentStatus || 'Pending',
         status: 'Pending', createdAt: new Date() 
       };
@@ -29,7 +34,10 @@ router.post('/', async (req, res) => {
       return res.json({ success: true, orderId: newOrder._id });
     }
 
-    const order = new Order({ customerName, customerMobile, customerAddress, customerCity, customerPin, items, totalAmount, paymentMethod: paymentMethod || 'COD', paymentId: paymentId || '', paymentStatus: paymentStatus || 'Pending' });
+    const order = new Order({
+      customerName, customerEmail: customerEmail || '', customerMobile, customerAddress, customerLandmark: customerLandmark || '', customerCity, customerState: customerState || '', customerPin, items, totalAmount,
+      paymentMethod: paymentMethod || 'COD', paymentId: paymentId || '', razorpayOrderId: razorpayOrderId || '', paymentStatus: paymentStatus || 'Pending'
+    });
     await order.save();
     res.json({ success: true, orderId: order._id });
   } catch (err) {

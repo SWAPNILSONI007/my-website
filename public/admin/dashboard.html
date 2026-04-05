@@ -125,14 +125,16 @@ textarea{resize:vertical;min-height:80px;}
 
   <div class="content">
 
-    <!-- Dashboard -->
     <div id="panel-dashboard" class="panel active">
       <div class="panel-title">Dashboard</div>
       <div class="panel-subtitle">Welcome back!</div>
-      <div class="stats-grid">
+      <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);">
         <div class="stat-card"><div class="stat-label">Total Products</div><div class="stat-value" id="stat-products">—</div></div>
         <div class="stat-card"><div class="stat-label">Flash Sale Items</div><div class="stat-value" id="stat-flash">—</div></div>
         <div class="stat-card"><div class="stat-label">Messages</div><div class="stat-value" id="stat-messages">—</div></div>
+        <div class="stat-card" style="border-left:3px solid #27ae60;"><div class="stat-label">💰 Total Revenue</div><div class="stat-value" id="stat-revenue">—</div></div>
+        <div class="stat-card" style="border-left:3px solid #5b21b6;"><div class="stat-label">💳 Online Payments</div><div class="stat-value" id="stat-online">—</div></div>
+        <div class="stat-card" style="border-left:3px solid #856404;"><div class="stat-label">🏠 COD Orders</div><div class="stat-value" id="stat-cod">—</div></div>
       </div>
     </div>
 
@@ -232,6 +234,13 @@ textarea{resize:vertical;min-height:80px;}
         <div class="table-header">
           <h3>Recent Orders</h3>
           <div style="display:flex;gap:8px;align-items:center;">
+            <select id="pay-filter" onchange="loadOrders()" style="padding:5px 8px;font-size:12px;border:1px solid #ddd;border-radius:2px;background:#fff;">
+              <option value="all">All Payments</option>
+              <option value="Razorpay">💳 Online Only</option>
+              <option value="COD">🏠 COD Only</option>
+              <option value="Paid">✅ Paid Only</option>
+              <option value="Pending">⏳ Unpaid Only</option>
+            </select>
             <select id="order-filter" onchange="loadOrders()" style="padding:5px 8px;font-size:12px;border:1px solid #ddd;border-radius:2px;background:#fff;">
               <option value="all">All Orders</option>
               <option value="Pending">Pending</option>
@@ -242,8 +251,8 @@ textarea{resize:vertical;min-height:80px;}
             <button class="btn btn-outline btn-sm" onclick="loadOrders()">🔄 Refresh</button>
           </div>
         </div>
-        <table style="min-width: 900px;">
-          <thead><tr><th>Order</th><th>Customer & Address</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th><th>Action</th></tr></thead>
+        <table style="min-width: 1000px;">
+          <thead><tr><th>Order</th><th>Customer & Contact</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th><th>Action</th></tr></thead>
           <tbody id="orders-table"><tr><td colspan="7" style="text-align:center;color:#999;padding:30px;">Loading...</td></tr></tbody>
         </table>
       </div>
@@ -362,13 +371,22 @@ document.getElementById('p-flash').addEventListener('change',function(){
 // Stats
 async function loadStats(){
   try{
-    const [pr,ms] = await Promise.all([
+    const [pr,ms,orders] = await Promise.all([
       fetch('/api/products').then(r=>r.json()),
-      fetch('/api/contact').then(r=>r.json())
+      fetch('/api/contact').then(r=>r.json()),
+      fetch('/api/orders').then(r=>r.json()).catch(()=>[])
     ]);
     document.getElementById('stat-products').textContent = pr.length||0;
     document.getElementById('stat-flash').textContent = pr.filter(p=>p.isFlashSale).length||0;
     document.getElementById('stat-messages').textContent = ms.length||0;
+    // Revenue stats
+    const allOrders = Array.isArray(orders) ? orders : [];
+    const totalRevenue = allOrders.reduce((s,o)=>s+(o.totalAmount||0),0);
+    const onlineOrders = allOrders.filter(o=>o.paymentMethod==='Razorpay');
+    const codOrders = allOrders.filter(o=>o.paymentMethod!=='Razorpay');
+    document.getElementById('stat-revenue').textContent = '₹'+totalRevenue.toLocaleString();
+    document.getElementById('stat-online').textContent = onlineOrders.length;
+    document.getElementById('stat-cod').textContent = codOrders.length;
   }catch(e){}
 }
 
@@ -531,10 +549,16 @@ function showAlert(id){
 async function loadOrders(){
   const tbody=document.getElementById('orders-table');
   const filterVal = document.getElementById('order-filter')?.value || 'all';
+  const payFilter = document.getElementById('pay-filter')?.value || 'all';
   tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:#999;padding:20px;">Loading...</td></tr>';
   try{
     const orders=await fetch('/api/orders').then(r=>r.json());
-    const filtered = filterVal === 'all' ? orders : orders.filter(o=>o.status === filterVal);
+    let filtered = filterVal === 'all' ? orders : orders.filter(o=>o.status === filterVal);
+    // Payment filter
+    if(payFilter === 'Razorpay') filtered = filtered.filter(o=>o.paymentMethod==='Razorpay');
+    else if(payFilter === 'COD') filtered = filtered.filter(o=>o.paymentMethod!=='Razorpay');
+    else if(payFilter === 'Paid') filtered = filtered.filter(o=>o.paymentStatus==='Paid');
+    else if(payFilter === 'Pending') filtered = filtered.filter(o=>o.paymentStatus!=='Paid');
     if(!filtered.length){
       tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;color:#999;padding:30px;">No ${filterVal === 'all' ? '' : filterVal + ' '}orders yet</td></tr>`;
       return;
@@ -558,8 +582,9 @@ async function loadOrders(){
         </td>
         <td>
           <div style="font-weight:600;font-size:14px;">${o.customerName}</div>
+          ${o.customerEmail ? `<div style="font-size:11px;color:#5b21b6;margin-top:2px;">✉ ${o.customerEmail}</div>` : ''}
           <div style="font-size:12px;color:#555;margin-top:2px;">📞 ${o.customerMobile}</div>
-          <div style="font-size:11px;color:#777;margin-top:3px;max-width:200px;line-height:1.4;">${o.customerAddress}<br>${o.customerCity} — ${o.customerPin}</div>
+          <div style="font-size:11px;color:#777;margin-top:3px;max-width:200px;line-height:1.4;">${o.customerAddress}${o.customerLandmark ? ', '+o.customerLandmark : ''}<br>${o.customerCity}${o.customerState ? ', '+o.customerState : ''} — ${o.customerPin}</div>
         </td>
         <td>
           <div style="font-size:12px;line-height:1.6;">${o.items.map(i=>`${i.emoji || '💎'} ${i.name}<span style="color:#999;"> — ₹${i.price?.toLocaleString()}</span>`).join('<br>')}</div>
@@ -569,7 +594,7 @@ async function loadOrders(){
           <div style="display:flex;flex-direction:column;gap:4px;">
             ${payMethodBadge}
             ${payStatusBadge}
-            ${o.paymentId ? `<div style="font-size:9px;color:#aaa;word-break:break-all;max-width:100px;">${o.paymentId}</div>` : ''}
+            ${o.paymentId ? `<div style="font-size:9px;color:#aaa;word-break:break-all;max-width:100px;">ID: ${o.paymentId}</div>` : ''}
           </div>
         </td>
         <td>

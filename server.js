@@ -6,12 +6,14 @@ const path = require('path');
 const app = express();
 app.use(express.json());
 
-// MongoDB connect
+// MongoDB connect (non-fatal — server works without DB using in-memory fallback)
 if(process.env.MONGODB_URI){
   mongoose.connect(process.env.MONGODB_URI, { serverSelectionTimeoutMS: 3000 })
     .then(()=>console.log('✅ MongoDB Connected!'))
-    .catch(err=>console.log('❌ Error:',err));
+    .catch(err=>console.log('⚠️ MongoDB unavailable, using in-memory mode:', err.message));
 }
+// Prevent unhandled promise rejections from crashing the server
+process.on('unhandledRejection', (err) => console.log('⚠️ Unhandled rejection:', err.message));
 
 // API Routes
 app.use('/api/products', require('./routes/products'));
