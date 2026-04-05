@@ -9,7 +9,7 @@ let memoryOrders = [];
 // Create order
 router.post('/', async (req, res) => {
   try {
-    const { customerName, customerMobile, customerAddress, customerCity, customerPin, items, totalAmount } = req.body;
+    const { customerName, customerMobile, customerAddress, customerCity, customerPin, items, totalAmount, paymentMethod, paymentId, paymentStatus } = req.body;
     if (!customerName || !customerMobile || !customerAddress || !items || items.length === 0) {
       return res.status(400).json({ success: false, message: 'Missing required fields' });
     }
@@ -19,14 +19,17 @@ router.post('/', async (req, res) => {
       console.log('MongoDB disconnected, using in-memory fallback for order.');
       const newOrder = { 
         _id: 'ORD-' + Math.floor(Math.random() * 90000 + 10000), 
-        customerName, customerMobile, customerAddress, customerCity, customerPin, items, totalAmount, 
+        customerName, customerMobile, customerAddress, customerCity, customerPin, items, totalAmount,
+        paymentMethod: paymentMethod || 'COD',
+        paymentId: paymentId || '',
+        paymentStatus: paymentStatus || 'Pending',
         status: 'Pending', createdAt: new Date() 
       };
-      memoryOrders.unshift(newOrder); // Add to beginning
+      memoryOrders.unshift(newOrder);
       return res.json({ success: true, orderId: newOrder._id });
     }
 
-    const order = new Order({ customerName, customerMobile, customerAddress, customerCity, customerPin, items, totalAmount });
+    const order = new Order({ customerName, customerMobile, customerAddress, customerCity, customerPin, items, totalAmount, paymentMethod: paymentMethod || 'COD', paymentId: paymentId || '', paymentStatus: paymentStatus || 'Pending' });
     await order.save();
     res.json({ success: true, orderId: order._id });
   } catch (err) {

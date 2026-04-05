@@ -19,6 +19,7 @@ app.use('/api/orders', require('./routes/orders'));
 app.use('/api/contact', require('./routes/contact'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/chatbot', require('./routes/chatbot'));
+app.use('/api/payment', require('./routes/payment'));
 
 // HTML Pages
 app.get('/', (req,res) => res.sendFile(path.join(__dirname,'public','index.html')));

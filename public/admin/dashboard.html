@@ -81,6 +81,18 @@ textarea{resize:vertical;min-height:80px;}
 .modal{background:#fff;border-radius:4px;padding:28px;width:90%;max-width:600px;max-height:90vh;overflow-y:auto;}
 .modal-title{font-size:20px;font-family:Georgia,serif;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid #e8e4dc;}
 .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid #e8e4dc;}
+/* Order status badges */
+.status-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.03em;}
+.status-pending{background:#fff3cd;color:#856404;}
+.status-processing{background:#d1ecf1;color:#0c5460;}
+.status-shipped{background:#cce5ff;color:#004085;}
+.status-delivered{background:#d4edda;color:#155724;}
+.status-cancelled{background:#f8d7da;color:#721c24;}
+/* Payment badges */
+.pay-badge-paid{background:#d4edda;color:#155724;display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;}
+.pay-badge-pending{background:#fff3cd;color:#856404;display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;}
+.pay-badge-cod{background:#f0f0f0;color:#555;display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;}
+.pay-badge-rzp{background:#ede9fe;color:#5b21b6;display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;}
 </style>
 </head>
 <body>
@@ -214,13 +226,25 @@ textarea{resize:vertical;min-height:80px;}
 
     <!-- Orders -->
     <div id="panel-orders" class="panel">
-      <div class="panel-title">Orders</div>
-      <div class="panel-subtitle">Manage customer orders and update delivery status.</div>
+      <div class="panel-title">📦 Orders</div>
+      <div class="panel-subtitle">All customer orders — update status to track deliveries. Payment info shown per order.</div>
       <div class="table-card" style="overflow-x: auto;">
-        <div class="table-header"><h3>Recent Orders</h3><button class="btn btn-outline btn-sm" onclick="loadOrders()">🔄 Refresh</button></div>
-        <table style="min-width: 800px;">
-          <thead><tr><th>ID / Date</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead>
-          <tbody id="orders-table"><tr><td colspan="6" style="text-align:center;color:#999;padding:30px;">Loading...</td></tr></tbody>
+        <div class="table-header">
+          <h3>Recent Orders</h3>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <select id="order-filter" onchange="loadOrders()" style="padding:5px 8px;font-size:12px;border:1px solid #ddd;border-radius:2px;background:#fff;">
+              <option value="all">All Orders</option>
+              <option value="Pending">Pending</option>
+              <option value="Processing">Processing</option>
+              <option value="Shipped">Shipped</option>
+              <option value="Delivered">Delivered</option>
+            </select>
+            <button class="btn btn-outline btn-sm" onclick="loadOrders()">🔄 Refresh</button>
+          </div>
+        </div>
+        <table style="min-width: 900px;">
+          <thead><tr><th>Order</th><th>Customer & Address</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="orders-table"><tr><td colspan="7" style="text-align:center;color:#999;padding:30px;">Loading...</td></tr></tbody>
         </table>
       </div>
     </div>
@@ -506,36 +530,72 @@ function showAlert(id){
 // Orders
 async function loadOrders(){
   const tbody=document.getElementById('orders-table');
+  const filterVal = document.getElementById('order-filter')?.value || 'all';
+  tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:#999;padding:20px;">Loading...</td></tr>';
   try{
     const orders=await fetch('/api/orders').then(r=>r.json());
-    if(!orders.length){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:#999;padding:30px;">No orders yet</td></tr>';return;}
-    tbody.innerHTML=orders.map(o=>`
+    const filtered = filterVal === 'all' ? orders : orders.filter(o=>o.status === filterVal);
+    if(!filtered.length){
+      tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;color:#999;padding:30px;">No ${filterVal === 'all' ? '' : filterVal + ' '}orders yet</td></tr>`;
+      return;
+    }
+    tbody.innerHTML=filtered.map(o=>{
+      const statusClass = 'status-'+o.status.toLowerCase();
+      const payMethod = o.paymentMethod || 'COD';
+      const payStatus = o.paymentStatus || 'Pending';
+      const payMethodBadge = payMethod === 'Razorpay' ? `<span class="pay-badge-rzp">💳 Razorpay</span>` : `<span class="pay-badge-cod">🏠 COD</span>`;
+      const payStatusBadge = payStatus === 'Paid' ? `<span class="pay-badge-paid">✅ Paid</span>` : payStatus === 'Failed' ? `<span style="background:#f8d7da;color:#721c24;display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;">❌ Failed</span>` : `<span class="pay-badge-pending">⏳ Unpaid</span>`;
+      const waMsg = `Hi ${o.customerName}! Your Navyra Jewellers order (${o.items.map(i=>i.name).join(', ')}) of ₹${o.totalAmount} is being processed. We'll share tracking details soon. Thank you! 🙏`;
+      const date = new Date(o.createdAt);
+      const dateStr = date.toLocaleDateString('en-IN', {day:'2-digit',month:'short',year:'numeric'});
+      const timeStr = date.toLocaleTimeString('en-IN', {hour:'2-digit',minute:'2-digit'});
+      return `
       <tr>
-        <td><div style="font-size:11px;color:#888;">${o._id}</div><div>${new Date(o.createdAt).toLocaleString('en-IN')}</div></td>
-        <td><strong>${o.customerName}</strong><br><span style="font-size:11px;color:#666;">${o.customerMobile}</span><br><span style="font-size:11px;color:#666;white-space:normal;display:inline-block;max-width:200px;">${o.customerAddress}, ${o.customerCity} - ${o.customerPin}</span></td>
-        <td><div style="max-height:80px;overflow-y:auto;font-size:12px;">${o.items.map(i=>`${i.emoji} 1x ${i.name}`).join('<br>')}</div></td>
-        <td><strong>₹${o.totalAmount.toLocaleString()}</strong></td>
         <td>
-          <select style="padding:4px;font-size:12px;width:105px;border-radius:2px;background:#fff;border:1px solid #ddd;" onchange="updateOrderStatus('${o._id}',this.value)">
-            <option value="Pending" ${o.status==='Pending'?'selected':''}>Pending</option>
-            <option value="Processing" ${o.status==='Processing'?'selected':''}>Processing</option>
-            <option value="Shipped" ${o.status==='Shipped'?'selected':''}>Shipped</option>
-            <option value="Delivered" ${o.status==='Delivered'?'selected':''}>Delivered</option>
-            <option value="Cancelled" ${o.status==='Cancelled'?'selected':''}>Cancelled</option>
+          <div style="font-family:Georgia,serif;font-size:13px;font-weight:600;">${dateStr}</div>
+          <div style="font-size:11px;color:#888;">${timeStr}</div>
+          <div style="font-size:10px;color:#aaa;margin-top:2px;word-break:break-all;">${String(o._id).slice(-8)}</div>
+        </td>
+        <td>
+          <div style="font-weight:600;font-size:14px;">${o.customerName}</div>
+          <div style="font-size:12px;color:#555;margin-top:2px;">📞 ${o.customerMobile}</div>
+          <div style="font-size:11px;color:#777;margin-top:3px;max-width:200px;line-height:1.4;">${o.customerAddress}<br>${o.customerCity} — ${o.customerPin}</div>
+        </td>
+        <td>
+          <div style="font-size:12px;line-height:1.6;">${o.items.map(i=>`${i.emoji || '💎'} ${i.name}<span style="color:#999;"> — ₹${i.price?.toLocaleString()}</span>`).join('<br>')}</div>
+        </td>
+        <td><strong style="font-size:15px;">₹${o.totalAmount.toLocaleString()}</strong></td>
+        <td>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            ${payMethodBadge}
+            ${payStatusBadge}
+            ${o.paymentId ? `<div style="font-size:9px;color:#aaa;word-break:break-all;max-width:100px;">${o.paymentId}</div>` : ''}
+          </div>
+        </td>
+        <td>
+          <select style="padding:5px 6px;font-size:12px;border-radius:3px;background:#fff;border:1px solid #ddd;width:120px;" onchange="updateOrderStatus('${o._id}',this.value,this)">
+            <option value="Pending" ${o.status==='Pending'?'selected':''}>🕐 Pending</option>
+            <option value="Processing" ${o.status==='Processing'?'selected':''}>⚙️ Processing</option>
+            <option value="Shipped" ${o.status==='Shipped'?'selected':''}>🚚 Shipped</option>
+            <option value="Delivered" ${o.status==='Delivered'?'selected':''}>✅ Delivered</option>
+            <option value="Cancelled" ${o.status==='Cancelled'?'selected':''}>❌ Cancelled</option>
           </select>
         </td>
         <td>
-          <a href="https://wa.me/91${o.customerMobile.replace(/\D/g,'')}?text=Hi%20${encodeURIComponent(o.customerName)},%20this%20is%20regarding%20your%20Navyra%20Jewellers%20order%20${o._id}..." target="_blank" class="btn btn-outline btn-sm" style="color:#25d366;border-color:#25d366;text-decoration:none;">💬 WA</a>
+          <a href="https://wa.me/91${o.customerMobile.replace(/\D/g,'')}?text=${encodeURIComponent(waMsg)}" target="_blank" style="display:block;background:#25d366;color:#fff;text-align:center;padding:6px 10px;font-size:11px;text-decoration:none;border-radius:3px;font-weight:600;margin-bottom:4px;">💬 WhatsApp</a>
         </td>
-      </tr>`).join('');
-  }catch(e){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:#e74c3c;padding:30px;">Error loading orders</td></tr>';}
+      </tr>`;
+    }).join('');
+  }catch(e){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:#e74c3c;padding:30px;">Error loading orders</td></tr>';}
 }
-async function updateOrderStatus(id, status){
+async function updateOrderStatus(id, status, selectEl){
   try{
     const res = await fetch('/api/orders/'+id, {method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({status})});
     const data = await res.json();
-    if(data.success) alert('Order status updated rapidly');
-    else alert('Error updating status');
+    if(data.success){
+      // Flash the select green briefly
+      if(selectEl){ selectEl.style.borderColor='#27ae60'; setTimeout(()=>selectEl.style.borderColor='#ddd',1500); }
+    } else { alert('Error updating status'); }
   }catch(e){alert('Network error');}
 }
 
