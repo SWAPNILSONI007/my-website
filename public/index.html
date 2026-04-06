@@ -343,8 +343,35 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
 .checkout-input{width:100%;padding:12px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-family:inherit;font-size:.9rem;outline:none;border-radius:2px;transition:all .3s;}
 .checkout-input:focus{border-color:var(--gold-accent);}
 .checkout-modal-foot{padding:1.5rem;border-top:1px solid var(--border);background:var(--bg2);}
-.checkout-success{text-align:center;padding:2.5rem 1.5rem;display:none;}
-.checkout-success-icon{font-size:3.5rem;color:#27ae60;margin-bottom:1rem;}
+.checkout-success{text-align:center;padding:0;display:none;}
+/* Order success premium styles */
+.os-wrap{padding:2rem 1.75rem 2rem;}
+.os-icon-ring{width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#1a9c4e,#27ae60);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;font-size:1.8rem;color:#fff;box-shadow:0 8px 24px rgba(39,174,96,0.3);animation:popIn .5s cubic-bezier(.4,0,.2,1);}
+@keyframes popIn{0%{transform:scale(0);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+.os-eyebrow{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:#27ae60;margin-bottom:.4rem;}
+.os-title{font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:400;margin-bottom:.4rem;}
+.os-subtitle{color:var(--text2);font-size:.83rem;line-height:1.6;margin-bottom:1rem;}
+.os-id{display:inline-block;background:var(--bg2);border:1px solid var(--border);padding:.35rem 1rem;border-radius:20px;font-size:.72rem;letter-spacing:.1em;color:var(--silver);margin-bottom:1.5rem;}
+/* Status tracker */
+.os-tracker{margin:0 0 1.5rem;}
+.os-tracker-title{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--silver);margin-bottom:1rem;text-align:left;}
+.os-steps{display:flex;align-items:flex-start;justify-content:space-between;position:relative;}
+.os-steps::before{content:'';position:absolute;top:18px;left:18px;right:18px;height:2px;background:var(--border);z-index:0;}
+.os-progress-line{position:absolute;top:18px;left:18px;height:2px;background:linear-gradient(90deg,#27ae60,#2ecc71);z-index:1;transition:width .8s cubic-bezier(.4,0,.2,1);}
+.os-step{display:flex;flex-direction:column;align-items:center;position:relative;z-index:2;flex:1;}
+.os-step-dot{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;background:var(--bg2);border:2px solid var(--border);transition:all .4s;margin-bottom:.4rem;}
+.os-step.active .os-step-dot{background:#27ae60;border-color:#27ae60;color:#fff;box-shadow:0 4px 12px rgba(39,174,96,0.35);}
+.os-step.done .os-step-dot{background:#d4edda;border-color:#27ae60;}
+.os-step-label{font-size:.58rem;letter-spacing:.05em;text-transform:uppercase;color:var(--text2);text-align:center;line-height:1.3;max-width:52px;}
+.os-step.active .os-step-label{color:var(--text);font-weight:600;}
+.os-eta{background:linear-gradient(135deg,rgba(39,174,96,0.08),rgba(39,174,96,0.04));border:1px solid rgba(39,174,96,0.2);border-radius:4px;padding:.75rem 1rem;margin-bottom:1.25rem;text-align:left;}
+.os-eta p:first-child{font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:#27ae60;margin-bottom:.2rem;}
+.os-eta p:last-child{font-size:.85rem;color:var(--text);font-weight:500;}
+.os-actions{display:flex;gap:.75rem;}
+.os-btn-main{flex:1;padding:13px;background:var(--text);color:var(--bg);border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;transition:all .3s;border-radius:3px;}
+.os-btn-main:hover{opacity:.85;}
+.os-btn-track{padding:13px 16px;background:none;border:1px solid var(--border);color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;transition:all .3s;border-radius:3px;text-decoration:none;display:flex;align-items:center;gap:.4rem;}
+.os-btn-track:hover{border-color:var(--gold);color:var(--text);}
 </style>
 </head>
 <body>
@@ -486,11 +513,49 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
       </div>
     </div>
     <div class="checkout-success" id="checkoutSuccess">
-      <div class="checkout-success-icon">✓</div>
-      <h3 style="font-family:'Playfair Display',serif;margin-bottom:1rem;font-size:1.6rem;">Order Placed successfully!</h3>
-      <p style="color:var(--text2);font-size:0.9rem;margin-bottom:.5rem;line-height:1.6;">Thank you for shopping with Navyra Jewellers. Your order has been securely placed and we will process it shortly.</p>
-      <p class="order-id-badge" id="successOrderId" style="display:inline-block;background:var(--bg2);border:1px solid var(--border);padding:.4rem 1rem;border-radius:20px;font-size:.75rem;letter-spacing:.1em;color:var(--text2);margin-bottom:1.5rem;"></p>
-      <button class="btn-primary" style="width:100%;padding:14px;font-size:0.9rem;" onclick="closeCheckoutModal()">Continue Shopping</button>
+      <div class="os-wrap">
+        <div class="os-icon-ring">✓</div>
+        <p class="os-eyebrow">✦ Order Confirmed</p>
+        <h3 class="os-title">Order Placed Successfully!</h3>
+        <p class="os-subtitle">Thank you for shopping with <strong>Navyra Jewellers</strong>. Your order is now being processed.</p>
+        <p class="os-id" id="successOrderId"></p>
+        <!-- Status Tracker -->
+        <div class="os-tracker">
+          <p class="os-tracker-title">Order Status</p>
+          <div class="os-steps" id="osSteps">
+            <div class="os-progress-line" id="osProgressLine" style="width:0%"></div>
+            <div class="os-step active" id="osStep1">
+              <div class="os-step-dot">📦</div>
+              <div class="os-step-label">Order Placed</div>
+            </div>
+            <div class="os-step" id="osStep2">
+              <div class="os-step-dot">⚙️</div>
+              <div class="os-step-label">Processing</div>
+            </div>
+            <div class="os-step" id="osStep3">
+              <div class="os-step-dot">📬</div>
+              <div class="os-step-label">Packed</div>
+            </div>
+            <div class="os-step" id="osStep4">
+              <div class="os-step-dot">🚚</div>
+              <div class="os-step-label">Shipped</div>
+            </div>
+            <div class="os-step" id="osStep5">
+              <div class="os-step-dot">✅</div>
+              <div class="os-step-label">Delivered</div>
+            </div>
+          </div>
+        </div>
+        <!-- ETA -->
+        <div class="os-eta">
+          <p>Estimated Delivery</p>
+          <p id="osEta">Within 5–7 business days</p>
+        </div>
+        <div class="os-actions">
+          <button class="os-btn-main" onclick="closeCheckoutModal()">Continue Shopping</button>
+          <a href="/track" class="os-btn-track">📍 Track Order</a>
+        </div>
+      </div>
     </div>
     <div class="checkout-modal-foot" id="checkoutFoot">
       <button class="btn-primary" id="payBtn" style="width:100%;padding:14px;font-size:0.9rem;letter-spacing:0.1em;text-transform:uppercase;background:linear-gradient(135deg,#5a4ff3,#7e6ff8);border:none;color:#fff;cursor:pointer;" onclick="handlePayment()">Pay Now with Razorpay</button>
@@ -969,8 +1034,21 @@ async function saveOrderToServer({name,email,mobile,address,landmark,city,state,
 function showSuccess(orderId){
   document.getElementById('checkoutBody').style.display='none';
   document.getElementById('checkoutFoot').style.display='none';
-  document.getElementById('successOrderId').textContent = orderId ? `Order ID: ${orderId}` : '';
+  const sid=document.getElementById('successOrderId');
+  if(sid) sid.textContent = orderId ? `Order ID: ${orderId}` : '';
   document.getElementById('checkoutSuccess').style.display='block';
+  // Animate progress bar to Step 1
+  setTimeout(()=>{
+    const line=document.getElementById('osProgressLine');
+    if(line) line.style.width='0%';
+  },100);
+  // Compute ETA
+  const eta=document.getElementById('osEta');
+  if(eta){
+    const d=new Date(); d.setDate(d.getDate()+6);
+    const opts={weekday:'long',month:'long',day:'numeric'};
+    eta.textContent=`By ${d.toLocaleDateString('en-IN',opts)}`;
+  }
   cart=[]; updateCart();
 }
 async function handlePayment(){
