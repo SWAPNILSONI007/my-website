@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Account - Navyra Jewellers</title>
+  <link rel="stylesheet" href="/index.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    .layout { display: flex; max-width: 1200px; margin: 40px auto; gap: 40px; padding: 0 5%; }
+    .sidebar { width: 250px; background: var(--bg2); padding: 20px; border-radius: 8px; border: 1px solid var(--border); height: fit-content; }
+    .sidebar-av { width: 60px; height: 60px; border-radius: 50%; background: var(--gold-accent); color: #000; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 600; margin-bottom: 20px; font-family: 'Playfair Display', serif; }
+    .nav-link { display: block; padding: 12px; color: var(--text); text-decoration: none; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
+    .nav-link:hover, .nav-link.active { color: var(--gold-accent); border-color: var(--gold-accent); }
+    .nav-link:last-child { border: none; }
+    
+    .content { flex: 1; }
+    .section-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 20px; color: var(--gold-accent); }
+    
+    .order-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+    .order-header { display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 15px; font-size: 0.9rem; color: var(--text2); }
+    .order-item { display: flex; gap: 15px; margin-bottom: 10px; }
+    .item-emoji { font-size: 24px; background: var(--bg); width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
+    .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; color: #fff; text-transform: uppercase; }
+    .bg-pending { background: #f39c12; } .bg-processing { background: #3498db; } .bg-shipped { background: #9b59b6; } .bg-delivered { background: #2ecc71; } .bg-cancelled { background: #e74c3c; }
+    
+    .profile-info { background: var(--bg2); padding: 20px; border-radius: 8px; border: 1px solid var(--border); }
+    .info-row { display: flex; margin-bottom: 15px; border-bottom: 1px dashed var(--border); padding-bottom: 10px; }
+    .info-label { width: 120px; color: var(--text2); font-size: 0.9rem; }
+    .info-val { color: var(--text); font-weight: 500; }
+  </style>
+</head>
+<body>
+  <!-- Simplified Navbar -->
+  <header style="padding: 1rem 5%; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: rgba(10,10,10,0.8); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100;">
+    <a href="/" class="logo">Navyra Jewellers</a>
+    <div style="display:flex;gap:1.5rem;align-items:center;">
+      <a href="/shop.html" style="color:var(--text);text-decoration:none;font-size:0.9rem;">Shop</a>
+      <a href="#" onclick="logout(); return false;" style="color:var(--text2);text-decoration:none;font-size:0.9rem;">Logout</a>
+    </div>
+  </header>
+
+  <div class="layout">
+    <div class="sidebar">
+      <div class="sidebar-av" id="userInitial">?</div>
+      <h3 style="margin-bottom:5px;font-family:'Playfair Display'" id="userName">User</h3>
+      <p style="color:var(--text2);font-size:0.8rem;margin-bottom:20px;" id="userEmail">email@domain.com</p>
+      
+      <a href="#" class="nav-link active" onclick="show('orders', this)">📦 My Orders</a>
+      <a href="#" class="nav-link" onclick="show('profile', this)">👤 Profile Details</a>
+    </div>
+
+    <div class="content">
+      <!-- Orders Section -->
+      <div id="sec-orders">
+        <h2 class="section-title">Order History</h2>
+        <div id="ordersList"><p style="color:var(--text2)">Loading orders...</p></div>
+      </div>
+
+      <!-- Profile Section -->
+      <div id="sec-profile" style="display:none;">
+        <h2 class="section-title">Profile Details</h2>
+        <div class="profile-info">
+          <div class="info-row"><div class="info-label">Full Name</div><div class="info-val" id="pName">-</div></div>
+          <div class="info-row"><div class="info-label">Email</div><div class="info-val" id="pEmail">-</div></div>
+          <div class="info-row"><div class="info-label">Mobile</div><div class="info-val" id="pPhone">-</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  if(!localStorage.getItem('navToken')) window.location.href = '/login.html';
+
+  const user = JSON.parse(localStorage.getItem('navUser') || '{}');
+  document.getElementById('userName').textContent = user.name || 'User';
+  document.getElementById('userInitial').textContent = (user.name || '?')[0].toUpperCase();
+  document.getElementById('userEmail').textContent = user.email || '';
+  
+  document.getElementById('pName').textContent = user.name || '-';
+  document.getElementById('pEmail').textContent = user.email || '-';
+  document.getElementById('pPhone').textContent = user.phone || '-';
+
+  function logout() {
+    localStorage.removeItem('navToken');
+    localStorage.removeItem('navUser');
+    window.location.href = '/login.html';
+  }
+
+  function show(id, el) {
+    document.getElementById('sec-orders').style.display = id==='orders'?'block':'none';
+    document.getElementById('sec-profile').style.display = id==='profile'?'block':'none';
+    document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  async function loadOrders() {
+    try {
+      const res = await fetch('/api/orders/my-orders', {
+        headers: { 'x-auth-token': localStorage.getItem('navToken') }
+      });
+      if(res.status === 401) return logout();
+      const orders = await res.json();
+      
+      const container = document.getElementById('ordersList');
+      if(orders.length === 0) {
+        container.innerHTML = '<p style="color:var(--text2)">You have no orders yet. <a href="/shop.html" style="color:var(--gold-accent)">Explore shop</a></p>';
+        return;
+      }
+      
+      container.innerHTML = orders.map(o => {
+        const date = new Date(o.createdAt).toLocaleDateString('en-IN', {day:'numeric',month:'short',year:'numeric'});
+        const sClass = 'bg-' + (o.status || 'pending').toLowerCase();
+        return `
+          <div class="order-card">
+            <div class="order-header">
+              <div><strong>Order #${String(o._id).slice(-8).toUpperCase()}</strong> • ${date}</div>
+              <div class="status-badge ${sClass}">${o.status}</div>
+            </div>
+            ${o.items.map(i => `
+              <div class="order-item">
+                <div class="item-emoji">${i.emoji||'✨'}</div>
+                <div>
+                  <div style="font-weight:500;">${i.name}</div>
+                  <div style="font-size:0.8rem;color:var(--text2);">Qty: ${i.qty || 1} • ₹${i.price}</div>
+                </div>
+              </div>
+            `).join('')}
+            <div style="margin-top:15px; border-top:1px dashed var(--border); padding-top:10px; display:flex; justify-content:space-between; align-items:center;">
+              <div style="font-size:0.85rem;color:var(--text2);">Payment: ${o.paymentMethod} (${o.paymentStatus})</div>
+              <div style="font-weight:600; font-size:1.1rem; color:var(--gold-accent);">Total: ₹${o.totalAmount}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    } catch(e) {
+      document.getElementById('ordersList').innerHTML = '<p style="color:#e74c3c;">Failed to load orders.</p>';
+    }
+  }
+
+  loadOrders();
+</script>
+</body>
+</html>

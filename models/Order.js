@@ -22,6 +22,7 @@ const OrderSchema = new mongoose.Schema({
   razorpayOrderId: { type: String, default: '' },
   paymentStatus: { type: String, default: 'Pending', enum: ['Pending', 'Paid', 'Failed'] },
   status: { type: String, default: 'Pending', enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'] },
+  customerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Customer' },
   createdAt: { type: Date, default: Date.now }
 });
 

@@ -553,6 +553,7 @@ async function loadOrders(){
   tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:#999;padding:20px;">Loading...</td></tr>';
   try{
     const orders=await fetch('/api/orders').then(r=>r.json());
+    window.adminOrders = orders; // Save globally for copy function
     let filtered = filterVal === 'all' ? orders : orders.filter(o=>o.status === filterVal);
     // Payment filter
     if(payFilter === 'Razorpay') filtered = filtered.filter(o=>o.paymentMethod==='Razorpay');
@@ -608,6 +609,7 @@ async function loadOrders(){
         </td>
         <td>
           <a href="https://wa.me/91${o.customerMobile.replace(/\D/g,'')}?text=${encodeURIComponent(waMsg)}" target="_blank" style="display:block;background:#25d366;color:#fff;text-align:center;padding:6px 10px;font-size:11px;text-decoration:none;border-radius:3px;font-weight:600;margin-bottom:4px;">💬 WhatsApp</a>
+          <button onclick="copyOrderDetails('${o._id}')" style="display:block;width:100%;border:1px solid #ddd;background:#f9fafb;color:#4b5563;text-align:center;padding:6px 10px;font-size:11px;border-radius:3px;font-weight:600;cursor:pointer;transition:all 0.2s;">📋 Copy Details</button>
         </td>
       </tr>`;
     }).join('');
@@ -622,6 +624,25 @@ async function updateOrderStatus(id, status, selectEl){
       if(selectEl){ selectEl.style.borderColor='#27ae60'; setTimeout(()=>selectEl.style.borderColor='#ddd',1500); }
     } else { alert('Error updating status'); }
   }catch(e){alert('Network error');}
+}
+
+function copyOrderDetails(orderId) {
+  if(!window.adminOrders) return;
+  const o = window.adminOrders.find(ord => ord._id === orderId);
+  if(!o) return;
+  const text = `Name: ${o.customerName}
+Mobile: ${o.customerMobile}
+Address: ${o.customerAddress}
+Landmark: ${o.customerLandmark || 'N/A'}
+City: ${o.customerCity}
+State: ${o.customerState || 'N/A'}
+PIN: ${o.customerPin}`;
+  
+  navigator.clipboard.writeText(text).then(() => {
+    alert('✅ Delivery details copied!');
+  }).catch(err => {
+    alert('❌ Failed to copy: ' + err);
+  });
 }
 
 // Init

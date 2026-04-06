@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track Order — Navyra Jewellers</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+:root{--bg:#faf8f5;--bg2:#f2ede6;--text:#1c1814;--text2:#6b5f52;--silver:#8a8a9a;--gold:#c9a84c;--card:#ffffff;--border:#e8e0d5;--nav-bg:rgba(250,248,245,0.96);--shadow:rgba(0,0,0,0.06);}
+[data-theme="dark"]{--bg:#0e0d0c;--bg2:#161412;--text:#f0ebe3;--text2:#a89b8c;--silver:#9a9aaa;--gold:#d4aa5a;--card:#1a1816;--border:#2a2520;--nav-bg:rgba(14,13,12,0.96);--shadow:rgba(0,0,0,0.3);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .4s,color .4s;}
+nav{position:fixed;top:0;width:100%;z-index:1000;background:var(--nav-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);height:70px;display:flex;align-items:center;padding:0 5%;gap:2rem;}
+.logo{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:400;color:var(--text);text-decoration:none;letter-spacing:.05em;flex:1;}
+.logo span{color:var(--silver);font-style:italic;}
+.nav-links{display:flex;gap:1.5rem;align-items:center;}
+.nav-links a{text-decoration:none;color:var(--text2);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;transition:color .3s;}
+.nav-links a:hover{color:var(--text);}
+.theme-toggle{background:none;border:1px solid var(--border);width:36px;height:36px;cursor:pointer;font-size:.95rem;display:flex;align-items:center;justify-content:center;color:var(--text2);transition:all .3s;border-radius:50%;}
+.theme-toggle:hover{border-color:var(--gold);}
+/* Track page */
+.track-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:100px 1rem 3rem;}
+.track-card{background:var(--card);border:1px solid var(--border);border-radius:8px;width:100%;max-width:500px;overflow:hidden;box-shadow:0 20px 60px var(--shadow);}
+.track-card-header{background:linear-gradient(135deg,#0e0d0c 0%,#1c1814 100%);padding:2rem 2rem 1.75rem;position:relative;overflow:hidden;}
+.track-card-header::before{content:'✦';position:absolute;bottom:-2rem;right:-1rem;font-size:8rem;color:rgba(201,168,76,0.07);}
+.track-eyebrow{font-size:.6rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;}
+.track-card-header h1{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:400;color:#f0ebe3;}
+.track-card-header h1 em{font-style:italic;color:var(--gold);}
+.track-card-header p{color:rgba(240,235,227,0.5);font-size:.83rem;margin-top:.4rem;line-height:1.6;}
+.track-body{padding:2rem;}
+.form-group{margin-bottom:1rem;}
+.form-group label{display:block;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--silver);margin-bottom:.4rem;}
+.form-group input{width:100%;padding:11px 14px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-family:'DM Sans',sans-serif;font-size:.9rem;outline:none;border-radius:4px;transition:all .3s;}
+.form-group input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,0.1);}
+.form-group input::placeholder{color:var(--text2);opacity:.5;}
+.btn-track{width:100%;padding:14px;background:linear-gradient(135deg,#c9a84c,#e6c56a);border:none;color:#111;font-family:'DM Sans',sans-serif;font-weight:600;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;border-radius:4px;cursor:pointer;margin-top:.5rem;transition:all .35s;}
+.btn-track:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(201,168,76,0.35);}
+.btn-track:disabled{opacity:.65;cursor:wait;transform:none;}
+.error-msg{color:#e74c3c;font-size:.78rem;text-align:center;padding:.5rem;background:rgba(231,76,60,0.08);border-radius:4px;margin-top:.75rem;display:none;}
+/* Result */
+#result{display:none;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border);}
+.status-pill{display:inline-flex;align-items:center;gap:.4rem;padding:6px 14px;border-radius:20px;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:1.25rem;}
+.status-pending{background:#fff3cd;color:#856404;}
+.status-processing{background:#d1ecf1;color:#0c5460;}
+.status-shipped{background:#cce5ff;color:#004085;}
+.status-delivered{background:#d4edda;color:#155724;}
+.status-cancelled{background:#f8d7da;color:#721c24;}
+.res-row{display:flex;justify-content:space-between;align-items:flex-start;padding:.6rem 0;border-bottom:1px solid var(--border);gap:1rem;}
+.res-row:last-child{border-bottom:none;}
+.res-label{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--silver);flex-shrink:0;padding-top:2px;}
+.res-val{color:var(--text);font-size:.88rem;text-align:right;line-height:1.5;}
+.res-total{font-size:1.1rem;font-weight:600;color:var(--gold);}
+  </style>
+</head>
+<body>
+<script>
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.dataset.theme = savedTheme;
+</script>
+<nav>
+  <a href="/" class="logo">Navyra <span>Jewellers</span></a>
+  <div class="nav-links">
+    <a href="/shop">Shop</a>
+    <a href="/flash-sale">Sale ⚡</a>
+    <a href="/about">About</a>
+    <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()">🌙</button>
+  </div>
+</nav>
+
+<div class="track-wrap">
+  <div class="track-card">
+    <div class="track-card-header">
+      <p class="track-eyebrow">✦ Order Tracking</p>
+      <h1>Track your <em>order.</em></h1>
+      <p>Enter your Order ID and the mobile number or email you used at checkout.</p>
+    </div>
+    <div class="track-body">
+      <form onsubmit="handleTrack(event)">
+        <div class="form-group">
+          <label>Order ID</label>
+          <input type="text" id="orderId" placeholder="e.g. ORD-12345 or your full order ID" required>
+        </div>
+        <div class="form-group">
+          <label>Mobile Number or Email</label>
+          <input type="text" id="contact" placeholder="Used when placing the order" required>
+        </div>
+        <button type="submit" class="btn-track" id="btnSubmit">Track Order</button>
+        <p class="error-msg" id="errorMsg"></p>
+      </form>
+
+      <div id="result">
+        <div id="resStatus" class="status-pill status-pending">🕐 Pending</div>
+        <div class="res-row"><span class="res-label">Order Date</span><span class="res-val" id="resDate"></span></div>
+        <div class="res-row"><span class="res-label">Customer</span><span class="res-val" id="resName"></span></div>
+        <div class="res-row"><span class="res-label">Items</span><span class="res-val" id="resItems"></span></div>
+        <div class="res-row"><span class="res-label">Payment</span><span class="res-val" id="resPay"></span></div>
+        <div class="res-row"><span class="res-label">Total Amount</span><span class="res-val res-total" id="resTotal"></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){
+  const h=document.documentElement;
+  const t=h.dataset.theme==='light'?'dark':'light';
+  h.dataset.theme=t; localStorage.setItem('theme',t);
+  document.getElementById('themeBtn').textContent=t==='dark'?'☀️':'🌙';
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  const t=localStorage.getItem('theme')||'light';
+  document.getElementById('themeBtn').textContent=t==='dark'?'☀️':'🌙';
+});
+
+const statusMap={
+  pending:{cls:'status-pending',icon:'🕐'},
+  processing:{cls:'status-processing',icon:'⚙️'},
+  shipped:{cls:'status-shipped',icon:'🚚'},
+  delivered:{cls:'status-delivered',icon:'✅'},
+  cancelled:{cls:'status-cancelled',icon:'❌'}
+};
+
+async function handleTrack(e) {
+  e.preventDefault();
+  const btn=document.getElementById('btnSubmit');
+  const err=document.getElementById('errorMsg');
+  const resDiv=document.getElementById('result');
+  btn.disabled=true; btn.textContent='Searching...';
+  err.style.display='none'; resDiv.style.display='none';
+  try{
+    const res=await fetch('/api/orders/track',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({orderId:document.getElementById('orderId').value.trim(),contact:document.getElementById('contact').value.trim()})
+    });
+    const data=await res.json();
+    if(data.success&&data.order){
+      const o=data.order;
+      const s=statusMap[o.status.toLowerCase()]||{cls:'status-pending',icon:'📦'};
+      const pill=document.getElementById('resStatus');
+      pill.className='status-pill '+s.cls;
+      pill.textContent=s.icon+' '+o.status;
+      document.getElementById('resDate').textContent=new Date(o.createdAt).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
+      document.getElementById('resName').textContent=o.customerName;
+      document.getElementById('resItems').innerHTML=o.items.map(i=>(i.emoji||'💎')+' '+i.name).join('<br>');
+      document.getElementById('resPay').textContent=(o.paymentMethod||'COD')+' — '+(o.paymentStatus||'Pending');
+      document.getElementById('resTotal').textContent='₹'+o.totalAmount.toLocaleString();
+      resDiv.style.display='block';
+    } else {
+      err.textContent=data.msg||'Order not found. Please check your Order ID and contact details.';
+      err.style.display='block';
+    }
+  }catch(ex){
+    err.textContent='Server error. Please try again.';
+    err.style.display='block';
+  }
+  btn.disabled=false; btn.textContent='Track Order';
+}
+</script>
+</body>
+</html>
