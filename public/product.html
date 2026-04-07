@@ -483,6 +483,26 @@ loadProduct();
       <button class="btn-pay btn-pay-cod" onclick="closeCheckoutModal()" style="max-width:220px;margin:0 auto;">Continue Shopping</button>
     </div>
 
+    <!-- FAILURE SCREEN -->
+    <div class="checkout-failure" id="checkoutFailure" style="display:none;">
+      <div style="padding:2rem 1.75rem;text-align:center;">
+        <div class="checkout-success-icon" style="background:linear-gradient(135deg,#c0392b,#e74c3c);animation:popIn .5s cubic-bezier(.4,0,.2,1);">✕</div>
+        <p style="font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:#e74c3c;margin-bottom:.4rem;">✦ Payment Unsuccessful</p>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:400;margin-bottom:.4rem;">Payment Failed</h3>
+        <p style="color:var(--text2);font-size:.83rem;line-height:1.6;margin-bottom:1rem;" id="failureMessage">Your payment could not be completed. No amount has been deducted from your account.</p>
+        <p class="order-id-badge" id="failurePaymentId" style="display:none;border-color:rgba(231,76,60,0.3);color:#e74c3c;"></p>
+        <div style="background:linear-gradient(135deg,rgba(231,76,60,0.08),rgba(231,76,60,0.03));border:1px solid rgba(231,76,60,0.2);border-radius:4px;padding:.75rem 1rem;margin-bottom:1.25rem;text-align:left;">
+          <p style="font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:#e74c3c;margin-bottom:.2rem;">What can you do?</p>
+          <p style="font-size:.82rem;color:var(--text2);line-height:1.6;">Try again with a different payment method, or choose Cash on Delivery.</p>
+        </div>
+        <div style="display:flex;gap:.75rem;">
+          <button class="btn-pay btn-pay-razorpay" style="flex:1;" onclick="retryPayment()">🔄 Try Again</button>
+          <button class="btn-pay btn-pay-cod" style="flex:1;" onclick="switchToCOD()">🏠 Cash on Delivery</button>
+        </div>
+        <p style="font-size:.7rem;color:var(--text2);margin-top:1rem;">Need help? <a href="https://wa.me/918004703038?text=Hi! My payment failed. Please help." target="_blank" style="color:var(--gold);text-decoration:none;">Chat on WhatsApp</a></p>
+      </div>
+    </div>
+
     <!-- FOOTER -->
     <div class="checkout-modal-foot" id="checkoutFoot">
       <button class="btn-pay btn-pay-razorpay" id="payBtn" onclick="handlePayment()">Pay Now with Razorpay</button>
@@ -616,9 +636,34 @@ async function saveOrderToServer({name,email,mobile,address,landmark,city,state,
 function showSuccess(orderId){
   document.getElementById('checkoutBody').style.display='none';
   document.getElementById('checkoutFoot').style.display='none';
+  document.getElementById('checkoutFailure').style.display='none';
   document.getElementById('successOrderId').textContent = orderId ? `Order ID: ${orderId}` : '';
   document.getElementById('checkoutSuccess').style.display='block';
   cart=[]; updateCart();
+}
+function showFailure(message, paymentId){
+  document.getElementById('checkoutBody').style.display='none';
+  document.getElementById('checkoutFoot').style.display='none';
+  document.getElementById('checkoutSuccess').style.display='none';
+  document.getElementById('failureMessage').textContent = message || 'Your payment could not be completed. No amount has been deducted from your account.';
+  const pidEl = document.getElementById('failurePaymentId');
+  if(paymentId){ pidEl.textContent = 'Payment ID: ' + paymentId; pidEl.style.display = 'inline-block'; }
+  else { pidEl.style.display = 'none'; }
+  document.getElementById('checkoutFailure').style.display='block';
+  const btn = document.getElementById('payBtn');
+  btn.disabled=false; selectPayMethod('razorpay');
+}
+function retryPayment(){
+  document.getElementById('checkoutFailure').style.display='none';
+  document.getElementById('checkoutBody').style.display='block';
+  document.getElementById('checkoutFoot').style.display='block';
+  selectPayMethod('razorpay');
+}
+function switchToCOD(){
+  document.getElementById('checkoutFailure').style.display='none';
+  document.getElementById('checkoutBody').style.display='block';
+  document.getElementById('checkoutFoot').style.display='block';
+  selectPayMethod('cod');
 }
 
 async function handlePayment(){
@@ -666,20 +711,19 @@ async function handlePayment(){
           if(vData.success){
             const saved = await saveOrderToServer({...details,paymentMethod:'Razorpay',paymentId:response.razorpay_payment_id,razorpayOrderId:orderData.orderId,paymentStatus:'Paid'});
             if(saved.success) showSuccess(saved.orderId);
-            else alert('Payment done but order saving failed. Payment ID: '+response.razorpay_payment_id);
+            else showFailure('Payment was successful but order could not be saved. Please contact support.', response.razorpay_payment_id);
           } else {
-            alert('Payment verification failed. Please contact support with Payment ID: '+response.razorpay_payment_id);
+            showFailure('Payment verification failed. Please contact support.', response.razorpay_payment_id);
           }
-        } catch(e){ alert('Verification error. Contact support.'); }
+        } catch(e){ showFailure('Payment verification error. Please contact support.'); }
       },
       modal:{ ondismiss: function(){ btn.disabled=false; selectPayMethod('razorpay'); } }
     };
     const rzp = new Razorpay(options);
-    rzp.on('payment.failed',function(){ btn.disabled=false; selectPayMethod('razorpay'); alert('Payment failed. Please try again or use Cash on Delivery.'); });
+    rzp.on('payment.failed',function(resp){ showFailure(resp.error?.description || 'Payment failed. Please try again or use Cash on Delivery.'); });
     rzp.open();
   } catch(e){
-    alert('Could not initiate payment: '+e.message);
-    btn.disabled=false; selectPayMethod('razorpay');
+    showFailure('Could not initiate payment: '+e.message);
   }
 }
 </script>
