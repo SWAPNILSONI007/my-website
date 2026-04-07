@@ -576,7 +576,7 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
       </div>
     </div>
     <div class="checkout-modal-foot" id="checkoutFoot">
-      <button class="btn-primary" id="payBtn" style="width:100%;padding:14px;font-size:0.9rem;letter-spacing:0.1em;text-transform:uppercase;background:linear-gradient(135deg,#5a4ff3,#7e6ff8);border:none;color:#fff;cursor:pointer;" onclick="handlePayment()">Pay Online</button>
+      <button class="btn-primary" id="payBtn" style="width:100%;padding:14px;font-size:0.9rem;letter-spacing:0.1em;text-transform:uppercase;background:linear-gradient(135deg,#c9a84c,#e6c56a);border:none;color:#111;font-weight:600;cursor:pointer;border-radius:3px;transition:all .3s;" onclick="handlePayment()">Pay Online</button>
     </div>
   </div>
 </div>
@@ -1001,11 +1001,11 @@ function selectPayMethod(method){
   if(method === 'razorpay'){
     rzp.style.borderColor='var(--gold-accent)';rzp.style.background='rgba(201,168,76,0.06)';
     cod.style.borderColor='var(--border)';cod.style.background='var(--bg2)';
-    btn.textContent='Pay Online';btn.style.background='linear-gradient(135deg,#5a4ff3,#7e6ff8)';
+    btn.textContent='Pay Online';btn.style.cssText='width:100%;padding:14px;font-size:0.9rem;letter-spacing:0.1em;text-transform:uppercase;background:linear-gradient(135deg,#c9a84c,#e6c56a);border:none;color:#111;font-weight:600;cursor:pointer;border-radius:3px;transition:all .3s;';
   } else {
     cod.style.borderColor='var(--gold-accent)';cod.style.background='rgba(201,168,76,0.06)';
     rzp.style.borderColor='var(--border)';rzp.style.background='var(--bg2)';
-    btn.textContent='Place Order (Cash on Delivery)';btn.style.background='var(--text)';
+    btn.textContent='Place Order (Cash on Delivery)';btn.style.cssText='width:100%;padding:14px;font-size:0.9rem;letter-spacing:0.1em;text-transform:uppercase;background:transparent;border:1.5px solid #c9a84c;color:#c9a84c;font-weight:600;cursor:pointer;border-radius:3px;transition:all .3s;';
   }
 }
 function openCheckoutModal() {
