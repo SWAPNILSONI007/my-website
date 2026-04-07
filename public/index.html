@@ -332,12 +332,12 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
 /* CHECKOUT MODAL */
 .checkout-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:3000;opacity:0;pointer-events:none;transition:opacity .3s;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
 .checkout-modal-overlay.open{opacity:1;pointer-events:all;}
-.checkout-modal{background:var(--card);border:1px solid var(--border);width:100%;max-width:500px;border-radius:4px;overflow:hidden;transform:translateY(20px);opacity:0;transition:all .3s;box-shadow:0 20px 60px rgba(0,0,0,0.2);}
+.checkout-modal{background:var(--card);border:1px solid var(--border);width:100%;max-width:500px;max-height:90vh;border-radius:4px;overflow:hidden;transform:translateY(20px);opacity:0;transition:all .3s;box-shadow:0 20px 60px rgba(0,0,0,0.2);display:flex;flex-direction:column;}
 .checkout-modal-overlay.open .checkout-modal{transform:translateY(0);opacity:1;}
 .checkout-modal-head{padding:1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
 .checkout-modal-head h3{font-family:'Playfair Display',serif;font-size:1.4rem;}
 .checkout-modal-close{background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--text);}
-.checkout-modal-body{padding:1.5rem;max-height:60vh;overflow-y:auto;}
+.checkout-modal-body{padding:1.5rem;max-height:60vh;overflow-y:auto;flex:1;}
 .checkout-form-group{margin-bottom:1rem;}
 .checkout-form-group label{display:block;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--silver);margin-bottom:.4rem;}
 .checkout-input{width:100%;padding:12px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-family:inherit;font-size:.9rem;outline:none;border-radius:2px;transition:all .3s;}
@@ -576,7 +576,7 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
       </div>
     </div>
     <div class="checkout-modal-foot" id="checkoutFoot">
-      <button class="btn-primary" id="payBtn" style="width:100%;padding:14px;font-size:0.9rem;letter-spacing:0.1em;text-transform:uppercase;background:linear-gradient(135deg,#5a4ff3,#7e6ff8);border:none;color:#fff;cursor:pointer;" onclick="handlePayment()">Pay Now with Razorpay</button>
+      <button class="btn-primary" id="payBtn" style="width:100%;padding:14px;font-size:0.9rem;letter-spacing:0.1em;text-transform:uppercase;background:linear-gradient(135deg,#5a4ff3,#7e6ff8);border:none;color:#fff;cursor:pointer;" onclick="handlePayment()">Pay Online</button>
     </div>
   </div>
 </div>
@@ -1001,7 +1001,7 @@ function selectPayMethod(method){
   if(method === 'razorpay'){
     rzp.style.borderColor='var(--gold-accent)';rzp.style.background='rgba(201,168,76,0.06)';
     cod.style.borderColor='var(--border)';cod.style.background='var(--bg2)';
-    btn.textContent='Pay Now with Razorpay';btn.style.background='linear-gradient(135deg,#5a4ff3,#7e6ff8)';
+    btn.textContent='Pay Online';btn.style.background='linear-gradient(135deg,#5a4ff3,#7e6ff8)';
   } else {
     cod.style.borderColor='var(--gold-accent)';cod.style.background='rgba(201,168,76,0.06)';
     rzp.style.borderColor='var(--border)';rzp.style.background='var(--bg2)';
