@@ -495,7 +495,7 @@
         <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
       </button>
     </div>
-    <div class="nch-footer">Powered by Gemini AI · Silviyara Jewellers</div>
+    <div class="nch-footer">Powered by Gemini AI · Silviyara Jewels</div>
   </div>
   `;
   document.body.insertAdjacentHTML('beforeend', html);

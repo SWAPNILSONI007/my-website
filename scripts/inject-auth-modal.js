@@ -57,7 +57,7 @@ const AUTH_MODAL = `
     <!-- Stripe header -->
     <div class="auth-modal-stripe">
       <button class="auth-modal-close" onclick="closeAuthModal()">✕</button>
-      <p class="auth-modal-eyebrow">✦ Silviyara Jewellers</p>
+      <p class="auth-modal-eyebrow">✦ Silviyara Jewels</p>
       <h2 class="auth-modal-title" id="authModalHeading">Welcome <em>back.</em></h2>
     </div>
     <!-- Tabs -->

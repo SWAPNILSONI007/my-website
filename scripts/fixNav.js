@@ -52,7 +52,7 @@ nav.nav-hidden{transform:translateY(-100%);}
 
 const getHtmlToReplace = (activePage) => `
 <nav id="mainNav">
-  <a href="/" class="logo">Silviyara <span>Jewellers</span></a>
+  <a href="/" class="logo">Silviyara <span>Jewels</span></a>
   <ul class="nav-links">
     <li class="dropdown"><a href="#">Collections ▾</a>
       <div class="dropdown-menu">

@@ -172,7 +172,7 @@ textarea{resize:vertical;min-height:80px;}
 <div class="main">
   <div class="topbar">
     <div class="topbar-left">
-      <div class="topbar-logo">Silviyara <em>Jewellers</em></div>
+      <div class="topbar-logo">Silviyara <em>Jewels</em></div>
       <span class="topbar-badge">Admin</span>
     </div>
     <div class="topbar-right">
@@ -761,7 +761,7 @@ async function loadOrders(){
       const payStatus=o.paymentStatus||'Pending';
       const payMethodBadge=payMethod==='Razorpay'?`<span class="pay-badge-rzp">💳 Razorpay</span>`:`<span class="pay-badge-cod">🏠 COD</span>`;
       const payStatusBadge=payStatus==='Paid'?`<span class="pay-badge-paid">✅ Paid</span>`:payStatus==='Failed'?`<span style="background:rgba(231,76,60,0.12);color:#e74c3c;display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;">❌ Failed</span>`:`<span class="pay-badge-pending">⏳ Unpaid</span>`;
-      const waMsg=`Hi ${o.customerName}! Your Silviyara Jewellers order (${o.items.map(i=>i.name).join(', ')}) of ₹${o.totalAmount} is being processed. We'll share tracking details soon. Thank you! 🙏`;
+      const waMsg=`Hi ${o.customerName}! Your Silviyara Jewels order (${o.items.map(i=>i.name).join(', ')}) of ₹${o.totalAmount} is being processed. We'll share tracking details soon. Thank you! 🙏`;
       const date=new Date(o.createdAt);
       const dateStr=date.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
       const timeStr=date.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
@@ -868,7 +868,7 @@ function generateInvoice(orderId){
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Invoice ${orderNum} — Silviyara Jewellers</title>
+<title>Invoice ${orderNum} — Silviyara Jewels</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root{--ink:#1a1a2e;--muted:#6b7280;--accent:#c9a84c;--accent-light:#f5edd8;--border:#e5e0d8;--bg:#faf9f7;--white:#ffffff;}
@@ -943,7 +943,7 @@ function generateInvoice(orderId){
 <div class="invoice">
   <div class="header">
     <div>
-      <div class="brand-name">Silviyara Jewellers</div>
+      <div class="brand-name">Silviyara Jewels</div>
       <div class="brand-tagline">Fine Silver & Handcrafted Pieces</div>
       <div class="brand-contact">silviyarajewels@gmail.com<br>+91 8004703038<br>Lucknow, Uttar Pradesh</div>
     </div>

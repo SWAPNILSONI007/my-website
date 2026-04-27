@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Silviyara Jewellers — Silver Jewellery</title>
+<title>Silviyara Jewels — Silver Jewellery</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 :root {
@@ -413,7 +413,7 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
 
 <!-- NAV -->
 <nav id="mainNav">
-  <a href="/" class="logo">Silviyara <span>Jewellers</span></a>
+  <a href="/" class="logo">Silviyara <span>Jewels</span></a>
   <ul class="nav-links">
     <li><a href="/" class="active">Home</a></li>
     <li class="dropdown">
@@ -521,7 +521,7 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
         <div class="os-icon-ring">✓</div>
         <p class="os-eyebrow">✦ Order Confirmed</p>
         <h3 class="os-title">Order Placed Successfully!</h3>
-        <p class="os-subtitle">Thank you for shopping with <strong>Silviyara Jewellers</strong>. Your order is now being processed.</p>
+        <p class="os-subtitle">Thank you for shopping with <strong>Silviyara Jewels</strong>. Your order is now being processed.</p>
         <p class="os-id" id="successOrderId"></p>
         <!-- Status Tracker -->
         <div class="os-tracker">
@@ -709,7 +709,7 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
 <footer>
   <div class="footer-grid">
     <div class="footer-brand">
-      <a href="/" class="logo">Silviyara <span style="color:var(--silver);font-style:italic">Jewellers</span></a>
+      <a href="/" class="logo">Silviyara <span style="color:var(--silver);font-style:italic">Jewels</span></a>
       <p>Handpicked sterling silver jewellery from Lucknow. Crafted for the modern woman who values elegance and authenticity.</p>
     </div>
     <div class="footer-col">
@@ -736,7 +736,7 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
     </div>
   </div>
   <div class="footer-bottom">
-    <span>© 2026 Silviyara Jewellers. All rights reserved.</span>
+    <span>© 2026 Silviyara Jewels. All rights reserved.</span>
     <span>Made with ♥ in Lucknow</span>
   </div>
 </footer>
@@ -855,7 +855,7 @@ function closeCart(){document.getElementById('cartOverlay').classList.remove('op
 function checkoutWA(){
   const items=cart.map(i=>`• ${i.name} — ₹${i.price.toLocaleString()}`).join('\n');
   const total=cart.reduce((s,i)=>s+i.price,0);
-  const msg=`Hi Silviyara Jewellers! 💍\n\nI'd like to order:\n${items}\n\nTotal: ₹${total.toLocaleString()}\n\nPlease confirm availability.`;
+  const msg=`Hi Silviyara Jewels! 💍\n\nI'd like to order:\n${items}\n\nTotal: ₹${total.toLocaleString()}\n\nPlease confirm availability.`;
   window.open(`https://wa.me/918004703038?text=${encodeURIComponent(msg)}`,'_blank');
 }
 
@@ -1072,7 +1072,7 @@ function sendOwnerWhatsApp(orderData){
     const o = orderData.order || orderData;
     const items = (o.items||[]).map(i=>`• ${i.name}${i.sku?' ('+i.sku+')':''} × ${i.qty||1} — ₹${(i.price||0).toLocaleString()}`).join('\n');
     const date = new Date().toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
-    const msg = `🛍️ NEW ORDER — Silviyara Jewellers\n\n👤 ${o.customerName||'Customer'}\n📧 ${o.customerEmail||'N/A'}\n📞 ${o.customerMobile||'N/A'}\n📍 ${o.customerAddress||''}${o.customerLandmark?', '+o.customerLandmark:''}\\n${o.customerCity||''}${o.customerState?', '+o.customerState:''} — ${o.customerPin||''}\n\n📦 Items:\n${items}\n\n💰 Total: ₹${(o.totalAmount||0).toLocaleString()}\n💳 Payment: ${o.paymentMethod||'COD'}${o.paymentStatus==='Paid'?' (Paid ✓)':' (Pending)'}\n\n📝 Order ID: ${o._id||orderData.orderId||'N/A'}\n🕐 ${date}`;
+    const msg = `🛍️ NEW ORDER — Silviyara Jewels\n\n👤 ${o.customerName||'Customer'}\n📧 ${o.customerEmail||'N/A'}\n📞 ${o.customerMobile||'N/A'}\n📍 ${o.customerAddress||''}${o.customerLandmark?', '+o.customerLandmark:''}\\n${o.customerCity||''}${o.customerState?', '+o.customerState:''} — ${o.customerPin||''}\n\n📦 Items:\n${items}\n\n💰 Total: ₹${(o.totalAmount||0).toLocaleString()}\n💳 Payment: ${o.paymentMethod||'COD'}${o.paymentStatus==='Paid'?' (Paid ✓)':' (Pending)'}\n\n📝 Order ID: ${o._id||orderData.orderId||'N/A'}\n🕐 ${date}`;
     // Open WhatsApp in background tab
     const waUrl = `https://wa.me/918004703038?text=${encodeURIComponent(msg)}`;
     window.open(waUrl,'_blank','noopener,noreferrer');
@@ -1146,7 +1146,7 @@ async function handlePayment(){
     if(!orderData.success) throw new Error(orderData.message||'Failed to create payment order');
     const options = {
       key: orderData.keyId, amount: orderData.amount, currency: orderData.currency,
-      name: 'Silviyara Jewellers', description: `Order of ${cart.length} item(s)`, image: '/ring1.png',
+      name: 'Silviyara Jewels', description: `Order of ${cart.length} item(s)`, image: '/ring1.png',
       order_id: orderData.orderId, prefill:{name:details.name,contact:details.mobile,email:details.email}, theme:{color:'#c9a84c'},
       handler: async function(response){
         try{
@@ -1219,7 +1219,7 @@ async function handlePayment(){
     <!-- Stripe header -->
     <div class="auth-modal-stripe">
       <button class="auth-modal-close" onclick="closeAuthModal()">✕</button>
-      <p class="auth-modal-eyebrow">✦ Silviyara Jewellers</p>
+      <p class="auth-modal-eyebrow">✦ Silviyara Jewels</p>
       <h2 class="auth-modal-title" id="authModalHeading">Welcome <em>back.</em></h2>
     </div>
     <!-- Tabs -->
