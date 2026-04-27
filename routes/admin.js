@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const ADMIN_USER = process.env.ADMIN_USERNAME || 'navyra_admin';
-const ADMIN_PASS = process.env.ADMIN_PASSWORD || 'navyra@2026';
-const SECRET_TOKEN = process.env.ADMIN_TOKEN || 'navyra-secret-2026';
+const ADMIN_USER = process.env.ADMIN_USERNAME || 'silviyara_admin';
+const ADMIN_PASS = process.env.ADMIN_PASSWORD || 'silviyara@2026';
+const SECRET_TOKEN = process.env.ADMIN_TOKEN || 'silviyara-secret-2026';
 
 router.post('/login', (req, res) => {
   const { username, password } = req.body;

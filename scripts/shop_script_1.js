@@ -125,7 +125,7 @@ function closeCart(){document.getElementById('cartOverlay').classList.remove('op
 function checkoutWA(){
   const items=cart.map(i=>`• ${i.name} — ₹${i.price.toLocaleString()}`).join('\n');
   const total=cart.reduce((s,i)=>s+i.price,0);
-  window.open(`https://wa.me/918004703038?text=${encodeURIComponent(`Hi Navyra Jewellers!\n\nOrder:\n${items}\n\nTotal: ₹${total.toLocaleString()}`)}`, '_blank');
+  window.open(`https://wa.me/918004703038?text=${encodeURIComponent(`Hi Silviyara Jewellers!\n\nOrder:\n${items}\n\nTotal: ₹${total.toLocaleString()}`)}`, '_blank');
 }
 
 function toggleTheme(){

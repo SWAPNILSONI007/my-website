@@ -39,9 +39,34 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+// Category code map for SKU generation
+const CATEGORY_CODES = {
+  'pendant': 'PND', 'ear-jewellery': 'EAR', 'rings': 'RNG',
+  'anklets': 'ANK', 'bracelets': 'BRC', 'necklaces': 'NCK',
+  'hair-accessories': 'HAR'
+};
+
+// Auto-generate SKU: SLV-{CAT}-{NNN}
+async function generateSKU(category) {
+  const code = CATEGORY_CODES[category] || 'GEN';
+  const prefix = `SLV-${code}-`;
+  // Find highest existing SKU number for this category
+  const existing = await Product.find({ sku: { $regex: `^${prefix}` } }).select('sku').lean();
+  let maxNum = 0;
+  existing.forEach(p => {
+    const num = parseInt(p.sku.replace(prefix, ''), 10);
+    if (num > maxNum) maxNum = num;
+  });
+  return `${prefix}${String(maxNum + 1).padStart(3, '0')}`;
+}
+
 // Add product (admin only)
 router.post('/', async (req, res) => {
   try {
+    // Auto-generate SKU if not provided
+    if (!req.body.sku || req.body.sku.trim() === '') {
+      req.body.sku = await generateSKU(req.body.category);
+    }
     const product = new Product(req.body);
     await product.save();
     res.json({ success: true, product });

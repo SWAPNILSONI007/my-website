@@ -4,7 +4,7 @@ const Order = require('../models/Order');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'navyra_super_secret_key_2026';
+const JWT_SECRET = process.env.JWT_SECRET || 'Silviyara_super_secret_key_2026';
 const auth = (req, res, next) => {
   const token = req.header('x-auth-token');
   if (!token) return res.status(401).json({ success: false, msg: 'No token, authorization denied' });
@@ -46,7 +46,7 @@ router.post('/', async (req, res) => {
         status: 'Pending', createdAt: new Date() 
       };
       memoryOrders.unshift(newOrder);
-      return res.json({ success: true, orderId: newOrder._id });
+      return res.json({ success: true, orderId: newOrder._id, order: newOrder });
     }
 
     const orderData = {
@@ -57,7 +57,7 @@ router.post('/', async (req, res) => {
 
     const order = new Order(orderData);
     await order.save();
-    res.json({ success: true, orderId: order._id });
+    res.json({ success: true, orderId: order._id, order });
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: 'Server error' });

@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Customer = require('../models/Customer');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'navyra_super_secret_key_2026';
+const JWT_SECRET = process.env.JWT_SECRET || 'Silviyara_super_secret_key_2026';
 
 // Middleware to protect routes
 const auth = (req, res, next) => {

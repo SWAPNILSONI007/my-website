@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Navyra Jewellers — Silver Jewellery</title>
+<title>Silviyara Jewellers — Silver Jewellery</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 :root {
@@ -97,12 +97,16 @@ nav.nav-hidden{transform:translateY(-100%);}
 .section-label{font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:var(--silver);margin-bottom:.75rem;}
 .section-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:400;}
 .section-header{margin-bottom:3rem;}
-.categories-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:1rem;}
-.cat-card{background:var(--card);border:1px solid var(--border);overflow:hidden;text-align:center;cursor:pointer;transition:all .3s;text-decoration:none;color:var(--text);display:block;padding:0;}
-.cat-card:hover{border-color:var(--silver);transform:translateY(-4px);box-shadow:0 12px 40px var(--shadow);}
-.cat-card:hover .cat-img{transform:scale(1.06);}
-.cat-img-wrap{height:120px;overflow:hidden;background:var(--bg2);display:flex;align-items:center;justify-content:center;}
-.cat-img{width:100%;height:100%;object-fit:cover;transition:transform .4s cubic-bezier(.4,0,.2,1);}
+/* Marquee categories */
+.categories-marquee{overflow:hidden;position:relative;width:100%;mask-image:linear-gradient(to right,transparent 0%,#000 8%,#000 92%,transparent 100%);-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 8%,#000 92%,transparent 100%);}
+.categories-track{display:flex;gap:1.25rem;width:max-content;animation:marqueeScroll 30s linear infinite;}
+.categories-marquee:hover .categories-track{animation-play-state:paused;}
+@keyframes marqueeScroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+.cat-card{background:var(--card);border:1px solid var(--border);overflow:hidden;text-align:center;cursor:pointer;transition:all .35s cubic-bezier(.4,0,.2,1);text-decoration:none;color:var(--text);display:block;padding:0;min-width:160px;flex-shrink:0;border-radius:8px;}
+.cat-card:hover{border-color:var(--gold-accent);transform:translateY(-6px) scale(1.03);box-shadow:0 16px 48px var(--shadow),0 0 0 1px rgba(201,168,76,0.15);}
+.cat-card:hover .cat-img{transform:scale(1.08);}
+.cat-img-wrap{height:130px;overflow:hidden;background:var(--bg2);display:flex;align-items:center;justify-content:center;}
+.cat-img{width:100%;height:100%;object-fit:cover;transition:transform .5s cubic-bezier(.4,0,.2,1);}
 .cat-img-fallback{font-size:2rem;}
 .cat-body{padding:.9rem 1rem .9rem;}
 .cat-icon{font-size:2rem;margin-bottom:.75rem;display:block;}
@@ -409,7 +413,7 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
 
 <!-- NAV -->
 <nav id="mainNav">
-  <a href="/" class="logo">Navyra <span>Jewellers</span></a>
+  <a href="/" class="logo">Silviyara <span>Jewellers</span></a>
   <ul class="nav-links">
     <li><a href="/" class="active">Home</a></li>
     <li class="dropdown">
@@ -517,7 +521,7 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
         <div class="os-icon-ring">✓</div>
         <p class="os-eyebrow">✦ Order Confirmed</p>
         <h3 class="os-title">Order Placed Successfully!</h3>
-        <p class="os-subtitle">Thank you for shopping with <strong>Navyra Jewellers</strong>. Your order is now being processed.</p>
+        <p class="os-subtitle">Thank you for shopping with <strong>Silviyara Jewellers</strong>. Your order is now being processed.</p>
         <p class="os-id" id="successOrderId"></p>
         <!-- Status Tracker -->
         <div class="os-tracker">
@@ -601,15 +605,27 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
     <p class="section-label">✦ Browse By Category</p>
     <h2 class="section-title">Shop Our Collections</h2>
   </div>
-  <div class="categories-grid">
-    <a href="/shop?cat=pendant" class="cat-card"><div class="cat-img-wrap"><img class="cat-img" src="/images/pendant.png" alt="Pendant" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span class="cat-img-fallback" style="display:none">🔮</span></div><div class="cat-body"><span class="cat-name">Pendant</span></div></a>
-    <a href="/shop?cat=ear-jewellery" class="cat-card"><div class="cat-img-wrap"><img class="cat-img" src="/images/ear-jewellery.png" alt="Ear Jewellery" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span class="cat-img-fallback" style="display:none">✨</span></div><div class="cat-body"><span class="cat-name">Ear Jewellery</span></div></a>
-    <a href="/shop?cat=rings" class="cat-card"><div class="cat-img-wrap"><img class="cat-img" src="/images/rings.png" alt="Rings" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span class="cat-img-fallback" style="display:none">💍</span></div><div class="cat-body"><span class="cat-name">Rings</span></div></a>
-    <a href="/shop?cat=anklets" class="cat-card"><div class="cat-img-wrap"><img class="cat-img" src="/images/anklets.png" alt="Anklets" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span class="cat-img-fallback" style="display:none">🌿</span></div><div class="cat-body"><span class="cat-name">Anklets</span></div></a>
-    <a href="/shop?cat=bracelets" class="cat-card"><div class="cat-img-wrap"><img class="cat-img" src="/images/bracelets.png" alt="Bracelets" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span class="cat-img-fallback" style="display:none">🪬</span></div><div class="cat-body"><span class="cat-name">Bracelets</span></div></a>
-    <a href="/shop?cat=necklaces" class="cat-card"><div class="cat-img-wrap"><img class="cat-img" src="/images/necklaces.png" alt="Necklaces" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span class="cat-img-fallback" style="display:none">📿</span></div><div class="cat-body"><span class="cat-name">Necklaces</span></div></a>
-    <a href="/shop?cat=hair-accessories" class="cat-card"><div class="cat-img-wrap"><img class="cat-img" src="/images/hair-accessories.png" alt="Hair Accessories" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span class="cat-img-fallback" style="display:none">🌸</span></div><div class="cat-body"><span class="cat-name">Hair Accessories</span></div></a>
-    <a href="#" class="cat-card" style="opacity:.5;pointer-events:none"><div class="cat-img-wrap"><span class="cat-img-fallback" style="display:block">👑</span></div><div class="cat-body"><span class="cat-name">Gold</span><span class="cat-count">Coming Soon</span></div></a>
+  <div class="categories-marquee">
+    <div class="categories-track">
+      <!-- Set 1 -->
+      <a href="/shop?cat=pendant" class="cat-card"><div class="cat-img-wrap"><img class="cat-img" src="/images/pendant.png" alt="Pendant" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span class="cat-img-fallback" style="display:none">🔮</span></div><div class="cat-body"><span class="cat-name">Pendant</span></div></a>
+      <a href="/shop?cat=ear-jewellery" class="cat-card"><div class="cat-img-wrap"><img class="cat-img" src="/images/ear-jewellery.png" alt="Ear Jewellery" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span class="cat-img-fallback" style="display:none">✨</span></div><div class="cat-body"><span class="cat-name">Ear Jewellery</span></div></a>
+      <a href="/shop?cat=rings" class="cat-card"><div class="cat-img-wrap"><img class="cat-img" src="/images/rings.png" alt="Rings" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span class="cat-img-fallback" style="display:none">💍</span></div><div class="cat-body"><span class="cat-name">Rings</span></div></a>
+      <a href="/shop?cat=anklets" class="cat-card"><div class="cat-img-wrap"><img class="cat-img" src="/images/anklets.png" alt="Anklets" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span class="cat-img-fallback" style="display:none">🌿</span></div><div class="cat-body"><span class="cat-name">Anklets</span></div></a>
+      <a href="/shop?cat=bracelets" class="cat-card"><div class="cat-img-wrap"><img class="cat-img" src="/images/bracelets.png" alt="Bracelets" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span class="cat-img-fallback" style="display:none">🪬</span></div><div class="cat-body"><span class="cat-name">Bracelets</span></div></a>
+      <a href="/shop?cat=necklaces" class="cat-card"><div class="cat-img-wrap"><img class="cat-img" src="/images/necklaces.png" alt="Necklaces" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span class="cat-img-fallback" style="display:none">📿</span></div><div class="cat-body"><span class="cat-name">Necklaces</span></div></a>
+      <a href="/shop?cat=hair-accessories" class="cat-card"><div class="cat-img-wrap"><img class="cat-img" src="/images/hair-accessories.png" alt="Hair Accessories" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span class="cat-img-fallback" style="display:none">🌸</span></div><div class="cat-body"><span class="cat-name">Hair Accessories</span></div></a>
+      <a href="#" class="cat-card" style="opacity:.5;pointer-events:none"><div class="cat-img-wrap"><span class="cat-img-fallback" style="display:block">👑</span></div><div class="cat-body"><span class="cat-name">Gold</span><span class="cat-count">Coming Soon</span></div></a>
+      <!-- Set 2 (duplicate for seamless loop) -->
+      <a href="/shop?cat=pendant" class="cat-card"><div class="cat-img-wrap"><img class="cat-img" src="/images/pendant.png" alt="Pendant" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span class="cat-img-fallback" style="display:none">🔮</span></div><div class="cat-body"><span class="cat-name">Pendant</span></div></a>
+      <a href="/shop?cat=ear-jewellery" class="cat-card"><div class="cat-img-wrap"><img class="cat-img" src="/images/ear-jewellery.png" alt="Ear Jewellery" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span class="cat-img-fallback" style="display:none">✨</span></div><div class="cat-body"><span class="cat-name">Ear Jewellery</span></div></a>
+      <a href="/shop?cat=rings" class="cat-card"><div class="cat-img-wrap"><img class="cat-img" src="/images/rings.png" alt="Rings" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span class="cat-img-fallback" style="display:none">💍</span></div><div class="cat-body"><span class="cat-name">Rings</span></div></a>
+      <a href="/shop?cat=anklets" class="cat-card"><div class="cat-img-wrap"><img class="cat-img" src="/images/anklets.png" alt="Anklets" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span class="cat-img-fallback" style="display:none">🌿</span></div><div class="cat-body"><span class="cat-name">Anklets</span></div></a>
+      <a href="/shop?cat=bracelets" class="cat-card"><div class="cat-img-wrap"><img class="cat-img" src="/images/bracelets.png" alt="Bracelets" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span class="cat-img-fallback" style="display:none">🪬</span></div><div class="cat-body"><span class="cat-name">Bracelets</span></div></a>
+      <a href="/shop?cat=necklaces" class="cat-card"><div class="cat-img-wrap"><img class="cat-img" src="/images/necklaces.png" alt="Necklaces" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span class="cat-img-fallback" style="display:none">📿</span></div><div class="cat-body"><span class="cat-name">Necklaces</span></div></a>
+      <a href="/shop?cat=hair-accessories" class="cat-card"><div class="cat-img-wrap"><img class="cat-img" src="/images/hair-accessories.png" alt="Hair Accessories" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span class="cat-img-fallback" style="display:none">🌸</span></div><div class="cat-body"><span class="cat-name">Hair Accessories</span></div></a>
+      <a href="#" class="cat-card" style="opacity:.5;pointer-events:none"><div class="cat-img-wrap"><span class="cat-img-fallback" style="display:block">👑</span></div><div class="cat-body"><span class="cat-name">Gold</span><span class="cat-count">Coming Soon</span></div></a>
+    </div>
   </div>
 </section>
 
@@ -656,7 +672,7 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
 <section class="why-section">
   <div class="section-header">
     <p class="section-label">✦ Why Choose Us</p>
-    <h2 class="section-title">The Navyra Promise</h2>
+    <h2 class="section-title">The Silviyara Promise</h2>
   </div>
   <div class="why-grid">
     <div class="why-card"><span class="why-icon">🪙</span><h3 class="why-title">925 Sterling Silver</h3><p class="why-desc">Every piece is crafted from genuine 925 sterling silver — hallmarked and certified.</p></div>
@@ -693,7 +709,7 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
 <footer>
   <div class="footer-grid">
     <div class="footer-brand">
-      <a href="/" class="logo">Navyra <span style="color:var(--silver);font-style:italic">Jewellers</span></a>
+      <a href="/" class="logo">Silviyara <span style="color:var(--silver);font-style:italic">Jewellers</span></a>
       <p>Handpicked sterling silver jewellery from Lucknow. Crafted for the modern woman who values elegance and authenticity.</p>
     </div>
     <div class="footer-col">
@@ -720,7 +736,7 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
     </div>
   </div>
   <div class="footer-bottom">
-    <span>© 2026 Navyra Jewellers. All rights reserved.</span>
+    <span>© 2026 Silviyara Jewellers. All rights reserved.</span>
     <span>Made with ♥ in Lucknow</span>
   </div>
 </footer>
@@ -839,7 +855,7 @@ function closeCart(){document.getElementById('cartOverlay').classList.remove('op
 function checkoutWA(){
   const items=cart.map(i=>`• ${i.name} — ₹${i.price.toLocaleString()}`).join('\n');
   const total=cart.reduce((s,i)=>s+i.price,0);
-  const msg=`Hi Navyra Jewellers! 💍\n\nI'd like to order:\n${items}\n\nTotal: ₹${total.toLocaleString()}\n\nPlease confirm availability.`;
+  const msg=`Hi Silviyara Jewellers! 💍\n\nI'd like to order:\n${items}\n\nTotal: ₹${total.toLocaleString()}\n\nPlease confirm availability.`;
   window.open(`https://wa.me/918004703038?text=${encodeURIComponent(msg)}`,'_blank');
 }
 
@@ -956,7 +972,7 @@ loadProducts();
           <div class="cmodal-contact-text"><p>Working Hours</p><span>Mon–Sat: 10am – 8pm</span></div>
         </div>
       </div>
-      <a href="https://wa.me/918004703038?text=Hi%20Navyra!%20I%20have%20a%20question." target="_blank" class="cmodal-wa-btn">💬 &nbsp;Chat on WhatsApp</a>
+      <a href="https://wa.me/918004703038?text=Hi%20Silviyara!%20I%20have%20a%20question." target="_blank" class="cmodal-wa-btn">💬 &nbsp;Chat on WhatsApp</a>
     </div>
     <div class="cmodal-right">
       <button class="cmodal-close" onclick="closeContactModal()">✕</button>
@@ -1049,7 +1065,21 @@ async function saveOrderToServer({name,email,mobile,address,landmark,city,state,
   const res = await fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({customerId: (JSON.parse(localStorage.getItem('navUser') || 'null') || {}).id || null, customerName:name,customerEmail:email,customerMobile:mobile,customerAddress:address,customerLandmark:landmark,customerCity:city,customerState:state,customerPin:pin,items:cart,totalAmount,paymentMethod,paymentId,razorpayOrderId:razorpayOrderId||'',paymentStatus})});
   return await res.json();
 }
-function showSuccess(orderId){
+
+// Send order notification to owner's WhatsApp
+function sendOwnerWhatsApp(orderData){
+  try{
+    const o = orderData.order || orderData;
+    const items = (o.items||[]).map(i=>`• ${i.name}${i.sku?' ('+i.sku+')':''} × ${i.qty||1} — ₹${(i.price||0).toLocaleString()}`).join('\n');
+    const date = new Date().toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    const msg = `🛍️ NEW ORDER — Silviyara Jewellers\n\n👤 ${o.customerName||'Customer'}\n📧 ${o.customerEmail||'N/A'}\n📞 ${o.customerMobile||'N/A'}\n📍 ${o.customerAddress||''}${o.customerLandmark?', '+o.customerLandmark:''}\\n${o.customerCity||''}${o.customerState?', '+o.customerState:''} — ${o.customerPin||''}\n\n📦 Items:\n${items}\n\n💰 Total: ₹${(o.totalAmount||0).toLocaleString()}\n💳 Payment: ${o.paymentMethod||'COD'}${o.paymentStatus==='Paid'?' (Paid ✓)':' (Pending)'}\n\n📝 Order ID: ${o._id||orderData.orderId||'N/A'}\n🕐 ${date}`;
+    // Open WhatsApp in background tab
+    const waUrl = `https://wa.me/918004703038?text=${encodeURIComponent(msg)}`;
+    window.open(waUrl,'_blank','noopener,noreferrer');
+  }catch(e){ console.log('WA notify error:',e); }
+}
+
+function showSuccess(orderId, orderData){
   document.getElementById('checkoutBody').style.display='none';
   document.getElementById('checkoutFoot').style.display='none';
   document.getElementById('checkoutFailure').style.display='none';
@@ -1068,6 +1098,8 @@ function showSuccess(orderId){
     const opts={weekday:'long',month:'long',day:'numeric'};
     eta.textContent=`By ${d.toLocaleDateString('en-IN',opts)}`;
   }
+  // Send WhatsApp notification to owner
+  if(orderData) sendOwnerWhatsApp(orderData);
   cart=[]; updateCart();
 }
 function showFailure(message, paymentId){
@@ -1102,7 +1134,7 @@ async function handlePayment(){
   if(selectedPayMethod === 'cod'){
     try{
       const data = await saveOrderToServer({...details,paymentMethod:'COD',paymentId:'',razorpayOrderId:'',paymentStatus:'Pending'});
-      if(data.success){showSuccess(data.orderId);}
+      if(data.success){showSuccess(data.orderId, data);}
       else{alert('Error: '+(data.message||'Could not place order'));btn.disabled=false;selectPayMethod('cod');}
     }catch(e){alert('Network error. Please try again.');btn.disabled=false;selectPayMethod('cod');}
     return;
@@ -1114,7 +1146,7 @@ async function handlePayment(){
     if(!orderData.success) throw new Error(orderData.message||'Failed to create payment order');
     const options = {
       key: orderData.keyId, amount: orderData.amount, currency: orderData.currency,
-      name: 'Navyra Jewellers', description: `Order of ${cart.length} item(s)`, image: '/ring1.png',
+      name: 'Silviyara Jewellers', description: `Order of ${cart.length} item(s)`, image: '/ring1.png',
       order_id: orderData.orderId, prefill:{name:details.name,contact:details.mobile,email:details.email}, theme:{color:'#c9a84c'},
       handler: async function(response){
         try{
@@ -1122,7 +1154,7 @@ async function handlePayment(){
           const vData = await vRes.json();
           if(vData.success){
             const saved = await saveOrderToServer({...details,paymentMethod:'Razorpay',paymentId:response.razorpay_payment_id,razorpayOrderId:orderData.orderId,paymentStatus:'Paid'});
-            if(saved.success) showSuccess(saved.orderId);
+            if(saved.success) showSuccess(saved.orderId, saved);
             else showFailure('Payment was successful but order could not be saved. Please contact support.', response.razorpay_payment_id);
           } else { showFailure('Payment verification failed. Please contact support.', response.razorpay_payment_id); }
         }catch(e){ showFailure('Payment verification error. Please contact support.'); }
@@ -1137,7 +1169,7 @@ async function handlePayment(){
 </script>
 <!-- Razorpay SDK -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<!-- Navyra AI Chatbot -->
+<!-- Silviyara AI Chatbot -->
 <script src="/chatbot.js"></script>
 
 
@@ -1187,7 +1219,7 @@ async function handlePayment(){
     <!-- Stripe header -->
     <div class="auth-modal-stripe">
       <button class="auth-modal-close" onclick="closeAuthModal()">✕</button>
-      <p class="auth-modal-eyebrow">✦ Navyra Jewellers</p>
+      <p class="auth-modal-eyebrow">✦ Silviyara Jewellers</p>
       <h2 class="auth-modal-title" id="authModalHeading">Welcome <em>back.</em></h2>
     </div>
     <!-- Tabs -->
@@ -1258,7 +1290,7 @@ function switchAuthTab(tab) {
   document.getElementById('modal-tab-register').classList.toggle('active',!isLogin);
   document.getElementById('modal-form-login').classList.toggle('active',isLogin);
   document.getElementById('modal-form-register').classList.toggle('active',!isLogin);
-  document.getElementById('authModalHeading').innerHTML = isLogin ? 'Welcome <em>back.</em>' : 'Join <em>Navyra.</em>';
+  document.getElementById('authModalHeading').innerHTML = isLogin ? 'Welcome <em>back.</em>' : 'Join <em>Silviyara.</em>';
 }
 async function handleModalLogin(e) {
   e.preventDefault();

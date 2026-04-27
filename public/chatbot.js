@@ -3,7 +3,7 @@
   const style = document.createElement('style');
   style.textContent = `
   /* ── Chatbot Widget ─────────────────────────────────── */
-  #navyra-chat-btn {
+  #Silviyara-chat-btn {
     position: fixed;
     bottom: 100px;
     right: 28px;
@@ -19,24 +19,24 @@
     align-items: center;
     justify-content: center;
     transition: all 0.3s cubic-bezier(.4,0,.2,1);
-    animation: navyra-pulse 2.8s infinite;
+    animation: Silviyara-pulse 2.8s infinite;
     outline: none;
   }
-  #navyra-chat-btn:hover {
+  #Silviyara-chat-btn:hover {
     transform: scale(1.1) translateY(-2px);
     border-color: rgba(201,168,76,0.9);
     box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 6px rgba(201,168,76,0.12);
   }
-  #navyra-chat-btn svg {
+  #Silviyara-chat-btn svg {
     width: 24px;
     height: 24px;
     fill: #c9a84c;
     transition: transform 0.3s;
   }
-  #navyra-chat-btn.open svg.icon-chat { display: none; }
-  #navyra-chat-btn.open svg.icon-close { display: block !important; }
-  #navyra-chat-btn svg.icon-close { display: none; }
-  .navyra-unread-dot {
+  #Silviyara-chat-btn.open svg.icon-chat { display: none; }
+  #Silviyara-chat-btn.open svg.icon-close { display: block !important; }
+  #Silviyara-chat-btn svg.icon-close { display: none; }
+  .Silviyara-unread-dot {
     position: absolute;
     top: 3px;
     right: 3px;
@@ -45,19 +45,19 @@
     background: #c9a84c;
     border-radius: 50%;
     border: 2px solid var(--card, #fff);
-    animation: navyra-dot-bounce 1s ease infinite;
+    animation: Silviyara-dot-bounce 1s ease infinite;
   }
 
-  @keyframes navyra-pulse {
+  @keyframes Silviyara-pulse {
     0%,100% { box-shadow: 0 4px 24px rgba(0,0,0,0.35), 0 0 0 0 rgba(201,168,76,0.4); }
     50% { box-shadow: 0 4px 24px rgba(0,0,0,0.35), 0 0 0 8px rgba(201,168,76,0); }
   }
-  @keyframes navyra-dot-bounce {
+  @keyframes Silviyara-dot-bounce {
     0%,100% { transform: scale(1); }
     50% { transform: scale(1.3); }
   }
 
-  #navyra-chat-window {
+  #Silviyara-chat-window {
     position: fixed;
     bottom: 168px;
     right: 28px;
@@ -78,7 +78,7 @@
     transition: all 0.35s cubic-bezier(.4,0,.2,1);
     transform-origin: bottom right;
   }
-  #navyra-chat-window.open {
+  #Silviyara-chat-window.open {
     transform: scale(1) translateY(0);
     opacity: 1;
     pointer-events: all;
@@ -281,7 +281,7 @@
     flex-shrink: 0;
     background: var(--card, #fff);
   }
-  #navyra-chat-input {
+  #Silviyara-chat-input {
     flex: 1;
     background: var(--bg2, #f2ede6);
     border: 1px solid var(--border, #e8e0d5);
@@ -297,17 +297,17 @@
     transition: border-color 0.2s, box-shadow 0.2s;
     overflow-y: auto;
   }
-  #navyra-chat-input:focus {
+  #Silviyara-chat-input:focus {
     border-color: #c9a84c;
     box-shadow: 0 0 0 3px rgba(201,168,76,0.08);
   }
-  #navyra-chat-input::placeholder { color: var(--text2, #6b5f52); opacity: 0.6; }
-  [data-theme="dark"] #navyra-chat-input {
+  #Silviyara-chat-input::placeholder { color: var(--text2, #6b5f52); opacity: 0.6; }
+  [data-theme="dark"] #Silviyara-chat-input {
     background: #1a1816;
     color: #f0ebe3;
     border-color: #2a2520;
   }
-  [data-theme="dark"] #navyra-chat-input::placeholder { color: #a89b8c; }
+  [data-theme="dark"] #Silviyara-chat-input::placeholder { color: #a89b8c; }
 
   .nch-send-btn {
     width: 38px;
@@ -451,8 +451,8 @@
   .nch-primary-card:hover .nch-primary-arrow { transform: translateX(3px); }
 
   @media (max-width: 420px) {
-    #navyra-chat-window { right: 12px; bottom: 156px; width: calc(100vw - 24px); }
-    #navyra-chat-btn { right: 12px; bottom: 90px; }
+    #Silviyara-chat-window { right: 12px; bottom: 156px; width: calc(100vw - 24px); }
+    #Silviyara-chat-btn { right: 12px; bottom: 90px; }
   }
   `;
   document.head.appendChild(style);
@@ -467,35 +467,35 @@
   ];
 
   const html = `
-  <!-- Navyra Chatbot Button -->
-  <button id="navyra-chat-btn" aria-label="Open chat assistant" title="Chat with Navyra">
+  <!-- Silviyara Chatbot Button -->
+  <button id="Silviyara-chat-btn" aria-label="Open chat assistant" title="Chat with Silviyara">
     <svg class="icon-chat" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path d="M12 2C6.48 2 2 6.02 2 11c0 2.73 1.28 5.16 3.3 6.82L4 22l4.55-1.97C9.64 20.64 10.79 21 12 21c5.52 0 10-4.02 10-9s-4.48-9-10-9zm1 13H7v-2h6v2zm4-4H7V9h10v2z"/>
     </svg>
     <svg class="icon-close" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
     </svg>
-    <span class="navyra-unread-dot" id="navyraDot"></span>
+    <span class="Silviyara-unread-dot" id="SilviyaraDot"></span>
   </button>
 
-  <!-- Navyra Chat Window -->
-  <div id="navyra-chat-window" role="dialog" aria-label="Navyra chat assistant">
+  <!-- Silviyara Chat Window -->
+  <div id="Silviyara-chat-window" role="dialog" aria-label="Silviyara chat assistant">
     <div class="nch-header">
       <div class="nch-avatar">✨</div>
       <div class="nch-info">
-        <div class="nch-name">Navyra Assistant</div>
+        <div class="nch-name">Silviyara Assistant</div>
         <div class="nch-status"><span class="nch-online-dot"></span>Online — replies instantly</div>
       </div>
-      <button class="nch-close-btn" onclick="navyraCloseChat()" aria-label="Close chat">✕</button>
+      <button class="nch-close-btn" onclick="SilviyaraCloseChat()" aria-label="Close chat">✕</button>
     </div>
-    <div class="nch-messages" id="navyraMsgs"></div>
+    <div class="nch-messages" id="SilviyaraMsgs"></div>
     <div class="nch-input-area">
-      <textarea id="navyra-chat-input" placeholder="Ask me anything about jewellery..." rows="1" aria-label="Type your message"></textarea>
-      <button class="nch-send-btn" id="navyraSendBtn" onclick="navyraSend()" aria-label="Send message">
+      <textarea id="Silviyara-chat-input" placeholder="Ask me anything about jewellery..." rows="1" aria-label="Type your message"></textarea>
+      <button class="nch-send-btn" id="SilviyaraSendBtn" onclick="SilviyaraSend()" aria-label="Send message">
         <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
       </button>
     </div>
-    <div class="nch-footer">Powered by Gemini AI · Navyra Jewellers</div>
+    <div class="nch-footer">Powered by Gemini AI · Silviyara Jewellers</div>
   </div>
   `;
   document.body.insertAdjacentHTML('beforeend', html);
@@ -505,37 +505,37 @@
   let isTyping = false;
   let chatOpened = false;
 
-  const btn = document.getElementById('navyra-chat-btn');
-  const win = document.getElementById('navyra-chat-window');
-  const msgs = document.getElementById('navyraMsgs');
-  const input = document.getElementById('navyra-chat-input');
-  const sendBtn = document.getElementById('navyraSendBtn');
-  const dot = document.getElementById('navyraDot');
+  const btn = document.getElementById('Silviyara-chat-btn');
+  const win = document.getElementById('Silviyara-chat-window');
+  const msgs = document.getElementById('SilviyaraMsgs');
+  const input = document.getElementById('Silviyara-chat-input');
+  const sendBtn = document.getElementById('SilviyaraSendBtn');
+  const dot = document.getElementById('SilviyaraDot');
 
   // Suggestion slot + quick-replies live inside the scrollable messages div
   const suggestSlot = document.createElement('div');
-  suggestSlot.id = 'navyraSuggestSlot';
+  suggestSlot.id = 'SilviyaraSuggestSlot';
   msgs.appendChild(suggestSlot);
 
   const qrContainer = document.createElement('div');
-  qrContainer.id = 'navyraQR';
+  qrContainer.id = 'SilviyaraQR';
   qrContainer.className = 'nch-quick-replies';
   msgs.appendChild(qrContainer);
 
   // ─── Init ────────────────────────────────────────────────────────────────────
-  function navyraInit() {
+  function SilviyaraInit() {
     // Greet after a short delay to attract attention
     setTimeout(() => {
       if (!chatOpened) dot.style.display = 'block';
     }, 2500);
 
-    btn.addEventListener('click', navyraToggleChat);
+    btn.addEventListener('click', SilviyaraToggleChat);
 
     // Enter to send, Shift+Enter for newline
     input.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
-        navyraSend();
+        SilviyaraSend();
       }
     });
 
@@ -546,16 +546,16 @@
     });
   }
 
-  function navyraToggleChat() {
+  function SilviyaraToggleChat() {
     const isOpen = win.classList.contains('open');
     if (isOpen) {
-      navyraCloseChat();
+      SilviyaraCloseChat();
     } else {
-      navyraOpenChat();
+      SilviyaraOpenChat();
     }
   }
 
-  function navyraOpenChat() {
+  function SilviyaraOpenChat() {
     win.classList.add('open');
     btn.classList.add('open');
     dot.style.display = 'none';
@@ -564,18 +564,18 @@
 
     // Show welcome message if first open
     if (chatHistory.length === 0) {
-      navyraShowWelcome();
+      SilviyaraShowWelcome();
     }
   }
 
-  window.navyraCloseChat = function () {
+  window.SilviyaraCloseChat = function () {
     win.classList.remove('open');
     btn.classList.remove('open');
   };
 
-  function navyraShowWelcome() {
+  function SilviyaraShowWelcome() {
     const greeting = getGreeting();
-    navyraAddBotMessage(`${greeting} I'm Navyra, your personal jewellery advisor! ✨\n\nI can help you explore our sterling silver collections, check prices, delivery info, and more. What can I help you with today?`);
+    SilviyaraAddBotMessage(`${greeting} I'm Silviyara, your personal jewellery advisor! ✨\n\nI can help you explore our sterling silver collections, check prices, delivery info, and more. What can I help you with today?`);
     // Move suggest slot & QR to end of messages after the welcome bubble
     msgs.appendChild(suggestSlot);
     msgs.appendChild(qrContainer);
@@ -592,21 +592,21 @@
   // ─── Quick Replies ───────────────────────────────────────────────────────────
   function renderQuickReplies() {
     qrContainer.innerHTML = QUICK_REPLIES.map(q =>
-      `<button class="nch-qr" onclick="navyraQuickReply('${q}')">${q}</button>`
+      `<button class="nch-qr" onclick="SilviyaraQuickReply('${q}')">${q}</button>`
     ).join('');
   }
 
-  window.navyraQuickReply = function (text) {
+  window.SilviyaraQuickReply = function (text) {
     qrContainer.innerHTML = '';
     suggestSlot.innerHTML = '';
     // move containers back to end so they stay below messages
     msgs.appendChild(suggestSlot);
     msgs.appendChild(qrContainer);
-    navyraSendMessage(text);
+    SilviyaraSendMessage(text);
   };
 
   // ─── Messaging ───────────────────────────────────────────────────────────────
-  window.navyraSend = function () {
+  window.SilviyaraSend = function () {
     const text = input.value.trim();
     if (!text || isTyping) return;
     input.value = '';
@@ -616,11 +616,11 @@
     // keep containers at the bottom of the scroll area
     msgs.appendChild(suggestSlot);
     msgs.appendChild(qrContainer);
-    navyraSendMessage(text);
+    SilviyaraSendMessage(text);
   };
 
-  async function navyraSendMessage(text) {
-    navyraAddUserMessage(text);
+  async function SilviyaraSendMessage(text) {
+    SilviyaraAddUserMessage(text);
     chatHistory.push({ role: 'user', text });
     // keep suggest/QR containers pinned to end
     msgs.appendChild(suggestSlot);
@@ -628,7 +628,7 @@
 
     isTyping = true;
     sendBtn.disabled = true;
-    const typingId = navyraShowTyping();
+    const typingId = SilviyaraShowTyping();
     // keep suggest/QR containers pinned to end
     msgs.appendChild(suggestSlot);
     msgs.appendChild(qrContainer);
@@ -642,8 +642,8 @@
       const data = await res.json();
       const reply = data.reply || "I'm sorry, I couldn't understand that. Please try again!";
 
-      navyraRemoveTyping(typingId);
-      navyraAddBotMessage(reply);
+      SilviyaraRemoveTyping(typingId);
+      SilviyaraAddBotMessage(reply);
       chatHistory.push({ role: 'model', text: reply });
       // keep suggest/QR containers pinned to end
       msgs.appendChild(suggestSlot);
@@ -654,8 +654,8 @@
         setTimeout(() => renderSuggestions(data.product, data.suggestions || []), 300);
       }
     } catch (err) {
-      navyraRemoveTyping(typingId);
-      navyraAddBotMessage("I'm having trouble connecting right now. Please reach us on WhatsApp at +91 8004703038 for immediate help! 💬");
+      SilviyaraRemoveTyping(typingId);
+      SilviyaraAddBotMessage("I'm having trouble connecting right now. Please reach us on WhatsApp at +91 8004703038 for immediate help! 💬");
       msgs.appendChild(suggestSlot);
       msgs.appendChild(qrContainer);
     }
@@ -722,7 +722,7 @@
     scrollToBottom();
   }
 
-  function navyraAddUserMessage(text) {
+  function SilviyaraAddUserMessage(text) {
     const wrap = document.createElement('div');
     wrap.className = 'nch-bubble-wrap user';
     wrap.innerHTML = `
@@ -733,7 +733,7 @@
     scrollToBottom();
   }
 
-  function navyraAddBotMessage(text) {
+  function SilviyaraAddBotMessage(text) {
     const wrap = document.createElement('div');
     wrap.className = 'nch-bubble-wrap bot';
     // Convert markdown-ish formatting
@@ -749,7 +749,7 @@
     scrollToBottom();
   }
 
-  function navyraShowTyping() {
+  function SilviyaraShowTyping() {
     const id = 'typing-' + Date.now();
     const wrap = document.createElement('div');
     wrap.className = 'nch-bubble-wrap bot';
@@ -763,7 +763,7 @@
     return id;
   }
 
-  function navyraRemoveTyping(id) {
+  function SilviyaraRemoveTyping(id) {
     const el = document.getElementById(id);
     if (el) el.remove();
   }
@@ -782,8 +782,8 @@
 
   // ─── Boot ────────────────────────────────────────────────────────────────────
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', navyraInit);
+    document.addEventListener('DOMContentLoaded', SilviyaraInit);
   } else {
-    navyraInit();
+    SilviyaraInit();
   }
 })();

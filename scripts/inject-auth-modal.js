@@ -57,7 +57,7 @@ const AUTH_MODAL = `
     <!-- Stripe header -->
     <div class="auth-modal-stripe">
       <button class="auth-modal-close" onclick="closeAuthModal()">✕</button>
-      <p class="auth-modal-eyebrow">✦ Navyra Jewellers</p>
+      <p class="auth-modal-eyebrow">✦ Silviyara Jewellers</p>
       <h2 class="auth-modal-title" id="authModalHeading">Welcome <em>back.</em></h2>
     </div>
     <!-- Tabs -->
@@ -128,7 +128,7 @@ function switchAuthTab(tab) {
   document.getElementById('modal-tab-register').classList.toggle('active',!isLogin);
   document.getElementById('modal-form-login').classList.toggle('active',isLogin);
   document.getElementById('modal-form-register').classList.toggle('active',!isLogin);
-  document.getElementById('authModalHeading').innerHTML = isLogin ? 'Welcome <em>back.</em>' : 'Join <em>Navyra.</em>';
+  document.getElementById('authModalHeading').innerHTML = isLogin ? 'Welcome <em>back.</em>' : 'Join <em>Silviyara.</em>';
 }
 async function handleModalLogin(e) {
   e.preventDefault();

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Navyra Admin</title>
+<title>Silviyara Admin</title>
 <style>
 :root{
   --bg:#f5f3ef;--bg2:#fff;--card:#fff;--sidebar:#1a1510;--sidebar2:#2a2018;
@@ -153,7 +153,7 @@ textarea{resize:vertical;min-height:80px;}
 <div class="sidebar">
   <div class="sidebar-logo">
     <div class="sidebar-logo-icon">💎</div>
-    <div class="sidebar-logo-text">Navyra <em>Admin</em></div>
+    <div class="sidebar-logo-text">Silviyara <em>Admin</em></div>
   </div>
   <nav class="sidebar-nav">
     <div class="nav-section">Overview</div>
@@ -172,7 +172,7 @@ textarea{resize:vertical;min-height:80px;}
 <div class="main">
   <div class="topbar">
     <div class="topbar-left">
-      <div class="topbar-logo">Navyra <em>Jewellers</em></div>
+      <div class="topbar-logo">Silviyara <em>Jewellers</em></div>
       <span class="topbar-badge">Admin</span>
     </div>
     <div class="topbar-right">
@@ -294,6 +294,10 @@ textarea{resize:vertical;min-height:80px;}
             </select>
           </div>
           <div class="form-group">
+            <label>SKU (auto-generated)</label>
+            <input type="text" id="p-sku" placeholder="Auto-generated if empty" style="font-family:monospace;">
+          </div>
+          <div class="form-group">
             <label>Sale Price (₹) *</label>
             <input type="number" id="p-price" placeholder="1999">
           </div>
@@ -339,8 +343,8 @@ textarea{resize:vertical;min-height:80px;}
           <button class="btn btn-outline btn-sm" onclick="loadProducts()">🔄 Refresh</button>
         </div>
         <table>
-          <thead><tr><th>Item</th><th>Name</th><th>Category</th><th>Price</th><th>Flash</th><th>Actions</th></tr></thead>
-          <tbody id="products-table"><tr><td colspan="6" style="text-align:center;color:var(--text3);padding:30px;">Loading...</td></tr></tbody>
+          <thead><tr><th>Item</th><th>SKU</th><th>Name</th><th>Category</th><th>Price</th><th>Flash</th><th>Actions</th></tr></thead>
+          <tbody id="products-table"><tr><td colspan="7" style="text-align:center;color:var(--text3);padding:30px;">Loading...</td></tr></tbody>
         </table>
       </div>
     </div>
@@ -422,6 +426,7 @@ textarea{resize:vertical;min-height:80px;}
     <input type="hidden" id="edit-id">
     <div class="form-grid">
       <div class="form-group full"><label>Product Name *</label><input type="text" id="edit-name" placeholder="Product name"></div>
+      <div class="form-group"><label>SKU</label><input type="text" id="edit-sku" placeholder="SLV-PND-001" style="font-family:monospace;"></div>
       <div class="form-group">
         <label>Category *</label>
         <select id="edit-category">
@@ -458,11 +463,11 @@ textarea{resize:vertical;min-height:80px;}
 
 <script>
 // ─── Auth ───────────────────────────────────────────────────
-const token = localStorage.getItem('navyra_admin_token');
+const token = localStorage.getItem('Silviyara_admin_token');
 if(!token) window.location.href = '/admin';
 
 function logout(){
-  localStorage.removeItem('navyra_admin_token');
+  localStorage.removeItem('Silviyara_admin_token');
   window.location.href = '/admin';
 }
 
@@ -472,12 +477,12 @@ function toggleTheme(){
   const isDark = html.dataset.theme === 'dark';
   html.dataset.theme = isDark ? 'light' : 'dark';
   document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
-  localStorage.setItem('navyra_admin_theme', isDark ? 'light' : 'dark');
+  localStorage.setItem('Silviyara_admin_theme', isDark ? 'light' : 'dark');
 }
 
 // Apply saved theme on load
 (function(){
-  const saved = localStorage.getItem('navyra_admin_theme') || 'light';
+  const saved = localStorage.getItem('Silviyara_admin_theme') || 'light';
   document.documentElement.dataset.theme = saved;
   document.getElementById('themeBtn').textContent = saved === 'dark' ? '☀️' : '🌙';
 })();
@@ -594,6 +599,7 @@ async function addProduct(){
   if(!name||!category||!price){alert('Name, category and price are required!');return;}
   const data={
     name, category,
+    sku:document.getElementById('p-sku').value.trim(),
     price:Number(price),
     originalPrice:Number(document.getElementById('p-original').value)||Number(price),
     description:document.getElementById('p-desc').value,
@@ -621,10 +627,11 @@ async function loadProducts(){
   try{
     const products=await fetch('/api/products').then(r=>r.json());
     if(products.error) throw new Error(products.error);
-    if(!products.length){tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;color:var(--text3);padding:30px;">No products yet</td></tr>`;return;}
+    if(!products.length){tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:30px;">No products yet</td></tr>`;return;}
     tbody.innerHTML=products.map(p=>`
       <tr>
         <td><img src="${p.image||''}" class="product-img" onerror="this.style.display='none'"></td>
+        <td><code style="font-size:11px;background:var(--tag-bg);padding:2px 6px;border-radius:3px;color:var(--gold);">${p.sku||'—'}</code></td>
         <td><strong>${p.name}</strong></td>
         <td style="text-transform:capitalize;color:var(--text2);">${p.category.replace('-',' ')}</td>
         <td>₹${p.price.toLocaleString()}</td>
@@ -636,7 +643,7 @@ async function loadProducts(){
           </div>
         </td>
       </tr>`).join('');
-  }catch(e){tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;color:#e74c3c;padding:30px;">Server Error / Waiting for MongoDB</td></tr>`;}
+  }catch(e){tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;color:#e74c3c;padding:30px;">Server Error / Waiting for MongoDB</td></tr>`;}
 }
 
 async function deleteProduct(id){
@@ -648,6 +655,7 @@ async function deleteProduct(id){
 function openEdit(p){
   document.getElementById('edit-id').value=p._id;
   document.getElementById('edit-name').value=p.name;
+  document.getElementById('edit-sku').value=p.sku||'';
   document.getElementById('edit-category').value=p.category;
   document.getElementById('edit-price').value=p.price;
   document.getElementById('edit-original').value=p.originalPrice||'';
@@ -668,6 +676,7 @@ async function saveEdit(){
   const id=document.getElementById('edit-id').value;
   const data={
     name:document.getElementById('edit-name').value,
+    sku:document.getElementById('edit-sku').value.trim(),
     category:document.getElementById('edit-category').value,
     price:Number(document.getElementById('edit-price').value),
     originalPrice:Number(document.getElementById('edit-original').value),
@@ -752,7 +761,7 @@ async function loadOrders(){
       const payStatus=o.paymentStatus||'Pending';
       const payMethodBadge=payMethod==='Razorpay'?`<span class="pay-badge-rzp">💳 Razorpay</span>`:`<span class="pay-badge-cod">🏠 COD</span>`;
       const payStatusBadge=payStatus==='Paid'?`<span class="pay-badge-paid">✅ Paid</span>`:payStatus==='Failed'?`<span style="background:rgba(231,76,60,0.12);color:#e74c3c;display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;">❌ Failed</span>`:`<span class="pay-badge-pending">⏳ Unpaid</span>`;
-      const waMsg=`Hi ${o.customerName}! Your Navyra Jewellers order (${o.items.map(i=>i.name).join(', ')}) of ₹${o.totalAmount} is being processed. We'll share tracking details soon. Thank you! 🙏`;
+      const waMsg=`Hi ${o.customerName}! Your Silviyara Jewellers order (${o.items.map(i=>i.name).join(', ')}) of ₹${o.totalAmount} is being processed. We'll share tracking details soon. Thank you! 🙏`;
       const date=new Date(o.createdAt);
       const dateStr=date.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
       const timeStr=date.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
@@ -769,7 +778,7 @@ async function loadOrders(){
           <div style="font-size:12px;color:var(--text2);margin-top:2px;">📞 ${o.customerMobile}</div>
           <div style="font-size:11px;color:var(--text3);margin-top:3px;max-width:200px;line-height:1.4;">${o.customerAddress}${o.customerLandmark?', '+o.customerLandmark:''}<br>${o.customerCity}${o.customerState?', '+o.customerState:''} — ${o.customerPin}</div>
         </td>
-        <td><div style="font-size:12px;line-height:1.6;color:var(--text2);">${o.items.map(i=>`${i.emoji||'💎'} ${i.name}<span style="color:var(--text3);"> — ₹${i.price?.toLocaleString()}</span>`).join('<br>')}</div></td>
+        <td><div style="font-size:12px;line-height:1.6;color:var(--text2);">${o.items.map(i=>`${i.emoji||'💎'} ${i.name}${i.sku?` <code style="font-size:9px;background:var(--tag-bg);padding:1px 4px;border-radius:2px;color:var(--gold);">${i.sku}</code>`:''}<span style="color:var(--text3);"> — ₹${i.price?.toLocaleString()}</span>`).join('<br>')}</div></td>
         <td><strong style="font-size:15px;">₹${o.totalAmount.toLocaleString()}</strong></td>
         <td>
           <div style="display:flex;flex-direction:column;gap:4px;">
@@ -788,6 +797,7 @@ async function loadOrders(){
         </td>
         <td>
           <a href="https://wa.me/91${o.customerMobile.replace(/\D/g,'')}?text=${encodeURIComponent(waMsg)}" target="_blank" style="display:block;background:#25d366;color:#fff;text-align:center;padding:6px 10px;font-size:11px;text-decoration:none;border-radius:3px;font-weight:600;margin-bottom:4px;">💬 WhatsApp</a>
+          <button onclick="generateInvoice('${o._id}')" style="display:block;width:100%;background:var(--gold);color:#111;border:none;text-align:center;padding:6px 10px;font-size:11px;border-radius:3px;font-weight:600;cursor:pointer;transition:all 0.2s;margin-bottom:4px;">📄 Invoice</button>
           <button onclick="copyOrderDetails('${o._id}')" style="display:block;width:100%;border:1px solid var(--border2);background:var(--tag-bg);color:var(--text2);text-align:center;padding:6px 10px;font-size:11px;border-radius:3px;font-weight:600;cursor:pointer;transition:all 0.2s;">📋 Copy Details</button>
         </td>
       </tr>`;
@@ -817,6 +827,180 @@ function showAlert(id){
   const el=document.getElementById(id);
   el.style.display='block';
   setTimeout(()=>el.style.display='none',3000);
+}
+
+// ─── Invoice Generation ──────────────────────────────────────────
+function generateInvoice(orderId){
+  if(!window.adminOrders) return;
+  const o=window.adminOrders.find(ord=>ord._id===orderId);
+  if(!o){ alert('Order not found'); return; }
+
+  const date=new Date(o.createdAt);
+  const dateStr=date.toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
+  const timeStr=date.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  const orderNum='#SLV-'+String(o._id).slice(-8).toUpperCase();
+  const statusBadge=o.paymentStatus==='Paid'?'Paid':'Pending';
+  const statusColor=o.paymentStatus==='Paid'?'background:#d1fae5;color:#065f46;':'background:rgba(133,100,4,0.12);color:#856404;';
+
+  // Calculate subtotal
+  const subtotal=o.items.reduce((s,i)=>(s+(i.price||0)*(i.qty||1)),0);
+  const shipping=subtotal>=999?0:99;
+  const gst=Math.round(subtotal*0.03);
+  const grandTotal=o.totalAmount||subtotal+shipping+gst;
+
+  const payMethodStr=o.paymentMethod==='Razorpay'?'UPI / Razorpay':'Cash on Delivery';
+  const txnStr=o.paymentId?o.paymentId:'N/A';
+
+  const itemsHTML=o.items.map(i=>`
+    <tr>
+      <td>
+        <div class="item-name">${i.name||'Product'}</div>
+        <div class="item-sku">SKU: ${i.sku||'N/A'}</div>
+      </td>
+      <td>92.5% Silver</td>
+      <td>${i.qty||1}</td>
+      <td>₹${(i.price||0).toLocaleString('en-IN')}</td>
+      <td>₹${((i.price||0)*(i.qty||1)).toLocaleString('en-IN')}</td>
+    </tr>`).join('');
+
+  const invoiceHTML=`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Invoice ${orderNum} — Silviyara Jewellers</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#1a1a2e;--muted:#6b7280;--accent:#c9a84c;--accent-light:#f5edd8;--border:#e5e0d8;--bg:#faf9f7;--white:#ffffff;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'DM Sans',sans-serif;background:#e8e4dc;display:flex;flex-direction:column;align-items:center;padding:24px 8px;min-height:100vh;gap:16px;}
+  .controls{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
+  .btn{padding:10px 24px;border:none;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:all 0.2s;}
+  .btn-print{background:var(--ink);color:white;letter-spacing:0.5px;}
+  .btn-print:hover{background:#2d2d4a;}
+  .invoice-wrapper{width:100%;max-width:860px;overflow-x:auto;}
+  .invoice{background:var(--white);width:100%;min-width:320px;padding:40px 36px;box-shadow:0 8px 40px rgba(0,0,0,0.12);position:relative;overflow:hidden;}
+  .invoice::before{content:'';position:absolute;top:0;right:0;width:100px;height:100px;background:var(--accent-light);clip-path:polygon(100% 0,0 0,100% 100%);}
+  .header{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;margin-bottom:28px;padding-bottom:24px;border-bottom:2px solid var(--ink);}
+  .brand-name{font-family:'Playfair Display',serif;font-size:24px;color:var(--ink);letter-spacing:1px;}
+  .brand-tagline{font-size:10px;color:var(--accent);letter-spacing:3px;text-transform:uppercase;margin-top:4px;}
+  .brand-contact{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.7;}
+  .invoice-meta{text-align:right;}
+  .invoice-label{font-family:'Playfair Display',serif;font-size:28px;color:var(--ink);font-weight:700;letter-spacing:2px;}
+  .invoice-number{font-size:12px;color:var(--muted);margin-top:4px;}
+  .invoice-number span{color:var(--ink);font-weight:500;}
+  .status-badge{display:inline-block;margin-top:8px;padding:3px 12px;border-radius:20px;font-size:10px;font-weight:500;letter-spacing:0.5px;text-transform:uppercase;${statusColor}}
+  .gold-bar{height:3px;background:linear-gradient(90deg,var(--accent),#e8d5a3,var(--accent));margin-bottom:28px;border-radius:2px;}
+  .info-row{display:flex;flex-wrap:wrap;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:24px;}
+  .info-block{flex:1 1 160px;padding:14px 16px;border-right:1px solid var(--border);}
+  .info-block:last-child{border-right:none;}
+  .info-block-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:500;margin-bottom:6px;}
+  .info-block-value{font-size:12px;color:var(--ink);font-weight:500;line-height:1.6;}
+  .info-block-value .muted{color:var(--muted);font-weight:400;}
+  .addresses{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:28px;}
+  .address-box{flex:1 1 220px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:16px;}
+  .address-title{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:500;margin-bottom:8px;}
+  .address-name{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px;}
+  .address-line{font-size:12px;color:var(--muted);line-height:1.8;}
+  .address-phone{font-size:12px;color:var(--ink);font-weight:500;margin-top:6px;}
+  .section-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:500;margin-bottom:10px;}
+  .table-wrap{overflow-x:auto;margin-bottom:4px;}
+  table{width:100%;border-collapse:collapse;min-width:460px;}
+  thead tr{background:var(--ink);color:white;}
+  thead th{padding:10px 12px;text-align:left;font-size:10px;letter-spacing:1px;text-transform:uppercase;font-weight:500;}
+  thead th:last-child{text-align:right;}
+  tbody tr{border-bottom:1px solid var(--border);}
+  tbody tr:nth-child(even){background:var(--bg);}
+  tbody td{padding:12px;font-size:12px;color:var(--ink);vertical-align:top;}
+  tbody td:last-child{text-align:right;font-weight:500;}
+  .item-name{font-weight:500;}
+  .item-sku{font-size:10px;color:var(--muted);margin-top:2px;}
+  .totals-wrap{display:flex;justify-content:flex-end;margin-top:16px;margin-bottom:24px;}
+  .totals{width:260px;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .total-row{display:flex;justify-content:space-between;padding:10px 16px;font-size:12px;border-bottom:1px solid var(--border);}
+  .total-row:last-child{border-bottom:none;}
+  .total-row .label{color:var(--muted);}
+  .total-row .value{font-weight:500;color:var(--ink);}
+  .total-row.grand{background:var(--ink);}
+  .total-row.grand .label{color:rgba(255,255,255,0.7);}
+  .total-row.grand .value{color:var(--accent);font-size:14px;font-weight:600;}
+  .bottom-grid{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:28px;}
+  .info-card{flex:1 1 200px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:16px;}
+  .info-card-title{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:500;margin-bottom:8px;}
+  .info-card-body{font-size:12px;color:var(--ink);line-height:1.8;}
+  .info-card-body .muted{color:var(--muted);}
+  .footer{border-top:1px solid var(--border);padding-top:16px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;}
+  .footer-note{font-size:10px;color:var(--muted);line-height:1.7;max-width:340px;}
+  .footer-thanks{font-family:'Playfair Display',serif;font-size:15px;color:var(--accent);font-style:italic;}
+  @media print{body{background:none;padding:0;}.controls{display:none;}.invoice{box-shadow:none;padding:28px 32px;}}
+</style>
+</head>
+<body>
+<div class="controls">
+  <button class="btn btn-print" onclick="window.print()">🖨️ Print / Save as PDF</button>
+</div>
+<div class="invoice-wrapper">
+<div class="invoice">
+  <div class="header">
+    <div>
+      <div class="brand-name">Silviyara Jewellers</div>
+      <div class="brand-tagline">Fine Silver & Handcrafted Pieces</div>
+      <div class="brand-contact">silviyarajewels@gmail.com<br>+91 8004703038<br>Lucknow, Uttar Pradesh</div>
+    </div>
+    <div class="invoice-meta">
+      <div class="invoice-label">INVOICE</div>
+      <div class="invoice-number">Order No. <span>${orderNum}</span></div>
+      <div class="invoice-number">Date: <span>${dateStr}</span></div>
+      <div><span class="status-badge">${statusBadge}</span></div>
+    </div>
+  </div>
+  <div class="gold-bar"></div>
+  <div class="info-row">
+    <div class="info-block"><div class="info-block-label">Order Date</div><div class="info-block-value">${dateStr}<br><span class="muted">${timeStr}</span></div></div>
+    <div class="info-block"><div class="info-block-label">Payment Method</div><div class="info-block-value">${payMethodStr}<br><span class="muted">Txn: ${txnStr}</span></div></div>
+    <div class="info-block"><div class="info-block-label">Delivery Method</div><div class="info-block-value">Standard Shipping<br><span class="muted">Est. 5–7 business days</span></div></div>
+  </div>
+  <div class="addresses">
+    <div class="address-box">
+      <div class="address-title">Customer Details</div>
+      <div class="address-name">${o.customerName}</div>
+      <div class="address-line">${o.customerEmail||''}</div>
+      <div class="address-phone">+91 ${o.customerMobile}</div>
+    </div>
+    <div class="address-box">
+      <div class="address-title">Shipping Address</div>
+      <div class="address-name">${o.customerName}</div>
+      <div class="address-line">${o.customerAddress}${o.customerLandmark?'<br>'+o.customerLandmark:''}<br>${o.customerCity}${o.customerState?', '+o.customerState:''} — ${o.customerPin}, India</div>
+      <div class="address-phone">+91 ${o.customerMobile}</div>
+    </div>
+  </div>
+  <div class="section-label">Order Items</div>
+  <div class="table-wrap">
+    <table><thead><tr><th style="width:38%">Product</th><th>Metal / Purity</th><th>Qty</th><th>Unit Price</th><th>Total</th></tr></thead>
+    <tbody>${itemsHTML}</tbody></table>
+  </div>
+  <div class="totals-wrap">
+    <div class="totals">
+      <div class="total-row"><span class="label">Subtotal</span><span class="value">₹${subtotal.toLocaleString('en-IN')}</span></div>
+      <div class="total-row"><span class="label">Shipping</span><span class="value">${shipping===0?'FREE':'₹'+shipping}</span></div>
+      <div class="total-row"><span class="label">GST (3%)</span><span class="value">₹${gst.toLocaleString('en-IN')}</span></div>
+      <div class="total-row grand"><span class="label">Grand Total</span><span class="value">₹${grandTotal.toLocaleString('en-IN')}</span></div>
+    </div>
+  </div>
+  <div class="bottom-grid">
+    <div class="info-card"><div class="info-card-title">Payment Info</div><div class="info-card-body"><span class="muted">Status:</span> ${o.paymentStatus==='Paid'?'Paid ✓':'Pending'}<br><span class="muted">Method:</span> ${payMethodStr}<br><span class="muted">Txn ID:</span> ${txnStr}</div></div>
+  </div>
+  <div class="footer">
+    <div class="footer-note">Returns accepted within 7 days of delivery. Items must be unused and in original packaging. For queries: silviyarajewels@gmail.com</div>
+    <div class="footer-thanks">Thank you for your order ✦</div>
+  </div>
+</div>
+</div>
+</body></html>`;
+
+  const invoiceWindow=window.open('','_blank','width=900,height=700');
+  invoiceWindow.document.write(invoiceHTML);
+  invoiceWindow.document.close();
 }
 
 // Init

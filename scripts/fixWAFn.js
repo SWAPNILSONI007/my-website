@@ -9,7 +9,7 @@ pages.forEach(p => {
 
   // Replace the entire checkoutWA function with a safe version using string concatenation:
   content = content.replace(/function checkoutWA\(\)\{[\s\S]*?\}/g,
-    "function checkoutWA() { const items=cart.map(i=>'• '+i.name+' — ₹'+i.price.toLocaleString()).join('%0A'); const total=cart.reduce((s,i)=>s+i.price,0); window.open('https://wa.me/918004703038?text=Hi%20Navyra!%20Order:%0A' + items + '%0ATotal:%20%E2%82%B9' + total.toLocaleString(), '_blank'); }"
+    "function checkoutWA() { const items=cart.map(i=>'• '+i.name+' — ₹'+i.price.toLocaleString()).join('%0A'); const total=cart.reduce((s,i)=>s+i.price,0); window.open('https://wa.me/918004703038?text=Hi%20Silviyara!%20Order:%0A' + items + '%0ATotal:%20%E2%82%B9' + total.toLocaleString(), '_blank'); }"
   );
 
   fs.writeFileSync(fp, content);

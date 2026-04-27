@@ -14,7 +14,9 @@ const OrderSchema = new mongoose.Schema({
     price: Number,
     qty: { type: Number, default: 1 },
     emoji: String,
-    id: String
+    id: String,
+    sku: { type: String, default: '' },
+    image: String
   }],
   totalAmount: { type: Number, required: true },
   paymentMethod: { type: String, default: 'COD', enum: ['COD', 'Razorpay'] },

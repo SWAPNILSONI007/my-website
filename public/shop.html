@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Shop — Navyra Jewellers</title>
+<title>Shop — Silviyara Jewellers</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 :root{--bg:#faf8f5;--bg2:#f2ede6;--text:#1c1814;--text2:#6b5f52;--silver:#8a8a9a;--silver2:#b8b8cc;--gold:#c9a84c;--card:#ffffff;--border:#e8e0d5;--nav-bg:rgba(250,248,245,0.96);--shadow:rgba(0,0,0,0.06);}
@@ -328,7 +328,7 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
 </div>
 
 <nav id="mainNav">
-  <a href="/" class="logo">Navyra <span>Jewellers</span></a>
+  <a href="/" class="logo">Silviyara <span>Jewellers</span></a>
   <ul class="nav-links">
     <li><a href="/" class="">Home</a></li>
     <li class="dropdown"><a href="#">Collections ▾</a>
@@ -581,7 +581,7 @@ function closeCart(){document.getElementById('cartOverlay').classList.remove('op
 function checkoutWA(){
   const items=cart.map(i=>`• ${i.name} — ₹${i.price.toLocaleString()}`).join('\n');
   const total=cart.reduce((s,i)=>s+i.price,0);
-  window.open(`https://wa.me/918004703038?text=${encodeURIComponent(`Hi Navyra Jewellers!\n\nOrder:\n${items}\n\nTotal: ₹${total.toLocaleString()}`)}`, '_blank');
+  window.open(`https://wa.me/918004703038?text=${encodeURIComponent(`Hi Silviyara Jewellers!\n\nOrder:\n${items}\n\nTotal: ₹${total.toLocaleString()}`)}`, '_blank');
 }
 
 function toggleTheme(){
@@ -658,7 +658,7 @@ loadProducts();
         <div class="os-icon-ring">✓</div>
         <p class="os-eyebrow">✦ Order Confirmed</p>
         <h3 class="os-title">Order Placed Successfully!</h3>
-        <p class="os-subtitle">Thank you for shopping with <strong>Navyra Jewellers</strong>. Your order is now being processed.</p>
+        <p class="os-subtitle">Thank you for shopping with <strong>Silviyara Jewellers</strong>. Your order is now being processed.</p>
         <p class="os-id" id="successOrderId"></p>
         <div class="os-tracker">
           <p class="os-tracker-title">Order Status</p>
@@ -720,7 +720,7 @@ loadProducts();
           <div class="cmodal-contact-text"><p>Working Hours</p><span>Mon–Sat: 10am – 8pm</span></div>
         </div>
       </div>
-      <a href="https://wa.me/918004703038?text=Hi%20Navyra!%20I%20have%20a%20question." target="_blank" class="cmodal-wa-btn">💬 &nbsp;Chat on WhatsApp</a>
+      <a href="https://wa.me/918004703038?text=Hi%20Silviyara!%20I%20have%20a%20question." target="_blank" class="cmodal-wa-btn">💬 &nbsp;Chat on WhatsApp</a>
     </div>
     <div class="cmodal-right">
       <button class="cmodal-close" onclick="closeContactModal()">✕</button>
@@ -806,7 +806,7 @@ async function saveOrderToServer({name,email,mobile,address,landmark,city,state,
   const res = await fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({customerId: (JSON.parse(localStorage.getItem('navUser') || 'null') || {}).id || null, customerName:name,customerEmail:email,customerMobile:mobile,customerAddress:address,customerLandmark:landmark,customerCity:city,customerState:state,customerPin:pin,items:cart,totalAmount,paymentMethod,paymentId,razorpayOrderId:razorpayOrderId||'',paymentStatus})});
   return await res.json();
 }
-function showSuccess(orderId){
+function showSuccess(orderId, orderData){
   document.getElementById('checkoutBody').style.display='none';
   document.getElementById('checkoutFoot').style.display='none';
   document.getElementById('checkoutFailure').style.display='none';
@@ -815,7 +815,17 @@ function showSuccess(orderId){
   document.getElementById('checkoutSuccess').style.display='block';
   const eta=document.getElementById('osEta');
   if(eta){ const d=new Date(); d.setDate(d.getDate()+6); eta.textContent=`By ${d.toLocaleDateString('en-IN',{weekday:'long',month:'long',day:'numeric'})}`; }
+  if(orderData) sendOwnerWhatsApp(orderData);
   cart=[]; updateCart();
+}
+function sendOwnerWhatsApp(orderData){
+  try{
+    const o = orderData.order || orderData;
+    const items = (o.items||[]).map(i=>`• ${i.name}${i.sku?' ('+i.sku+')':''} × ${i.qty||1} — ₹${(i.price||0).toLocaleString()}`).join('\n');
+    const date = new Date().toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    const msg = `🛍️ NEW ORDER — Silviyara Jewellers\n\n👤 ${o.customerName||'Customer'}\n📧 ${o.customerEmail||'N/A'}\n📞 ${o.customerMobile||'N/A'}\n📍 ${o.customerAddress||''}${o.customerLandmark?', '+o.customerLandmark:''}\n${o.customerCity||''}${o.customerState?', '+o.customerState:''} — ${o.customerPin||''}\n\n📦 Items:\n${items}\n\n💰 Total: ₹${(o.totalAmount||0).toLocaleString()}\n💳 Payment: ${o.paymentMethod||'COD'}${o.paymentStatus==='Paid'?' (Paid ✓)':' (Pending)'}\n\n📝 Order ID: ${o._id||orderData.orderId||'N/A'}\n🕐 ${date}`;
+    window.open(`https://wa.me/918004703038?text=${encodeURIComponent(msg)}`,'_blank','noopener,noreferrer');
+  }catch(e){ console.log('WA notify error:',e); }
 }
 function showFailure(message, paymentId){
   document.getElementById('checkoutBody').style.display='none';
@@ -849,7 +859,7 @@ async function handlePayment(){
   if(selectedPayMethod === 'cod'){
     try{
       const data = await saveOrderToServer({...details,paymentMethod:'COD',paymentId:'',razorpayOrderId:'',paymentStatus:'Pending'});
-      if(data.success){showSuccess(data.orderId);}
+      if(data.success){showSuccess(data.orderId, data);}
       else{alert('Error: '+(data.message||'Could not place order'));btn.disabled=false;selectPayMethod('cod');}
     }catch(e){alert('Network error. Please try again.');btn.disabled=false;selectPayMethod('cod');}
     return;
@@ -861,7 +871,7 @@ async function handlePayment(){
     if(!orderData.success) throw new Error(orderData.message||'Failed to create payment order');
     const options = {
       key: orderData.keyId, amount: orderData.amount, currency: orderData.currency,
-      name: 'Navyra Jewellers', description: `Order of ${cart.length} item(s)`, image: '/ring1.png',
+      name: 'Silviyara Jewellers', description: `Order of ${cart.length} item(s)`, image: '/ring1.png',
       order_id: orderData.orderId, prefill:{name:details.name,contact:details.mobile,email:details.email}, theme:{color:'#c9a84c'},
       handler: async function(response){
         try{
@@ -869,7 +879,7 @@ async function handlePayment(){
           const vData = await vRes.json();
           if(vData.success){
             const saved = await saveOrderToServer({...details,paymentMethod:'Razorpay',paymentId:response.razorpay_payment_id,razorpayOrderId:orderData.orderId,paymentStatus:'Paid'});
-            if(saved.success) showSuccess(saved.orderId);
+            if(saved.success) showSuccess(saved.orderId, saved);
             else showFailure('Payment was successful but order could not be saved. Please contact support.', response.razorpay_payment_id);
           } else { showFailure('Payment verification failed. Please contact support.', response.razorpay_payment_id); }
         }catch(e){ showFailure('Payment verification error. Please contact support.'); }
@@ -884,7 +894,7 @@ async function handlePayment(){
 </script>
 <!-- Razorpay SDK -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<!-- Navyra AI Chatbot -->
+<!-- Silviyara AI Chatbot -->
 <script src="/chatbot.js"></script>
 
 
@@ -934,7 +944,7 @@ async function handlePayment(){
     <!-- Stripe header -->
     <div class="auth-modal-stripe">
       <button class="auth-modal-close" onclick="closeAuthModal()">✕</button>
-      <p class="auth-modal-eyebrow">✦ Navyra Jewellers</p>
+      <p class="auth-modal-eyebrow">✦ Silviyara Jewellers</p>
       <h2 class="auth-modal-title" id="authModalHeading">Welcome <em>back.</em></h2>
     </div>
     <!-- Tabs -->
@@ -1005,7 +1015,7 @@ function switchAuthTab(tab) {
   document.getElementById('modal-tab-register').classList.toggle('active',!isLogin);
   document.getElementById('modal-form-login').classList.toggle('active',isLogin);
   document.getElementById('modal-form-register').classList.toggle('active',!isLogin);
-  document.getElementById('authModalHeading').innerHTML = isLogin ? 'Welcome <em>back.</em>' : 'Join <em>Navyra.</em>';
+  document.getElementById('authModalHeading').innerHTML = isLogin ? 'Welcome <em>back.</em>' : 'Join <em>Silviyara.</em>';
 }
 async function handleModalLogin(e) {
   e.preventDefault();

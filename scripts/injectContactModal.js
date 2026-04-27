@@ -67,7 +67,7 @@ const modalHTML = `
           <div class="cmodal-contact-text"><p>Working Hours</p><span>Mon–Sat: 10am – 8pm</span></div>
         </div>
       </div>
-      <a href="https://wa.me/918004703038?text=Hi%20Navyra!%20I%20have%20a%20question." target="_blank" class="cmodal-wa-btn">💬 &nbsp;Chat on WhatsApp</a>
+      <a href="https://wa.me/918004703038?text=Hi%20Silviyara!%20I%20have%20a%20question." target="_blank" class="cmodal-wa-btn">💬 &nbsp;Chat on WhatsApp</a>
     </div>
     <div class="cmodal-right">
       <button class="cmodal-close" onclick="closeContactModal()">✕</button>
