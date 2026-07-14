@@ -166,6 +166,8 @@ textarea{resize:vertical;min-height:80px;}
     <button class="nav-item" onclick="showPanel('flash-sale',this)"><span class="nav-icon">⚡</span> Flash Sale</button>
     <div class="nav-section">Messages</div>
     <button class="nav-item" onclick="showPanel('messages',this)"><span class="nav-icon">✉</span> Contact Messages</button>
+    <div class="nav-section">Services</div>
+    <button class="nav-item" onclick="showPanel('custom-designs',this)"><span class="nav-icon">🎨</span> Custom Designs</button>
   </nav>
 </div>
 
@@ -413,6 +415,24 @@ textarea{resize:vertical;min-height:80px;}
         </table>
       </div>
     </div>
+    
+    <!-- ═══ CUSTOM DESIGNS ═══ -->
+    <div id="panel-custom-designs" class="panel">
+      <div class="panel-head">
+        <div class="panel-title">🎨 Custom Designs</div>
+        <div class="panel-subtitle">Review customer custom design requests.</div>
+      </div>
+      <div class="table-card" style="overflow-x:auto;">
+        <div class="table-header">
+          <h3>Custom Design Submissions</h3>
+          <button class="btn btn-outline btn-sm" onclick="loadCustomDesigns()">🔄 Refresh</button>
+        </div>
+        <table style="min-width:800px;">
+          <thead><tr><th>Date</th><th>Customer</th><th>Design Title</th><th>File</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="custom-designs-table"><tr><td colspan="6" style="text-align:center;color:var(--text3);padding:30px;">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
 
   </div>
 </div>
@@ -498,6 +518,7 @@ function showPanel(name, btn){
   if(name==='messages') loadMessages();
   if(name==='orders') loadOrders();
   if(name==='dashboard') loadStats();
+  if(name==='custom-designs') loadCustomDesigns();
 }
 
 function previewImg(input, previewId){
@@ -735,6 +756,89 @@ async function loadMessages(){
         <td>${new Date(m.date).toLocaleDateString('en-IN')}</td>
       </tr>`).join('');
   }catch(e){tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;color:#e74c3c;padding:30px;">Error loading messages</td></tr>`;}
+}
+
+// ─── Custom Designs ─────────────────────────────────────────────────
+async function loadCustomDesigns(){
+  const tbody=document.getElementById('custom-designs-table');
+  try{
+    const res = await fetch('/api/custom-design', { headers: { 'x-admin-token': localStorage.getItem('Silviyara_admin_token') } });
+    if(res.status === 401) { logout(); return; }
+    const designs = await res.json();
+    if(!designs.length){tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;color:var(--text3);padding:30px;">No custom designs yet</td></tr>`;return;}
+    tbody.innerHTML=designs.map(d=>`
+      <tr>
+        <td>
+          <div style="font-family:Georgia,serif;font-size:13px;font-weight:600;">${new Date(d.createdAt).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})}</div>
+        </td>
+        <td>
+          <div style="font-weight:600;font-size:14px;">${d.customerName}</div>
+          ${d.customerEmail?`<div style="font-size:11px;color:#5b21b6;margin-top:2px;">✉ ${d.customerEmail}</div>`:''}
+          ${d.customerPhone?`<div style="font-size:12px;color:var(--text2);margin-top:2px;">📞 ${d.customerPhone}</div>`:''}
+        </td>
+        <td>
+          <strong>${d.designTitle}</strong>
+          ${d.description?`<div style="font-size:11px;color:var(--text3);margin-top:2px;max-width:200px;line-height:1.4;">${d.description}</div>`:''}
+        </td>
+        <td>
+          <button class="btn btn-outline btn-sm" onclick="viewCustomDesignFile('${d._id}', '${d.fileName}')">📄 View File</button>
+          <div style="font-size:10px;color:var(--text3);margin-top:4px;">${d.fileName || ''}</div>
+        </td>
+        <td><span class="status-badge ${d.status==='Accepted'?'status-delivered':d.status==='Rejected'?'status-cancelled':'status-pending'}">${d.status}</span></td>
+        <td>
+          <select class="filter-select" onchange="updateCustomDesignStatus('${d._id}', this.value)" style="padding:4px 8px;font-size:11px;">
+            <option value="" disabled selected>Update Status</option>
+            <option value="Accepted">Accept</option>
+            <option value="Rejected">Reject</option>
+            <option value="Pending">Pending</option>
+          </select>
+        </td>
+      </tr>`).join('');
+  }catch(e){tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;color:#e74c3c;padding:30px;">Error loading custom designs</td></tr>`;}
+}
+
+async function viewCustomDesignFile(id, fileName) {
+  try {
+    const res = await fetch('/api/custom-design/'+id+'/file', { headers: { 'x-admin-token': localStorage.getItem('Silviyara_admin_token') } });
+    const data = await res.json();
+    if(data.success && data.fileData) {
+      const a = document.createElement('a');
+      a.href = data.fileData;
+      a.download = fileName || 'design-file';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } else {
+      alert('Could not load file');
+    }
+  } catch(e) {
+    alert('Error fetching file');
+  }
+}
+
+async function updateCustomDesignStatus(id, newStatus) {
+  const note = prompt('Add a note for the customer (Required if Rejecting):', '');
+  if(newStatus === 'Rejected' && !note) {
+    alert('A note is required when rejecting a design.');
+    loadCustomDesigns();
+    return;
+  }
+  if(note === null) {
+    loadCustomDesigns();
+    return;
+  }
+  try {
+    const res = await fetch('/api/custom-design/'+id+'/status', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'x-admin-token': localStorage.getItem('Silviyara_admin_token') },
+      body: JSON.stringify({ status: newStatus, adminNote: note })
+    });
+    const result = await res.json();
+    if(result.success) loadCustomDesigns();
+    else alert('Error updating status: ' + result.msg);
+  } catch(e) {
+    alert('Error updating status');
+  }
 }
 
 // ─── Orders ───────────────────────────────────────────────────

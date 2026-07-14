@@ -10,7 +10,7 @@
 [data-theme="dark"]{--bg:#0e0d0c;--bg2:#161412;--text:#f0ebe3;--text2:#a89b8c;--silver:#9a9aaa;--gold:#d4aa5a;--card:#1a1816;--border:#2a2520;--nav-bg:rgba(14,13,12,0.96);--shadow:rgba(0,0,0,0.3);}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .4s,color .4s;}
-nav{position:fixed;top:0;width:100%;z-index:1000;background:var(--nav-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);height:70px;display:flex;align-items:center;padding:0 5%;gap:2rem;}
+nav{position:fixed;top:26px;width:100%;z-index:1000;background:var(--nav-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);height:70px;display:flex;align-items:center;padding:0 5%;gap:2rem;}
 .logo{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:400;color:var(--text);text-decoration:none;letter-spacing:.05em;flex:1;}
 .logo span{color:var(--silver);font-style:italic;}
 .nav-links{display:flex;gap:1.5rem;align-items:center;}
@@ -50,7 +50,12 @@ nav{position:fixed;top:0;width:100%;z-index:1000;background:var(--nav-bg);backdr
 .res-label{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--silver);flex-shrink:0;padding-top:2px;}
 .res-val{color:var(--text);font-size:.88rem;text-align:right;line-height:1.5;}
 .res-total{font-size:1.1rem;font-weight:600;color:var(--gold);}
-  </style>
+  
+/* FLASH SALE BANNER */
+.flash-banner{position:fixed;top:0;left:0;width:100%;z-index:2000;background:var(--flash,#1a0a0a);color:#f0ebe3;padding:5px 0;text-align:center;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;}
+.flash-banner a{color:var(--gold-accent,#c9a84c);text-decoration:none;margin-left:.5rem;font-weight:600;}
+
+</style>
 </head>
 <body>
 <script>

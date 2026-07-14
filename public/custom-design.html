@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Custom Design — Silviyara Jewels</title>
+<meta name="description" content="Submit your custom jewellery design to Silviyara Jewels. Upload sketches, images, or CAD files and our master craftsmen will bring your vision to life in 925 sterling silver."/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#faf8f5;--bg2:#f2ede6;--text:#1c1814;--text2:#6b5f52;--silver:#8a8a9a;--gold:#c9a84c;--card:#ffffff;--border:#e8e0d5;--nav-bg:rgba(250,248,245,0.96);--shadow:rgba(0,0,0,0.06);}
+[data-theme="dark"]{--bg:#0e0d0c;--bg2:#161412;--text:#f0ebe3;--text2:#a89b8c;--silver:#9a9aaa;--gold:#d4aa5a;--card:#1a1816;--border:#2a2520;--nav-bg:rgba(14,13,12,0.96);--shadow:rgba(0,0,0,0.3);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);transition:background .4s,color .4s;}
+
+/* NAV */
+nav{position:fixed;top:26px;width:100%;z-index:1000;background:var(--nav-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);height:72px;display:flex;align-items:center;padding:0 5%;gap:2rem;transition:all .4s cubic-bezier(.4,0,.2,1);}
+nav.scrolled{height:60px;box-shadow:0 4px 30px var(--shadow);}
+nav.nav-hidden{transform:translateY(-100%);}
+.logo{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:400;color:var(--text);text-decoration:none;letter-spacing:.05em;flex-shrink:0;transition:all .3s;}
+.logo:hover{opacity:.8;}
+.logo span{color:var(--silver);font-style:italic;}
+.nav-links{display:flex;gap:.15rem;list-style:none;flex:1;justify-content:center;align-items:center;}
+.nav-links a{text-decoration:none;color:var(--text2);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;padding:.5rem 1rem;display:block;transition:color .3s;white-space:nowrap;position:relative;}
+.nav-links > li > a::after{content:'';position:absolute;bottom:2px;left:50%;width:0;height:1.5px;background:var(--gold);transition:all .35s cubic-bezier(.4,0,.2,1);transform:translateX(-50%);}
+.nav-links > li > a:hover::after,.nav-links > li > a.active::after{width:60%;}
+.nav-links a:hover,.nav-links a.active{color:var(--text);}
+.dropdown{position:relative;}
+.dropdown-menu{position:absolute;top:100%;left:-10px;background:var(--card);border:1px solid var(--border);min-width:200px;opacity:0;pointer-events:none;transform:translateY(-10px);transition:all .3s cubic-bezier(.4,0,.2,1);z-index:100;box-shadow:0 12px 40px var(--shadow);border-radius:4px;overflow:hidden;}
+.dropdown:hover .dropdown-menu{opacity:1;pointer-events:all;transform:translateY(0);}
+.dropdown-menu a{display:block;padding:.75rem 1.25rem;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);text-decoration:none;border-bottom:1px solid var(--border);transition:all .25s;}
+.dropdown-menu a:last-child{border-bottom:none;}
+.dropdown-menu a:hover{color:var(--text);background:var(--bg2);padding-left:1.6rem;}
+.coming-soon-tag{font-size:.55rem;background:var(--border);color:var(--text2);padding:2px 5px;border-radius:2px;margin-left:5px;}
+.nav-right{display:flex;align-items:center;gap:.6rem;flex-shrink:0;}
+.theme-toggle{background:none;border:1px solid var(--border);width:38px;height:38px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;color:var(--text2);transition:all .3s;border-radius:50%;}
+.theme-toggle:hover{border-color:var(--gold);color:var(--text);transform:rotate(20deg);}
+.cart-btn{position:relative;background:none;border:1px solid var(--border);cursor:pointer;color:var(--text);font-size:1rem;padding:7px 10px;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;transition:all .3s;}
+.cart-btn:hover{border-color:var(--gold);}
+.cart-badge{position:absolute;top:-4px;right:-4px;background:var(--gold);color:#fff;border-radius:50%;width:18px;height:18px;font-size:.6rem;display:flex;align-items:center;justify-content:center;font-weight:500;}
+.hamburger{display:none;flex-direction:column;justify-content:center;align-items:center;gap:5px;cursor:pointer;background:none;border:1px solid var(--border);border-radius:50%;width:38px;height:38px;padding:0;transition:all .3s;}
+.hamburger:hover{border-color:var(--gold);}
+.hamburger span{display:block;width:18px;height:1.5px;background:var(--text);transition:all .35s cubic-bezier(.4,0,.2,1);transform-origin:center;}
+.hamburger.active span:nth-child(1){transform:rotate(45deg) translate(4.5px,4.5px);}
+.hamburger.active span:nth-child(2){opacity:0;transform:scaleX(0);}
+.hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(4.5px,-4.5px);}
+
+/* MOBILE DRAWER */
+.mobile-drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1500;opacity:0;pointer-events:none;transition:opacity .35s;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
+.mobile-drawer-overlay.open{opacity:1;pointer-events:all;}
+.mobile-drawer{position:fixed;top:0;right:-320px;width:300px;max-width:85vw;height:100vh;background:var(--card);z-index:1501;transition:right .4s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;border-left:1px solid var(--border);box-shadow:-8px 0 30px rgba(0,0,0,.1);}
+.mobile-drawer.open{right:0;}
+.mobile-drawer-head{display:flex;justify-content:space-between;align-items:center;padding:1.5rem;border-bottom:1px solid var(--border);}
+.mobile-drawer-head h3{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:400;}
+.mobile-drawer-close{background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text);width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background .2s;}
+.mobile-drawer-close:hover{background:var(--bg2);}
+.mobile-drawer-body{flex:1;overflow-y:auto;padding:1rem 0;}
+.mobile-nav-item{display:block;text-decoration:none;color:var(--text2);font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;padding:.9rem 1.5rem;border-bottom:1px solid var(--border);transition:all .2s;}
+.mobile-nav-item:hover,.mobile-nav-item.active{color:var(--text);background:var(--bg2);padding-left:2rem;}
+.mobile-nav-divider{padding:.75rem 1.5rem .5rem;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--silver);}
+.mobile-drawer-foot{padding:1.25rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:.75rem;}
+.mobile-drawer-foot .theme-toggle{width:42px;height:42px;font-size:1.1rem;}
+
+/* HERO */
+.cd-hero{padding:120px 5% 60px;background:linear-gradient(160deg,#080402 0%,#1a1410 60%,#0e0a08 100%);color:#f0ebe3;text-align:center;position:relative;overflow:hidden;border-bottom:1px solid rgba(201,168,76,0.15);}
+.cd-hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(201,168,76,.02) 0,rgba(201,168,76,.02) 1px,transparent 1px,transparent 60px);pointer-events:none;}
+.cd-hero-glow{position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(201,168,76,0.08),transparent 70%);border-radius:50%;top:-100px;right:-100px;pointer-events:none;}
+.cd-hero-glow2{position:absolute;width:300px;height:300px;background:radial-gradient(circle,rgba(201,168,76,0.06),transparent 70%);border-radius:50%;bottom:-80px;left:-80px;pointer-events:none;}
+.cd-hero .section-label{font-size:.7rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;position:relative;z-index:1;}
+.cd-hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.4rem,5vw,4rem);font-weight:400;margin-bottom:1.25rem;position:relative;z-index:1;line-height:1.1;}
+.cd-hero h1 em{font-style:italic;color:var(--gold);}
+.cd-hero p{max-width:600px;margin:0 auto;color:rgba(240,235,227,0.6);font-size:1rem;line-height:1.85;position:relative;z-index:1;}
+.cd-hero-icon{font-size:4rem;margin-bottom:1.5rem;display:block;position:relative;z-index:1;animation:floatIcon 3s ease-in-out infinite;}
+@keyframes floatIcon{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+/* LOGIN GATE */
+.login-gate{padding:60px 5%;text-align:center;max-width:500px;margin:0 auto;}
+.login-gate-icon{font-size:3rem;margin-bottom:1.5rem;display:block;opacity:.7;}
+.login-gate h2{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:400;margin-bottom:1rem;}
+.login-gate p{color:var(--text2);font-size:.95rem;line-height:1.8;margin-bottom:2rem;}
+.btn-login-gate{background:linear-gradient(135deg,#c9a84c,#e6c56a);color:#0e0d0c;border:none;padding:14px 40px;font-family:'DM Sans',sans-serif;font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:all .35s;font-weight:600;position:relative;overflow:hidden;}
+.btn-login-gate::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,0.3),transparent);transition:left .5s;}
+.btn-login-gate:hover::before{left:100%;}
+.btn-login-gate:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(201,168,76,0.35);}
+
+/* MAIN CONTENT (hidden until logged in) */
+.cd-main{display:none;padding:60px 5% 80px;max-width:900px;margin:0 auto;}
+.cd-main.show{display:block;}
+
+/* INFO CARDS */
+.cd-info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.25rem;margin-bottom:3rem;}
+.cd-info-card{background:var(--card);border:1px solid var(--border);padding:1.75rem;transition:all .3s;}
+.cd-info-card:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 8px 30px var(--shadow);}
+.cd-info-icon{font-size:1.8rem;margin-bottom:.75rem;display:block;}
+.cd-info-title{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:400;margin-bottom:.5rem;}
+.cd-info-text{font-size:.85rem;color:var(--text2);line-height:1.75;}
+
+/* NOTICE BOXES */
+.cd-notice{background:linear-gradient(135deg,rgba(201,168,76,0.06),rgba(201,168,76,0.02));border:1px solid rgba(201,168,76,0.2);padding:1.25rem 1.5rem;margin-bottom:1.5rem;display:flex;gap:1rem;align-items:flex-start;}
+.cd-notice-icon{font-size:1.3rem;flex-shrink:0;margin-top:.1rem;}
+.cd-notice-text{font-size:.88rem;color:var(--text2);line-height:1.75;}
+.cd-notice-text strong{color:var(--text);font-weight:500;}
+
+/* UPLOAD FORM */
+.cd-form-section{margin-bottom:3rem;}
+.cd-form-section h2{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:400;margin-bottom:.5rem;}
+.cd-form-section > p{color:var(--text2);font-size:.88rem;margin-bottom:1.75rem;}
+.cd-form{background:var(--card);border:1px solid var(--border);padding:2rem;}
+.cd-form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+.cd-form-group{margin-bottom:1rem;}
+.cd-form-group label{display:block;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--silver);margin-bottom:.45rem;}
+.cd-form-input{width:100%;background:var(--bg2);border:1px solid var(--border);padding:11px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.88rem;outline:none;transition:border-color .3s,box-shadow .3s;}
+.cd-form-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,0.08);}
+.cd-form-input::placeholder{color:var(--text2);opacity:.5;}
+textarea.cd-form-input{min-height:100px;resize:vertical;}
+
+/* FILE UPLOAD */
+.cd-file-drop{border:2px dashed var(--border);padding:2.5rem 2rem;text-align:center;cursor:pointer;transition:all .3s;background:var(--bg2);position:relative;}
+.cd-file-drop:hover,.cd-file-drop.dragover{border-color:var(--gold);background:rgba(201,168,76,0.03);}
+.cd-file-drop-icon{font-size:2.5rem;margin-bottom:.75rem;display:block;opacity:.6;}
+.cd-file-drop-text{font-size:.9rem;color:var(--text2);margin-bottom:.5rem;}
+.cd-file-drop-sub{font-size:.72rem;color:var(--silver);letter-spacing:.05em;}
+.cd-file-drop input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.cd-file-preview{display:none;margin-top:1rem;padding:1rem;background:var(--bg);border:1px solid var(--border);align-items:center;gap:1rem;}
+.cd-file-preview.show{display:flex;}
+.cd-file-preview-icon{font-size:2rem;flex-shrink:0;}
+.cd-file-preview-info{flex:1;min-width:0;}
+.cd-file-preview-name{font-size:.85rem;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cd-file-preview-size{font-size:.72rem;color:var(--silver);margin-top:.15rem;}
+.cd-file-preview-remove{background:none;border:1px solid var(--border);width:30px;height:30px;border-radius:50%;cursor:pointer;color:var(--text2);font-size:.85rem;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+.cd-file-preview-remove:hover{border-color:#e74c3c;color:#e74c3c;background:rgba(231,76,60,0.05);}
+
+/* SUBMIT */
+.cd-submit-btn{width:100%;background:linear-gradient(135deg,#c9a84c,#e6c56a);color:#0e0d0c;border:none;padding:16px;font-family:'DM Sans',sans-serif;font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:all .35s;font-weight:600;margin-top:.5rem;}
+.cd-submit-btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(201,168,76,0.35);}
+.cd-submit-btn:disabled{opacity:.6;cursor:wait;transform:none;box-shadow:none;}
+.cd-success-msg{display:none;background:linear-gradient(135deg,rgba(39,174,96,0.1),rgba(39,174,96,0.05));border:1px solid rgba(39,174,96,0.3);color:#27ae60;padding:1rem 1.25rem;margin-top:1rem;font-size:.85rem;text-align:center;}
+.cd-error-msg{display:none;background:rgba(231,76,60,0.08);border:1px solid rgba(231,76,60,0.2);color:#e74c3c;padding:1rem 1.25rem;margin-top:1rem;font-size:.85rem;text-align:center;}
+
+/* MY SUBMISSIONS */
+.cd-submissions{margin-top:3rem;}
+.cd-submissions h2{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:400;margin-bottom:1.5rem;}
+.cd-sub-empty{text-align:center;padding:2.5rem;color:var(--text2);font-size:.9rem;background:var(--card);border:1px solid var(--border);}
+.cd-sub-card{background:var(--card);border:1px solid var(--border);padding:1.25rem 1.5rem;margin-bottom:1rem;display:flex;align-items:center;gap:1.25rem;transition:all .2s;}
+.cd-sub-card:hover{border-color:var(--silver);}
+.cd-sub-icon{font-size:1.5rem;flex-shrink:0;width:42px;height:42px;background:var(--bg2);border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.cd-sub-info{flex:1;min-width:0;}
+.cd-sub-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:400;margin-bottom:.2rem;}
+.cd-sub-date{font-size:.72rem;color:var(--silver);letter-spacing:.05em;}
+.cd-sub-status{display:inline-block;padding:4px 12px;border-radius:20px;font-size:.7rem;font-weight:600;letter-spacing:.05em;flex-shrink:0;}
+.cd-sub-status.pending{background:rgba(201,168,76,0.12);color:#b8973b;}
+.cd-sub-status.accepted{background:rgba(39,174,96,0.12);color:#1a7d4a;}
+.cd-sub-status.rejected{background:rgba(231,76,60,0.1);color:#c0392b;}
+[data-theme="dark"] .cd-sub-status.pending{background:rgba(201,168,76,0.18);color:#d4aa5a;}
+[data-theme="dark"] .cd-sub-status.accepted{background:rgba(39,174,96,0.18);color:#4caf76;}
+[data-theme="dark"] .cd-sub-status.rejected{background:rgba(231,76,60,0.15);color:#e74c3c;}
+.cd-sub-note{margin-top:.4rem;font-size:.8rem;color:var(--text2);font-style:italic;line-height:1.5;}
+
+/* FOOTER */
+footer{background:#0e0a08;color:#a89b8c;padding:60px 5% 30px;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem;}
+.footer-brand .logo{color:#f0ebe3;font-size:1.4rem;}
+.footer-brand p{font-size:.85rem;line-height:1.7;margin-top:1rem;opacity:.7;}
+.footer-col h4{font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;color:#f0ebe3;margin-bottom:1.25rem;}
+.footer-col a{display:block;font-size:.85rem;color:#a89b8c;text-decoration:none;margin-bottom:.6rem;transition:color .3s;}
+.footer-col a:hover{color:#f0ebe3;}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.08);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;font-size:.8rem;opacity:.5;}
+
+.wa-float{position:fixed;bottom:28px;right:28px;z-index:999;background:#25d366;color:#fff;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;text-decoration:none;box-shadow:0 4px 20px rgba(37,211,102,.35);}
+
+/* CART */
+.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;opacity:0;pointer-events:none;transition:opacity .35s;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
+.cart-overlay.open{opacity:1;pointer-events:all;}
+.cart-sidebar{position:fixed;top:0;right:-400px;width:380px;max-width:90vw;height:100vh;background:var(--card);z-index:2001;transition:right .4s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;border-left:1px solid var(--border);box-shadow:-8px 0 30px rgba(0,0,0,.15);}
+.cart-sidebar.open{right:0;}
+.cart-head{display:flex;justify-content:space-between;align-items:center;padding:1.5rem;border-bottom:1px solid var(--border);}
+.cart-head h3{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:400;}
+.cart-close{background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text);width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background .2s;}
+.cart-close:hover{background:var(--bg2);}
+.cart-body{flex:1;overflow-y:auto;padding:1.5rem;}
+.cart-empty{text-align:center;padding:3rem 0;color:var(--text2);font-size:.9rem;letter-spacing:.05em;}
+.cart-item{display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border);}
+.cart-item-emoji{font-size:2rem;width:60px;height:60px;background:var(--bg2);display:flex;align-items:center;justify-content:center;border-radius:8px;}
+.cart-item-info{flex:1;}
+.cart-item-name{font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:.25rem;}
+.cart-item-price{font-size:.85rem;text-transform:uppercase;letter-spacing:.1em;}
+.cart-item-remove{background:none;border:none;font-size:1rem;cursor:pointer;color:var(--silver);transition:color .2s;padding:5px;}
+.cart-item-remove:hover{color:red;}
+.cart-foot{padding:1.5rem;border-top:1px solid var(--border);background:var(--bg2);}
+.cart-total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;font-size:.9rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text2);}
+.cart-total-row strong{font-size:1.4rem;color:var(--text);font-family:'DM Sans',sans-serif;font-weight:500;}
+.btn-checkout{width:100%;background:#25d366;color:#fff;border:none;padding:16px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;transition:all .3s;}
+.btn-checkout:hover{background:#128c7e;}
+
+/* CONTACT MODAL */
+.contact-modal-overlay{position:fixed;inset:0;z-index:3000;background:rgba(10,8,6,0.75);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s cubic-bezier(.4,0,.2,1);padding:1rem;}
+.contact-modal-overlay.open{opacity:1;pointer-events:all;}
+.contact-modal{background:var(--card);border:1px solid var(--border);width:100%;max-width:720px;max-height:90vh;overflow-y:auto;position:relative;box-shadow:0 40px 120px rgba(0,0,0,0.3),0 0 0 1px rgba(201,168,76,0.15);transform:translateY(24px) scale(0.97);transition:transform .4s cubic-bezier(.4,0,.2,1);display:grid;grid-template-columns:1fr 1.4fr;}
+.contact-modal-overlay.open .contact-modal{transform:translateY(0) scale(1);}
+.cmodal-left{background:linear-gradient(160deg,#080402 0%,#1a1410 100%);padding:3rem 2.5rem;display:flex;flex-direction:column;position:relative;overflow:hidden;}
+.cmodal-left::before{content:'✦';position:absolute;bottom:-2rem;right:-2rem;font-size:10rem;color:rgba(201,168,76,0.06);line-height:1;}
+.cmodal-eyebrow{font-size:.65rem;letter-spacing:.35em;text-transform:uppercase;color:#c9a84c;margin-bottom:1.5rem;}
+.cmodal-left h2{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:400;color:#f0ebe3;line-height:1.25;margin-bottom:1rem;}
+.cmodal-left h2 em{font-style:italic;color:#c9a84c;}
+.cmodal-left p{font-size:.85rem;color:rgba(240,235,227,0.55);line-height:1.8;margin-bottom:2.5rem;}
+.cmodal-contacts{display:flex;flex-direction:column;gap:1.5rem;margin-top:auto;}
+.cmodal-contact-item{display:flex;align-items:flex-start;gap:.9rem;}
+.cmodal-contact-icon{width:36px;height:36px;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.25);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;}
+.cmodal-contact-text p:first-child{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(240,235,227,0.4);margin-bottom:.2rem;}
+.cmodal-contact-text a,.cmodal-contact-text span{color:#f0ebe3;font-size:.88rem;text-decoration:none;transition:color .2s;}
+.cmodal-contact-text a:hover{color:#c9a84c;}
+.cmodal-wa-btn{display:inline-flex;align-items:center;gap:.6rem;background:#25d366;color:#fff;padding:11px 20px;text-decoration:none;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;transition:all .3s;margin-top:2rem;width:fit-content;}
+.cmodal-wa-btn:hover{background:#128c7e;transform:translateY(-2px);}
+.cmodal-right{padding:3rem 2.5rem;position:relative;}
+.cmodal-close{position:absolute;top:1.25rem;right:1.25rem;background:none;border:1px solid var(--border);width:34px;height:34px;border-radius:50%;cursor:pointer;color:var(--text2);font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all .3s;}
+.cmodal-close:hover{border-color:var(--gold);color:var(--text);transform:rotate(90deg);}
+.cmodal-right h3{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:400;margin-bottom:.4rem;}
+.cmodal-right > p{font-size:.82rem;color:var(--text2);margin-bottom:2rem;line-height:1.6;}
+.cmodal-form-group{margin-bottom:1.1rem;}
+.cmodal-form-group label{display:block;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--silver);margin-bottom:.45rem;}
+.cmodal-form-input{width:100%;background:var(--bg2);border:1px solid var(--border);padding:11px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.88rem;outline:none;transition:border-color .3s,box-shadow .3s;}
+.cmodal-form-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,0.08);}
+.cmodal-form-input::placeholder{color:var(--text2);opacity:.5;}
+textarea.cmodal-form-input{min-height:88px;resize:vertical;}
+.cmodal-form-row{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;}
+.cmodal-submit-btn{width:100%;background:var(--text);color:var(--bg);border:none;padding:13px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;transition:all .3s;margin-top:.25rem;position:relative;overflow:hidden;}
+.cmodal-submit-btn::after{content:'';position:absolute;inset:0;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.4,0,.2,1);}
+.cmodal-submit-btn:hover::after{transform:scaleX(1);}
+.cmodal-submit-btn span{position:relative;z-index:1;}
+.cmodal-success-msg{display:none;background:linear-gradient(135deg,rgba(201,168,76,0.1),rgba(201,168,76,0.05));border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:12px 16px;margin-top:1rem;font-size:.82rem;letter-spacing:.05em;text-align:center;}
+@media(max-width:600px){.contact-modal{grid-template-columns:1fr;}.cmodal-left{padding:2rem 1.5rem;}.cmodal-right{padding:2rem 1.5rem;}.cmodal-form-row{grid-template-columns:1fr;}}
+
+.btn-primary{background:var(--gold);color:#080402;border:none;padding:14px 36px;font-family:'DM Sans',sans-serif;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-block;transition:all .3s;}
+.btn-primary:hover{opacity:.9;transform:translateY(-2px);}
+.section-label{font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:var(--silver);margin-bottom:.75rem;}
+
+@media(max-width:768px){
+  nav{padding:0 4%;justify-content:space-between;gap:0;}
+  .logo{font-size:1.4rem;}
+  .nav-right{gap:0.4rem;}
+  .theme-toggle,.cart-btn,.hamburger{width:34px;height:34px;padding:0;display:flex;align-items:center;justify-content:center;font-size:1rem;}
+  .dropdown-menu{display:none;}
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  .footer-grid{grid-template-columns:1fr 1fr;}
+  .cd-form-row{grid-template-columns:1fr;}
+  .cd-info-grid{grid-template-columns:1fr;}
+}
+@media(max-width:480px){
+  .footer-grid{grid-template-columns:1fr;}
+}
+
+/* FLASH SALE BANNER */
+.flash-banner{position:fixed;top:0;left:0;width:100%;z-index:2000;background:var(--flash,#1a0a0a);color:#f0ebe3;padding:5px 0;text-align:center;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;}
+.flash-banner a{color:var(--gold-accent,#c9a84c);text-decoration:none;margin-left:.5rem;font-weight:600;}
+
+</style>
+</head>
+<body>
+<script>
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.dataset.theme = savedTheme;
+  document.addEventListener('DOMContentLoaded', () => {
+    const icon = savedTheme === 'dark' ? '☀️' : '🌙';
+    document.querySelectorAll('.theme-toggle').forEach(b => b.textContent = icon);
+  });
+</script>
+<a href="https://wa.me/918004703038" target="_blank" class="wa-float">💬</a>
+
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-head"><h3>Your Cart</h3><button class="cart-close" onclick="closeCart()">✕</button></div>
+  <div class="cart-body" id="cartBody"><div class="cart-empty"><p>Your cart is empty</p></div></div>
+  <div class="cart-foot" id="cartFoot" style="display:none">
+    <div class="cart-total-row"><span>Total</span><strong id="cartTotal">₹0</strong></div>
+    <button class="btn-checkout" style="background:var(--text);color:var(--bg);margin-bottom:10px;" onclick="checkoutWA()">Proceed to Checkout</button>
+    <button class="btn-checkout" style="background:transparent;color:#25d366;border:1px solid #25d366" onclick="checkoutWA()">💬 Order via WhatsApp</button>
+  </div>
+</div>
+
+<nav id="mainNav">
+  <a href="/" class="logo">Silviyara <span>Jewels</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li class="dropdown"><a href="#">Collections ▾</a>
+      <div class="dropdown-menu">
+        <a href="/shop?cat=pendant">Pendant</a>
+        <a href="/shop?cat=ear-jewellery">Ear Jewellery</a>
+        <a href="/shop?cat=rings">Rings</a>
+        <a href="/shop?cat=anklets">Anklets</a>
+        <a href="/shop?cat=bracelets">Bracelets</a>
+        <a href="/shop?cat=necklaces">Necklaces</a>
+        <a href="/shop?cat=hair-accessories">Hair Accessories</a>
+        <a href="#">Gold <span class="coming-soon-tag">Soon</span></a>
+      </div>
+    </li>
+    <li><a href="/shop">Shop</a></li>
+    <li><a href="/flash-sale">Sale ⚡</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="/custom-design" class="active">Custom Design</a></li>
+    <li><a href="#" onclick="openContactModal();return false;">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    <a href="/login.html" class="cart-btn" style="text-decoration:none;" id="accountBtn" title="My Account">👤</a>
+    <button class="cart-btn" onclick="openCart()">🛒 <span class="cart-badge" id="cartCount">0</span></button>
+    <button class="hamburger" id="hamburgerBtn" onclick="toggleMobileDrawer()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="mobile-drawer-overlay" id="mobileOverlay" onclick="closeMobileDrawer()"></div>
+<div class="mobile-drawer" id="mobileDrawer">
+  <div class="mobile-drawer-head"><h3>Menu</h3><button class="mobile-drawer-close" onclick="closeMobileDrawer()">✕</button></div>
+  <div class="mobile-drawer-body">
+    <a href="/shop" class="mobile-nav-item">Shop All</a>
+    <div class="mobile-nav-divider">Collections</div>
+    <a href="/shop?cat=pendant" class="mobile-nav-item">Pendant</a>
+    <a href="/shop?cat=ear-jewellery" class="mobile-nav-item">Ear Jewellery</a>
+    <a href="/shop?cat=rings" class="mobile-nav-item">Rings</a>
+    <a href="/shop?cat=anklets" class="mobile-nav-item">Anklets</a>
+    <a href="/shop?cat=bracelets" class="mobile-nav-item">Bracelets</a>
+    <a href="/shop?cat=necklaces" class="mobile-nav-item">Necklaces</a>
+    <a href="/shop?cat=hair-accessories" class="mobile-nav-item">Hair Accessories</a>
+    <div class="mobile-nav-divider">More</div>
+    <a href="/flash-sale" class="mobile-nav-item">Flash Sale ⚡</a>
+    <a href="/about" class="mobile-nav-item">About</a>
+    <a href="/custom-design" class="mobile-nav-item active">Custom Design 🎨</a>
+    <a href="#" onclick="openContactModal();return false;" class="mobile-nav-item">Contact</a>
+  </div>
+  <div class="mobile-drawer-foot"><button class="theme-toggle" onclick="toggleTheme()" id="themeBtn2">🌙</button></div>
+</div>
+
+<!-- HERO -->
+<section class="cd-hero">
+  <div class="cd-hero-glow"></div>
+  <div class="cd-hero-glow2"></div>
+  <span class="cd-hero-icon">🎨</span>
+  <p class="section-label">✦ Bespoke Creations</p>
+  <h1>Imagine It.<br>We'll <em>Craft It.</em></h1>
+  <p>Have a unique jewellery design in mind? Share your vision with us and our master craftsmen will bring it to life in pure 925 sterling silver.</p>
+</section>
+
+<!-- LOGIN GATE (shown when not logged in) -->
+<div class="login-gate" id="loginGate">
+  <span class="login-gate-icon">🔐</span>
+  <h2>Sign In to Continue</h2>
+  <p>To submit a custom design request, please sign in to your Silviyara account first. This helps us keep you updated on your submission status.</p>
+  <button class="btn-login-gate" onclick="openAuthModal()">Sign In / Create Account</button>
+</div>
+
+<!-- MAIN CONTENT (shown after login) -->
+<div class="cd-main" id="cdMain">
+
+  <!-- Info Cards -->
+  <div class="cd-info-grid">
+    <div class="cd-info-card">
+      <span class="cd-info-icon">✏️</span>
+      <h3 class="cd-info-title">Upload Your Design</h3>
+      <p class="cd-info-text">Share a sketch, photograph, or professional CAD file of your dream jewellery piece.</p>
+    </div>
+    <div class="cd-info-card">
+      <span class="cd-info-icon">👨‍🎨</span>
+      <h3 class="cd-info-title">Expert Review</h3>
+      <p class="cd-info-text">Our artisans carefully evaluate your design for feasibility and craftsmanship within 5–7 business days.</p>
+    </div>
+    <div class="cd-info-card">
+      <span class="cd-info-icon">💎</span>
+      <h3 class="cd-info-title">Brought to Life</h3>
+      <p class="cd-info-text">Once accepted, we'll craft your piece in 925 sterling silver and deliver it with love.</p>
+    </div>
+  </div>
+
+  <!-- Notices -->
+  <div class="cd-notice">
+    <span class="cd-notice-icon">✦</span>
+    <p class="cd-notice-text"><strong>Acceptance Policy:</strong> Our artisans carefully evaluate every submission. If your design is feasible to craft in sterling silver, we'll happily accept and begin working on it. If a design isn't possible due to technical constraints, we'll kindly let you know with an explanation. We truly appreciate your creativity and understanding!</p>
+  </div>
+  <div class="cd-notice">
+    <span class="cd-notice-icon">🕐</span>
+    <p class="cd-notice-text"><strong>Processing Time:</strong> Once submitted, please allow <strong>5–7 business days</strong> for our team to review your design and get back to you with an update. We'll notify you of the status right here on this page.</p>
+  </div>
+
+  <!-- Upload Form -->
+  <div class="cd-form-section">
+    <h2>Submit Your Design</h2>
+    <p>Fill in the details below and upload your design file. We accept images (JPG, PNG, WebP, SVG) and CAD files (PDF, DWG, DXF, STEP, IGES).</p>
+    
+    <form class="cd-form" id="cdForm" onsubmit="submitCustomDesign(event)">
+      <div class="cd-form-row">
+        <div class="cd-form-group">
+          <label>Your Name</label>
+          <input type="text" class="cd-form-input" id="cd-name" placeholder="Priya Sharma" required readonly/>
+        </div>
+        <div class="cd-form-group">
+          <label>Email Address</label>
+          <input type="email" class="cd-form-input" id="cd-email" placeholder="you@example.com" required readonly/>
+        </div>
+      </div>
+      <div class="cd-form-row">
+        <div class="cd-form-group">
+          <label>Phone Number</label>
+          <input type="tel" class="cd-form-input" id="cd-phone" placeholder="9876543210"/>
+        </div>
+        <div class="cd-form-group">
+          <label>Design Title *</label>
+          <input type="text" class="cd-form-input" id="cd-title" placeholder="e.g. Lotus Pendant, Custom Ring" required/>
+        </div>
+      </div>
+      <div class="cd-form-group">
+        <label>Description / Notes</label>
+        <textarea class="cd-form-input" id="cd-desc" placeholder="Tell us about your design — dimensions, style preferences, any special requirements..."></textarea>
+      </div>
+      <div class="cd-form-group">
+        <label>Upload Design File *</label>
+        <div class="cd-file-drop" id="cdFileDrop">
+          <span class="cd-file-drop-icon">📁</span>
+          <p class="cd-file-drop-text">Click to browse or drag & drop your file here</p>
+          <p class="cd-file-drop-sub">Images: JPG, PNG, WebP, SVG  •  CAD: PDF, DWG, DXF, STEP, IGES  •  Max 10MB</p>
+          <input type="file" id="cd-file" accept=".jpg,.jpeg,.png,.webp,.svg,.pdf,.dwg,.dxf,.step,.stp,.igs,.iges" onchange="handleFileSelect(this)"/>
+        </div>
+        <div class="cd-file-preview" id="cdFilePreview">
+          <span class="cd-file-preview-icon" id="cdFileIcon">📄</span>
+          <div class="cd-file-preview-info">
+            <div class="cd-file-preview-name" id="cdFileName">file.jpg</div>
+            <div class="cd-file-preview-size" id="cdFileSize">2.4 MB</div>
+          </div>
+          <button type="button" class="cd-file-preview-remove" onclick="removeFile()">✕</button>
+        </div>
+      </div>
+      <button type="submit" class="cd-submit-btn" id="cdSubmitBtn">Submit Design Request →</button>
+      <div class="cd-success-msg" id="cdSuccess">✦ Your design has been submitted successfully! We'll review it within 5–7 business days.</div>
+      <div class="cd-error-msg" id="cdError"></div>
+    </form>
+  </div>
+
+  <!-- My Submissions -->
+  <div class="cd-submissions">
+    <h2>My Submissions</h2>
+    <div id="cdSubmissionsList">
+      <div class="cd-sub-empty">Loading your submissions...</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="/" class="logo">Silviyara <span style="color:var(--silver);font-style:italic">Jewels</span></a>
+      <p>Handpicked sterling silver jewellery from Lucknow. Crafted for the modern woman who values elegance and authenticity.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Collections</h4>
+      <a href="/shop?cat=pendant">Pendant</a>
+      <a href="/shop?cat=ear-jewellery">Ear Jewellery</a>
+      <a href="/shop?cat=rings">Rings</a>
+      <a href="/shop?cat=anklets">Anklets</a>
+      <a href="/shop?cat=bracelets">Bracelets</a>
+      <a href="/shop?cat=necklaces">Necklaces</a>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <a href="/shop">Shop All</a>
+      <a href="/flash-sale">Flash Sale</a>
+      <a href="/custom-design">Custom Design</a>
+      <a href="/about">About Us</a>
+      <a href="#" onclick="openContactModal();return false;">Contact</a>
+      <a href="/size-guide">Size Guide</a>
+      <a href="/care-instructions">Care Instructions</a>
+    </div>
+    <div class="footer-col">
+      <h4>Policies</h4>
+      <a href="/shipping-policy">Shipping Policy</a>
+      <a href="/return-policy">Return Policy</a>
+      <a href="/privacy-policy">Privacy Policy</a>
+      <a href="/terms">Terms & Conditions</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Silviyara Jewels. All rights reserved.</span>
+    <span>Made with ♥ in Lucknow</span>
+  </div>
+</footer>
+
+<script>
+// Theme
+function toggleTheme(){
+  const h=document.documentElement;
+  const newTheme = h.dataset.theme === 'light' ? 'dark' : 'light';
+  h.dataset.theme = newTheme;
+  localStorage.setItem('theme', newTheme);
+  const icon = newTheme === 'dark' ? '☀️' : '🌙';
+  document.querySelectorAll('.theme-toggle').forEach(b=>b.textContent=icon);
+}
+
+// Nav scroll
+let lastScroll=0;
+window.addEventListener('scroll',()=>{
+  const nav=document.getElementById('mainNav');
+  if(!nav) return;
+  const st=window.scrollY;
+  if(st>60)nav.classList.add('scrolled');else nav.classList.remove('scrolled');
+  if(st>400&&st>lastScroll)nav.classList.add('nav-hidden');else nav.classList.remove('nav-hidden');
+  lastScroll=st;
+});
+
+// Mobile Drawer
+function toggleMobileDrawer(){
+  const d=document.getElementById('mobileDrawer'),o=document.getElementById('mobileOverlay'),h=document.getElementById('hamburgerBtn');
+  if(d.classList.contains('open')){closeMobileDrawer();}else{d.classList.add('open');o.classList.add('open');h.classList.add('active');document.body.style.overflow='hidden';}
+}
+function closeMobileDrawer(){
+  const d=document.getElementById('mobileDrawer'),o=document.getElementById('mobileOverlay'),h=document.getElementById('hamburgerBtn');
+  if(d)d.classList.remove('open');if(o)o.classList.remove('open');if(h)h.classList.remove('active');document.body.style.overflow='';
+}
+
+// Cart
+let cart=[];
+function updateCart(){
+  const countEl=document.getElementById('cartCount');if(countEl)countEl.textContent=cart.length;
+  const body=document.getElementById('cartBody'),foot=document.getElementById('cartFoot'),tot=document.getElementById('cartTotal');
+  if(!body)return;
+  if(!cart.length){body.innerHTML='<div class="cart-empty"><p>Your cart is empty</p></div>';if(foot)foot.style.display='none';return;}
+  body.innerHTML=cart.map((i,idx)=>`<div class="cart-item"><span class="cart-item-emoji">${i.emoji||'✨'}</span><div class="cart-item-info"><p class="cart-item-name">${i.name}</p><p class="cart-item-price">₹${i.price.toLocaleString()}</p></div><button class="cart-item-remove" onclick="removeFromCart(${idx})">✕</button></div>`).join('');
+  if(tot)tot.textContent='₹'+cart.reduce((s,i)=>s+i.price,0).toLocaleString();
+  if(foot)foot.style.display='block';
+}
+function removeFromCart(i){cart.splice(i,1);updateCart();}
+function openCart(){const o=document.getElementById('cartOverlay'),s=document.getElementById('cartSidebar');if(o)o.classList.add('open');if(s)s.classList.add('open');}
+function closeCart(){const o=document.getElementById('cartOverlay'),s=document.getElementById('cartSidebar');if(o)o.classList.remove('open');if(s)s.classList.remove('open');}
+function checkoutWA(){
+  const items=cart.map(i=>'• '+i.name+' — ₹'+i.price.toLocaleString()).join('%0A');
+  const total=cart.reduce((s,i)=>s+i.price,0);
+  window.open('https://wa.me/918004703038?text=Hi%20Silviyara!%20Order:%0A'+items+'%0ATotal:%20%E2%82%B9'+total.toLocaleString(),'_blank');
+}
+
+// ─── LOGIN GATE ───────────────────────────────────────────
+let selectedFile = null;
+let fileBase64 = null;
+
+function checkAuth(){
+  const token = localStorage.getItem('navToken');
+  const user = JSON.parse(localStorage.getItem('navUser') || 'null');
+  if(token && user){
+    document.getElementById('loginGate').style.display = 'none';
+    document.getElementById('cdMain').classList.add('show');
+    // Prefill form
+    document.getElementById('cd-name').value = user.name || '';
+    document.getElementById('cd-email').value = user.email || '';
+    document.getElementById('cd-phone').value = user.phone || '';
+    loadMySubmissions();
+  } else {
+    document.getElementById('loginGate').style.display = 'block';
+    document.getElementById('cdMain').classList.remove('show');
+  }
+}
+
+// ─── FILE HANDLING ────────────────────────────────────────
+function handleFileSelect(input){
+  const file = input.files[0];
+  if(!file) return;
+  if(file.size > 10 * 1024 * 1024){
+    alert('File size must be under 10MB');
+    input.value='';
+    return;
+  }
+  selectedFile = file;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    fileBase64 = e.target.result;
+    showFilePreview(file);
+  };
+  reader.readAsDataURL(file);
+}
+
+function showFilePreview(file){
+  const preview = document.getElementById('cdFilePreview');
+  const isImage = file.type.startsWith('image/');
+  document.getElementById('cdFileIcon').textContent = isImage ? '🖼️' : '📐';
+  document.getElementById('cdFileName').textContent = file.name;
+  const sizeMB = (file.size / (1024*1024)).toFixed(2);
+  document.getElementById('cdFileSize').textContent = sizeMB + ' MB • ' + (file.type || 'Unknown type');
+  preview.classList.add('show');
+  document.getElementById('cdFileDrop').style.display = 'none';
+}
+
+function removeFile(){
+  selectedFile = null;
+  fileBase64 = null;
+  document.getElementById('cd-file').value = '';
+  document.getElementById('cdFilePreview').classList.remove('show');
+  document.getElementById('cdFileDrop').style.display = 'block';
+}
+
+// Drag & drop
+const dropZone = document.getElementById('cdFileDrop');
+if(dropZone){
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    if(e.dataTransfer.files.length){
+      document.getElementById('cd-file').files = e.dataTransfer.files;
+      handleFileSelect(document.getElementById('cd-file'));
+    }
+  });
+}
+
+// ─── SUBMIT DESIGN ────────────────────────────────────────
+async function submitCustomDesign(e){
+  e.preventDefault();
+  const btn = document.getElementById('cdSubmitBtn');
+  const successMsg = document.getElementById('cdSuccess');
+  const errorMsg = document.getElementById('cdError');
+  successMsg.style.display = 'none';
+  errorMsg.style.display = 'none';
+
+  const token = localStorage.getItem('navToken');
+  if(!token){ alert('Please login first'); return; }
+
+  if(!fileBase64){
+    errorMsg.textContent = 'Please upload a design file.';
+    errorMsg.style.display = 'block';
+    return;
+  }
+
+  const data = {
+    customerName: document.getElementById('cd-name').value,
+    customerEmail: document.getElementById('cd-email').value,
+    customerPhone: document.getElementById('cd-phone').value,
+    designTitle: document.getElementById('cd-title').value.trim(),
+    description: document.getElementById('cd-desc').value.trim(),
+    fileName: selectedFile ? selectedFile.name : 'design-file',
+    fileType: selectedFile ? selectedFile.type : 'application/octet-stream',
+    fileData: fileBase64
+  };
+
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+
+  try{
+    const res = await fetch('/api/custom-design', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    if(result.success){
+      successMsg.style.display = 'block';
+      document.getElementById('cd-title').value = '';
+      document.getElementById('cd-desc').value = '';
+      removeFile();
+      loadMySubmissions();
+    } else {
+      errorMsg.textContent = result.msg || 'Something went wrong. Please try again.';
+      errorMsg.style.display = 'block';
+    }
+  } catch(err){
+    errorMsg.textContent = 'Network error. Please check your connection and try again.';
+    errorMsg.style.display = 'block';
+  }
+  btn.disabled = false;
+  btn.textContent = 'Submit Design Request →';
+}
+
+// ─── LOAD MY SUBMISSIONS ─────────────────────────────────
+async function loadMySubmissions(){
+  const container = document.getElementById('cdSubmissionsList');
+  const token = localStorage.getItem('navToken');
+  if(!token) return;
+
+  try{
+    const res = await fetch('/api/custom-design/my', {
+      headers: { 'x-auth-token': token }
+    });
+    const designs = await res.json();
+    if(!Array.isArray(designs) || !designs.length){
+      container.innerHTML = '<div class="cd-sub-empty">You haven\'t submitted any custom designs yet. Use the form above to submit your first one!</div>';
+      return;
+    }
+    container.innerHTML = designs.map(d => {
+      const date = new Date(d.createdAt).toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
+      const statusClass = d.status.toLowerCase();
+      const icon = d.status === 'Accepted' ? '✅' : d.status === 'Rejected' ? '❌' : '⏳';
+      const noteHtml = d.adminNote ? `<p class="cd-sub-note">"${d.adminNote}"</p>` : '';
+      return `<div class="cd-sub-card">
+        <div class="cd-sub-icon">${icon}</div>
+        <div class="cd-sub-info">
+          <div class="cd-sub-title">${d.designTitle}</div>
+          <div class="cd-sub-date">Submitted on ${date} • ${d.fileName || 'File attached'}</div>
+          ${noteHtml}
+        </div>
+        <span class="cd-sub-status ${statusClass}">${d.status}</span>
+      </div>`;
+    }).join('');
+  } catch(err){
+    container.innerHTML = '<div class="cd-sub-empty">Unable to load submissions. Please try again later.</div>';
+  }
+}
+
+// Check auth on load
+document.addEventListener('DOMContentLoaded', checkAuth);
+// Re-check auth when user returns from login
+window.addEventListener('storage', e => {
+  if(e.key === 'navToken') checkAuth();
+});
+</script>
+
+<!-- CONTACT MODAL -->
+<div class="contact-modal-overlay" id="contactModalOverlay" onclick="handleContactOverlayClick(event)">
+  <div class="contact-modal" id="contactModal">
+    <div class="cmodal-left">
+      <p class="cmodal-eyebrow">✦ Get in touch</p>
+      <h2>Let's talk<br><em>jewellery.</em></h2>
+      <p>Whether you have a question about a piece, a custom order, or just want to say hello — we'd love to hear from you.</p>
+      <div class="cmodal-contacts">
+        <div class="cmodal-contact-item">
+          <div class="cmodal-contact-icon">📞</div>
+          <div class="cmodal-contact-text"><p>Call / WhatsApp</p><a href="tel:+918004703038">+91 8004703038</a></div>
+        </div>
+        <div class="cmodal-contact-item">
+          <div class="cmodal-contact-icon">🕐</div>
+          <div class="cmodal-contact-text"><p>Working Hours</p><span>Mon–Sat: 10am – 8pm</span></div>
+        </div>
+      </div>
+      <a href="https://wa.me/918004703038?text=Hi%20Silviyara!%20I%20have%20a%20question." target="_blank" class="cmodal-wa-btn">💬 &nbsp;Chat on WhatsApp</a>
+    </div>
+    <div class="cmodal-right">
+      <button class="cmodal-close" onclick="closeContactModal()">✕</button>
+      <h3>Send a Message</h3>
+      <p>We reply within 24 hours. For quick answers, WhatsApp is fastest.</p>
+      <form onsubmit="submitContactForm(event)">
+        <div class="cmodal-form-row">
+          <div class="cmodal-form-group"><label>Your Name *</label><input type="text" class="cmodal-form-input" id="cfname" placeholder="Priya Sharma" required/></div>
+          <div class="cmodal-form-group"><label>Phone</label><input type="tel" class="cmodal-form-input" id="cfphone" placeholder="+91 9876543210"/></div>
+        </div>
+        <div class="cmodal-form-group"><label>Email</label><input type="email" class="cmodal-form-input" id="cfemail" placeholder="priya@email.com"/></div>
+        <div class="cmodal-form-group"><label>Subject</label><input type="text" class="cmodal-form-input" id="cfsubject" placeholder="Order inquiry, custom piece..."/></div>
+        <div class="cmodal-form-group"><label>Message *</label><textarea class="cmodal-form-input" id="cfmessage" placeholder="How can we help you?" required></textarea></div>
+        <button type="submit" class="cmodal-submit-btn"><span>Send Message →</span></button>
+        <div class="cmodal-success-msg" id="cSuccessMsg">✦ Thank you! We'll be in touch within 24 hours.</div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+function openContactModal(){document.getElementById("contactModalOverlay").classList.add("open");document.body.style.overflow="hidden";}
+function closeContactModal(){document.getElementById("contactModalOverlay").classList.remove("open");document.body.style.overflow="";}
+function handleContactOverlayClick(e){if(e.target===document.getElementById("contactModalOverlay"))closeContactModal();}
+document.addEventListener("keydown",function(e){if(e.key==="Escape")closeContactModal();});
+async function submitContactForm(e){
+  e.preventDefault();
+  const data={name:document.getElementById("cfname").value,phone:document.getElementById("cfphone").value,email:document.getElementById("cfemail").value,subject:document.getElementById("cfsubject").value,message:document.getElementById("cfmessage").value};
+  try{await fetch("/api/contact",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});}catch(err){}
+  document.getElementById("cSuccessMsg").style.display="block";
+  e.target.reset();
+  setTimeout(()=>document.getElementById("cSuccessMsg").style.display="none",5000);
+}
+</script>
+<script src="/chatbot.js"></script>
+
+<!-- Auth Modal -->
+<style>
+.auth-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:4000;opacity:0;pointer-events:none;transition:opacity .3s;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);}
+.auth-modal-overlay.open{opacity:1;pointer-events:all;}
+.auth-modal{background:var(--card);border:1px solid var(--border);width:100%;max-width:400px;border-radius:6px;overflow:hidden;transform:translateY(20px);opacity:0;transition:all .3s;box-shadow:0 20px 60px rgba(0,0,0,0.2);position:relative;}
+.auth-modal-overlay.open .auth-modal{transform:translateY(0);opacity:1;}
+.auth-modal-close{position:absolute;top:15px;right:15px;background:var(--bg2);border:1px solid var(--border);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;color:var(--text);z-index:2;transition:all .2s;}
+.auth-modal-close:hover{background:var(--text);color:var(--bg);}
+.auth-tabs{display:flex;border-bottom:1px solid var(--border);background:var(--bg2);}
+.auth-tab{flex:1;text-align:center;padding:15px 10px;cursor:pointer;color:var(--text2);font-weight:600;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.1em;transition:all .3s;}
+.auth-tab.active{color:var(--gold-accent);background:var(--card);border-bottom:2px solid var(--gold-accent);}
+.auth-form-wrap{padding:2rem;}
+.auth-form{display:none;}
+.auth-form.active{display:block;}
+.auth-form-group{margin-bottom:1.2rem;}
+.auth-form-group label{display:block;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--silver);margin-bottom:0.4rem;}
+.auth-input{width:100%;padding:12px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-family:inherit;font-size:0.9rem;outline:none;border-radius:4px;transition:all .3s;}
+.auth-input:focus{border-color:var(--gold-accent);}
+.btn-auth{width:100%;padding:14px;background:linear-gradient(135deg, #c9a84c, #e6c56a);border:none;color:#111;font-weight:600;font-size:0.85rem;border-radius:4px;cursor:pointer;text-transform:uppercase;letter-spacing:0.1em;margin-top:0.5rem;transition:all .3s;}
+.btn-auth:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(201,168,76,0.3);}
+</style>
+<div class="auth-modal-overlay" id="authModalOverlay" onclick="if(event.target===this)closeAuthModal()">
+  <div class="auth-modal" id="authModal">
+    <div class="auth-modal-close" onclick="closeAuthModal()">✕</div>
+    <div class="auth-tabs">
+      <div class="auth-tab active" id="modal-tab-login" onclick="switchAuthTab('login')">Login</div>
+      <div class="auth-tab" id="modal-tab-register" onclick="switchAuthTab('register')">Register</div>
+    </div>
+    <div class="auth-form-wrap">
+      <!-- Login -->
+      <form id="modal-form-login" class="auth-form active" onsubmit="handleModalLogin(event)">
+        <div class="auth-form-group"><label>Email Address</label><input type="email" id="modalLoginEmail" class="auth-input" required></div>
+        <div class="auth-form-group"><label>Password</label><input type="password" id="modalLoginPassword" class="auth-input" required></div>
+        <button type="submit" class="btn-auth">Sign In</button>
+        <p id="modalLoginError" style="color:#e74c3c;font-size:0.8rem;margin-top:10px;display:none;"></p>
+      </form>
+      <!-- Register -->
+      <form id="modal-form-register" class="auth-form" onsubmit="handleModalRegister(event)">
+        <div class="auth-form-group"><label>Full Name</label><input type="text" id="modalRegName" class="auth-input" required></div>
+        <div class="auth-form-group"><label>Email Address</label><input type="email" id="modalRegEmail" class="auth-input" required></div>
+        <div class="auth-form-group"><label>Mobile Number</label><input type="tel" id="modalRegPhone" class="auth-input" required></div>
+        <div class="auth-form-group"><label>Password</label><input type="password" id="modalRegPassword" class="auth-input" required minlength="6"></div>
+        <button type="submit" class="btn-auth">Create Account</button>
+        <p id="modalRegError" style="color:#e74c3c;font-size:0.8rem;margin-top:10px;display:none;"></p>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+  function openAuthModal() {
+    if(localStorage.getItem('navToken')) { window.location.href='/account.html'; return; }
+    document.getElementById('authModalOverlay').classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+  function closeAuthModal() {
+    document.getElementById('authModalOverlay').classList.remove('open');
+    document.body.style.overflow='';
+  }
+  function switchAuthTab(tab) {
+    if(tab==='login'){
+      document.getElementById('modal-tab-login').classList.add('active');
+      document.getElementById('modal-tab-register').classList.remove('active');
+      document.getElementById('modal-form-login').classList.add('active');
+      document.getElementById('modal-form-register').classList.remove('active');
+    } else {
+      document.getElementById('modal-tab-register').classList.add('active');
+      document.getElementById('modal-tab-login').classList.remove('active');
+      document.getElementById('modal-form-register').classList.add('active');
+      document.getElementById('modal-form-login').classList.remove('active');
+    }
+  }
+  async function handleModalLogin(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    const err = document.getElementById('modalLoginError');
+    btn.disabled=true; btn.textContent='Wait...'; err.style.display='none';
+    try{
+      const res = await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:document.getElementById('modalLoginEmail').value,password:document.getElementById('modalLoginPassword').value})});
+      const data = await res.json();
+      if(data.success){ localStorage.setItem('navToken',data.token); localStorage.setItem('navUser',JSON.stringify(data.customer)); window.location.href='/account.html'; }
+      else { err.textContent=data.msg||'Failed'; err.style.display='block'; }
+    }catch(e){ err.textContent='Error'; err.style.display='block'; }
+    btn.disabled=false; btn.textContent='Sign In';
+  }
+  async function handleModalRegister(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    const err = document.getElementById('modalRegError');
+    btn.disabled=true; btn.textContent='Wait...'; err.style.display='none';
+    try{
+      const res = await fetch('/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:document.getElementById('modalRegName').value,email:document.getElementById('modalRegEmail').value,phone:document.getElementById('modalRegPhone').value,password:document.getElementById('modalRegPassword').value})});
+      const data = await res.json();
+      if(data.success){ localStorage.setItem('navToken',data.token); localStorage.setItem('navUser',JSON.stringify(data.customer)); window.location.href='/account.html'; }
+      else { err.textContent=data.msg||'Failed'; err.style.display='block'; }
+    }catch(e){ err.textContent='Error'; err.style.display='block'; }
+    btn.disabled=false; btn.textContent='Create Account';
+  }
+  
+  // Intercept Account Icon Click
+  document.addEventListener('DOMContentLoaded', () => {
+    const accBtn = document.getElementById('accountBtn');
+    if(accBtn) {
+      if(localStorage.getItem('navToken')) {
+        accBtn.href = '/account.html';
+        accBtn.onclick = null;
+      } else {
+        accBtn.href = '#';
+        accBtn.onclick = (e) => { e.preventDefault(); openAuthModal(); };
+      }
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const files = ['index.html', 'shop.html', 'product.html', 'about.html', 'contact.html', 'flash-sale.html'];
+const files = ['index.html', 'shop.html', 'product.html', 'about.html', 'contact.html', 'flash-sale.html', 'custom-design.html', 'shipping-policy.html', 'return-policy.html', 'privacy-policy.html', 'terms.html', 'size-guide.html', 'care-instructions.html'];
 const publicDir = path.join(__dirname, 'public');
 
 const modalHTML = `

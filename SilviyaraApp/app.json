@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "Silviyara Jewels",
+    "slug": "silviyara-jewels",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "scheme": "silviyara",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0e0d0c"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.silviyara.jewels",
+      "infoPlist": {
+        "LSApplicationQueriesSchemes": ["whatsapp"]
+      }
+    },
+    "android": {
+      "package": "com.silviyara.jewels",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0e0d0c"
+      },
+      "edgeToEdgeEnabled": true,
+      "permissions": ["INTERNET"]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-font"
+    ]
+  }
+}

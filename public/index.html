@@ -39,7 +39,7 @@ html{scroll-behavior:smooth;}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);transition:background .4s,color .4s;}
 
 /* NAV — Premium */
-nav{position:fixed;top:0;width:100%;z-index:1000;background:var(--nav-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);height:72px;display:flex;align-items:center;padding:0 5%;gap:2rem;transition:all .4s cubic-bezier(.4,0,.2,1);}
+nav{position:fixed;top:26px;width:100%;z-index:1000;background:var(--nav-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);height:72px;display:flex;align-items:center;padding:0 5%;gap:2rem;transition:all .4s cubic-bezier(.4,0,.2,1);}
 nav.scrolled{height:60px;box-shadow:0 4px 30px var(--shadow);}
 nav.nav-hidden{transform:translateY(-100%);}
 .logo{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:400;color:var(--text);text-decoration:none;letter-spacing:.05em;flex-shrink:0;transition:all .3s;}
@@ -75,6 +75,7 @@ nav.nav-hidden{transform:translateY(-100%);}
 
 /* HERO — Gen Z Video */
 .hero{min-height:100vh;display:flex;align-items:center;padding:100px 5% 60px;position:relative;overflow:hidden;}
+.hero::after {content:'';position:absolute;bottom:0;left:0;width:100%;height:200px;background:linear-gradient(to bottom, transparent, var(--bg));z-index:5;pointer-events:none;}
 .hero-video-bg{position:absolute;inset:0;z-index:0;}
 .hero-video-bg video{width:100%;height:100%;object-fit:cover;}
 .hero-gradient-overlay{position:absolute;inset:0;z-index:1;background:
@@ -116,9 +117,7 @@ nav.nav-hidden{transform:translateY(-100%);}
 @keyframes scrollWheel{0%{transform:translateX(-50%) translateY(0);opacity:1}100%{transform:translateX(-50%) translateY(10px);opacity:0}}
 .hero-scroll-text{font-size:.55rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(240,235,227,0.25);}
 
-/* FLASH SALE BANNER */
-.flash-banner{background:var(--flash);color:#f0ebe3;padding:4px 0;text-align:center;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;}
-.flash-banner a{color:var(--gold-accent);text-decoration:none;margin-left:.5rem;}
+
 
 /* CATEGORIES */
 .section{padding:80px 5%;}
@@ -424,6 +423,11 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
 .os-btn-main:hover{opacity:.85;}
 .os-btn-track{padding:13px 16px;background:none;border:1px solid var(--border);color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;transition:all .3s;border-radius:3px;text-decoration:none;display:flex;align-items:center;gap:.4rem;}
 .os-btn-track:hover{border-color:var(--gold);color:var(--text);}
+
+/* FLASH SALE BANNER */
+.flash-banner{position:fixed;top:0;left:0;width:100%;z-index:2000;background:var(--flash,#1a0a0a);color:#f0ebe3;padding:5px 0;text-align:center;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;}
+.flash-banner a{color:var(--gold-accent,#c9a84c);text-decoration:none;margin-left:.5rem;font-weight:600;}
+
 </style>
 </head>
 <body>
@@ -436,8 +440,7 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
   });
 </script>
 
-<!-- Flash Banner -->
-<div class="flash-banner">⚡ Flash Sale Live — Up to 40% Off Selected Pieces <a href="/flash-sale">Shop Now →</a></div>
+
 
 <!-- Floating WhatsApp -->
 <a href="https://wa.me/918004703038" target="_blank" class="wa-float" title="Order on WhatsApp">💬</a>
@@ -458,6 +461,10 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
     <button class="btn-checkout" style="background:transparent;color:#25d366;border:1px solid #25d366" onclick="checkoutWA()">💬 Order via WhatsApp</button>
   </div>
 </div>
+
+
+<!-- Flash Banner -->
+<div class="flash-banner">⚡ Flash Sale Live — Up to 40% Off Selected Pieces <a href="/flash-sale">Shop Now →</a></div>
 
 <!-- NAV -->
 <nav id="mainNav">
@@ -480,6 +487,7 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
     <li><a href="/shop">Shop</a></li>
     <li><a href="/flash-sale">Sale ⚡</a></li>
     <li><a href="/about">About</a></li>
+    <li><a href="/custom-design">Custom Design</a></li>
     <li><a href="#" onclick="openContactModal();return false;">Contact</a></li>
   </ul>
   <div class="nav-right">
@@ -510,6 +518,7 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
     <div class="mobile-nav-divider">More</div>
     <a href="/flash-sale" class="mobile-nav-item">Flash Sale ⚡</a>
     <a href="/about" class="mobile-nav-item">About</a>
+    <a href="/custom-design" class="mobile-nav-item">Custom Design 🎨</a>
     <a href="#" onclick="openContactModal();return false;" class="mobile-nav-item">Contact</a>
   </div>
   <div class="mobile-drawer-foot">
@@ -764,6 +773,37 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
   </div>
 </section>
 
+<!-- CUSTOM DESIGN CTA -->
+<section class="custom-design-cta" id="customDesignCta">
+  <div class="cd-cta-glow"></div>
+  <div class="cd-cta-glow2"></div>
+  <div class="cd-cta-content">
+    <span class="cd-cta-eyebrow">✦ Bespoke Creations</span>
+    <h2 class="cd-cta-title">Have a <em>Unique Design</em><br>in Mind?</h2>
+    <p class="cd-cta-desc">Share your vision with us — a sketch, a photo, or a CAD file — and our master craftsmen will bring it to life in pure 925 sterling silver. Your imagination, our craftsmanship.</p>
+    <div class="cd-cta-features">
+      <div class="cd-cta-feat"><span>✏️</span> Upload Your Design</div>
+      <div class="cd-cta-feat"><span>👨‍🎨</span> Expert Review</div>
+      <div class="cd-cta-feat"><span>💎</span> Crafted for You</div>
+    </div>
+    <a href="/custom-design" class="btn-primary" style="display:inline-block;margin-top:2rem;background:linear-gradient(135deg,#c9a84c,#e6c56a);color:#0e0d0c;">Explore Custom Design →</a>
+  </div>
+</section>
+<style>
+.custom-design-cta{background:linear-gradient(160deg,#080402 0%,#1a1410 60%,#0e0a08 100%);color:#f0ebe3;padding:100px 5%;text-align:center;position:relative;overflow:hidden;}
+.custom-design-cta::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(201,168,76,.02) 0,rgba(201,168,76,.02) 1px,transparent 1px,transparent 60px);pointer-events:none;}
+.cd-cta-glow{position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(201,168,76,0.08),transparent 70%);border-radius:50%;top:-150px;right:-100px;pointer-events:none;animation:glowPulse 6s ease-in-out infinite alternate;}
+.cd-cta-glow2{position:absolute;width:350px;height:350px;background:radial-gradient(circle,rgba(201,168,76,0.06),transparent 70%);border-radius:50%;bottom:-100px;left:-80px;pointer-events:none;animation:glowPulse 6s ease-in-out infinite alternate-reverse;}
+.cd-cta-content{position:relative;z-index:1;max-width:700px;margin:0 auto;}
+.cd-cta-eyebrow{font-size:.7rem;letter-spacing:.35em;text-transform:uppercase;color:#c9a84c;display:block;margin-bottom:1.5rem;}
+.cd-cta-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4.5vw,3.5rem);font-weight:400;line-height:1.15;margin-bottom:1.25rem;}
+.cd-cta-title em{font-style:italic;color:#c9a84c;}
+.cd-cta-desc{color:rgba(240,235,227,0.55);font-size:1rem;line-height:1.85;max-width:550px;margin:0 auto;}
+.cd-cta-features{display:flex;justify-content:center;gap:2rem;margin-top:2.5rem;flex-wrap:wrap;}
+.cd-cta-feat{display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:rgba(240,235,227,0.7);letter-spacing:.05em;}
+.cd-cta-feat span{font-size:1.2rem;}
+</style>
+
 <!-- TESTIMONIALS -->
 <section class="testimonials">
   <div class="section-header">
@@ -807,14 +847,20 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
       <h4>Quick Links</h4>
       <a href="/shop">Shop All</a>
       <a href="/flash-sale">Flash Sale</a>
+      <a href="/custom-design">Custom Design</a>
       <a href="/about">About Us</a>
       <a href="#" onclick="openContactModal();return false;">Contact</a>
+      <a href="/size-guide">Size Guide</a>
+      <a href="/care-instructions">Care Instructions</a>
     </div>
     <div class="footer-col">
-      <h4>Contact</h4>
-      <a href="https://wa.me/918004703038">WhatsApp: 8004703038</a>
-      <a href="#">Lucknow, UP</a>
-      <a href="#">Mon–Sat: 10am–8pm</a>
+      <h4>Policies</h4>
+      <a href="/shipping-policy">Shipping Policy</a>
+      <a href="/return-policy">Return Policy</a>
+      <a href="/privacy-policy">Privacy Policy</a>
+      <a href="/terms">Terms & Conditions</a>
+      <a href="/authenticity">Authenticity Guarantee</a>
+      <a href="/fraud-protection">Fraud Protection</a>
     </div>
   </div>
   <div class="footer-bottom">

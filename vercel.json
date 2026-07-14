@@ -2,21 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "public/**",
-      "use": "@vercel/static"
-    },
-    {
       "src": "server.js",
       "use": "@vercel/node"
     }
   ],
-  "routes": [
-    { "src": "/silver-bg.mp4", "dest": "/public/silver-bg.mp4" },
-    { "src": "/images/(.*)", "dest": "/public/images/$1" },
-    { "src": "/chatbot.js", "dest": "/public/chatbot.js" },
-    { "src": "/ring1.png", "dest": "/public/ring1.png" },
-    { "src": "/(.*\\.html)$", "dest": "/public/$1" },
-    { "src": "/api/(.*)", "dest": "/server.js" },
-    { "src": "/(.*)", "dest": "/server.js" }
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/server.js"
+    }
   ]
 }

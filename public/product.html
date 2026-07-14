@@ -11,7 +11,7 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);transition:background .4s,color .4s;}
 /* NAV — Premium */
-nav{position:fixed;top:0;width:100%;z-index:1000;background:var(--nav-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);height:72px;display:flex;align-items:center;padding:0 5%;gap:2rem;transition:all .4s cubic-bezier(.4,0,.2,1);}
+nav{position:fixed;top:26px;width:100%;z-index:1000;background:var(--nav-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);height:72px;display:flex;align-items:center;padding:0 5%;gap:2rem;transition:all .4s cubic-bezier(.4,0,.2,1);}
 nav.scrolled{height:60px;box-shadow:0 4px 30px var(--shadow);}
 nav.nav-hidden{transform:translateY(-100%);}
 .logo{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:400;color:var(--text);text-decoration:none;letter-spacing:.05em;flex-shrink:0;transition:all .3s;}
@@ -214,6 +214,11 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
 .checkout-success h3{font-family:'Playfair Display',serif;font-size:1.6rem;margin-bottom:.65rem;}
 .checkout-success p{color:var(--text2);font-size:.88rem;line-height:1.7;margin-bottom:1.5rem;}
 .checkout-success .order-id-badge{display:inline-block;background:var(--bg2);border:1px solid var(--border);padding:.4rem 1rem;border-radius:20px;font-size:.75rem;letter-spacing:.1em;color:var(--text2);margin-bottom:1.5rem;}
+
+/* FLASH SALE BANNER */
+.flash-banner{position:fixed;top:0;left:0;width:100%;z-index:2000;background:var(--flash,#1a0a0a);color:#f0ebe3;padding:5px 0;text-align:center;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;}
+.flash-banner a{color:var(--gold-accent,#c9a84c);text-decoration:none;margin-left:.5rem;font-weight:600;}
+
 </style>
 </head>
 <body>
