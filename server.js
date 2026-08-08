@@ -36,6 +36,7 @@ app.get('/track', (req,res) => res.sendFile(path.join(__dirname,'public','track.
 app.get('/admin', (req,res) => res.sendFile(path.join(__dirname,'public','admin','login.html')));
 app.get('/admin/dashboard', (req,res) => res.sendFile(path.join(__dirname,'public','admin','dashboard.html')));
 app.get('/custom-design', (req,res) => res.sendFile(path.join(__dirname,'public','custom-design.html')));
+app.get('/faq', (req,res) => res.sendFile(path.join(__dirname,'public','faq.html')));
 app.get('/shipping-policy', (req,res) => res.sendFile(path.join(__dirname,'public','shipping-policy.html')));
 app.get('/return-policy', (req,res) => res.sendFile(path.join(__dirname,'public','return-policy.html')));
 app.get('/privacy-policy', (req,res) => res.sendFile(path.join(__dirname,'public','privacy-policy.html')));

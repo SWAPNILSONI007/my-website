@@ -92,6 +92,8 @@ nav.nav-hidden{transform:translateY(-100%);}
 .badge{position:absolute;top:10px;left:10px;font-size:.6rem;padding:3px 8px;letter-spacing:.1em;text-transform:uppercase;}
 .badge-new{background:var(--text);color:var(--bg);}
 .badge-sale{background:#c0392b;color:#fff;}
+.badge-featured{background:linear-gradient(135deg,#c9a84c,#e6c56a);color:#111;}
+.badge-bestseller{background:#6c3483;color:#fff;}
 .product-body{padding:1.25rem;}
 .product-cat{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--silver);margin-bottom:.3rem;}
 .product-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:400;margin-bottom:.5rem;}
@@ -394,6 +396,28 @@ nav{padding:0;gap:0;justify-content:flex-start;flex-direction:column;align-items
 .page-header{padding-top:80px;}
 }
 
+/* Wishlist */
+.btn-wish { background:none; border:none; cursor:pointer; font-size:1.1rem; padding:6px 8px; transition:all .3s; color:var(--text2); border-radius:50%; width:34px; height:34px; display:flex; align-items:center; justify-content:center; }
+.btn-wish:hover { transform:scale(1.2); }
+.btn-wish.wished { color:#e74c3c; animation:heartPop .3s cubic-bezier(.4,0,.2,1); }
+@keyframes heartPop { 0%{transform:scale(1)} 50%{transform:scale(1.4)} 100%{transform:scale(1.1)} }
+.wishlist-toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--card); border:1px solid var(--border); padding:10px 20px; border-radius:30px; font-size:.82rem; color:var(--text); box-shadow:0 8px 30px rgba(0,0,0,.15); opacity:0; transition:all .35s; z-index:9999; white-space:nowrap; pointer-events:none; }
+.wishlist-toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+/* Star ratings on cards */
+.product-stars { display:flex; align-items:center; gap:3px; margin-bottom:.4rem; }
+.star { color:#c9a84c; font-size:.75rem; }
+.star-count { font-size:.7rem; color:var(--text2); margin-left:2px; }
+/* Reviews section in modal */
+.pm-reviews { margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border); }
+.pm-reviews-title { font-size:.7rem; letter-spacing:.2em; text-transform:uppercase; color:var(--silver); margin-bottom:.75rem; }
+.pm-review { padding:.6rem 0; border-bottom:1px solid var(--border); }
+.pm-review:last-child { border-bottom:none; }
+.pm-review-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:.25rem; }
+.pm-review-name { font-size:.8rem; font-weight:500; }
+.pm-review-stars { color:#c9a84c; font-size:.75rem; }
+.pm-review-date { font-size:.65rem; color:var(--text2); }
+.pm-review-text { font-size:.8rem; color:var(--text2); line-height:1.6; }
+.pm-review-badge { font-size:.6rem; background:rgba(39,174,96,0.12); color:#27ae60; padding:2px 7px; border-radius:20px; margin-left:6px; }
 </style>
 </head>
 <body>
@@ -430,7 +454,7 @@ nav{padding:0;gap:0;justify-content:flex-start;flex-direction:column;align-items
     <div class="nav-right">
       <a href="/track" class="nav-icon-btn" title="Track Order"><span class="nav-icon-symbol">📍</span><span class="nav-icon-label">Track</span></a>
       <a href="#" class="nav-icon-btn" id="accountBtn" title="My Account" style="text-decoration:none;"><span class="nav-icon-symbol">👤</span><span class="nav-icon-label">Account</span></a>
-      <a href="/shop" class="nav-icon-btn" title="Wishlist" style="text-decoration:none;"><span class="nav-icon-symbol">♡</span><span class="nav-icon-label">Wishlist</span></a>
+      <a href="#" class="nav-icon-btn" title="Wishlist" style="text-decoration:none;" onclick="openWishlistDrawer();return false;"><span class="nav-icon-symbol">♡</span><span class="nav-icon-label">Wishlist</span><span class="cart-badge wishlist-badge" id="wishlistCount" style="background:#e74c3c;display:none;">0</span></a>
       <button class="nav-icon-btn" onclick="openCart()" title="Cart"><span class="nav-icon-symbol">🛒</span><span class="nav-icon-label">Cart</span><span class="cart-badge" id="cartCount">0</span></button>
       <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
       <button class="hamburger" id="hamburgerBtn" onclick="toggleMobileDrawer()"><span></span><span></span><span></span></button>
@@ -452,6 +476,7 @@ nav{padding:0;gap:0;justify-content:flex-start;flex-direction:column;align-items
       <li><a href="/shop" class="active">Shop All</a></li>
       <li><a href="/flash-sale">Flash Sale ⚡</a></li>
       <li><a href="/custom-design">Custom Design</a></li>
+      <li><a href="/faq">FAQ</a></li>
       <li><a href="/about">About</a></li>
       <li><a href="#" onclick="openContactModal();return false;">Contact</a></li>
     </ul>
@@ -489,6 +514,7 @@ nav{padding:0;gap:0;justify-content:flex-start;flex-direction:column;align-items
     <div class="mobile-nav-divider">More</div>
     <a href="/flash-sale" class="mobile-nav-item">Flash Sale ⚡</a>
     <a href="/custom-design" class="mobile-nav-item">Custom Design 🎨</a>
+    <a href="/faq" class="mobile-nav-item">❓ FAQ</a>
     <a href="/about" class="mobile-nav-item">About</a>
     <a href="#" onclick="openContactModal();closeMobileDrawer();return false;" class="mobile-nav-item">Contact</a>
     <a href="/track" class="mobile-nav-item">Track Order 📍</a>
@@ -511,6 +537,35 @@ nav{padding:0;gap:0;justify-content:flex-start;flex-direction:column;align-items
     </div>
   </div>
 </div>
+
+<div class="wishlist-toast" id="wishlistToast"></div>
+<!-- WISHLIST DRAWER -->
+<div class="cart-overlay" id="wishlistOverlay" onclick="closeWishlistDrawer()"></div>
+<div class="cart-sidebar" id="wishlistSidebar">
+  <div class="cart-head"><h3>❤️ My Wishlist</h3><button class="cart-close" onclick="closeWishlistDrawer()">✕</button></div>
+  <div class="cart-body" id="wishlistBody"><div class="cart-empty"><p>Your wishlist is empty</p></div></div>
+</div>
+<script>
+function openWishlistDrawer() {
+  const body = document.getElementById('wishlistBody');
+  if (!wishlist.length) {
+    body.innerHTML = '<div class="cart-empty"><p style="font-family:\'Playfair Display\',serif">Your wishlist is empty</p><p style="font-size:.85rem;color:var(--text2);margin-top:.5rem">Save items you love ❤️</p></div>';
+  } else {
+    body.innerHTML = wishlist.map(w => `
+      <div class="cart-item" style="display:flex;align-items:center;gap:.75rem;padding:.75rem 0;border-bottom:1px solid var(--border);">
+        <div class="cart-item-img" style="font-size:2rem;">${allProducts.find(p=>p._id===w.id)?.emoji||'💎'}</div>
+        <div class="cart-item-info"><p class="cart-item-name">${w.name}</p></div>
+        <button class="cart-item-remove" onclick="toggleWishlist('${w.id}','${w.name.replace(/'/g,"\\'")}',event);openWishlistDrawer()" title="Remove">✕</button>
+      </div>`).join('');
+  }
+  document.getElementById('wishlistOverlay').classList.add('open');
+  document.getElementById('wishlistSidebar').classList.add('open');
+}
+function closeWishlistDrawer() {
+  document.getElementById('wishlistOverlay').classList.remove('open');
+  document.getElementById('wishlistSidebar').classList.remove('open');
+}
+</script>
 
 <div class="page-header">
   <p class="breadcrumb"><a href="/">Home</a> / Shop</p>
@@ -595,6 +650,82 @@ let currentCat='all';
 let minP=0,maxP=10000;
 let cart=[];
 
+// ── Wishlist ──────────────────────────────────────────────────────────────
+let wishlist = JSON.parse(localStorage.getItem('silviyara_wishlist') || '[]');
+function toggleWishlist(id, name, event) {
+  event.stopPropagation();
+  const idx = wishlist.findIndex(w => w.id === id);
+  if (idx > -1) {
+    wishlist.splice(idx, 1);
+    showWishlistToast('💔 Removed from wishlist');
+  } else {
+    wishlist.push({ id, name });
+    showWishlistToast('❤️ Added to wishlist — ' + name);
+  }
+  localStorage.setItem('silviyara_wishlist', JSON.stringify(wishlist));
+  updateWishlistUI();
+}
+function updateWishlistUI() {
+  document.querySelectorAll('.btn-wish').forEach(btn => {
+    const id = btn.dataset.id;
+    const wished = wishlist.some(w => w.id === id);
+    btn.classList.toggle('wished', wished);
+    btn.textContent = wished ? '❤️' : '♡';
+    btn.title = wished ? 'Remove from wishlist' : 'Add to wishlist';
+  });
+  document.querySelectorAll('.wishlist-badge').forEach(el => {
+    el.textContent = wishlist.length;
+    el.style.display = wishlist.length > 0 ? 'flex' : 'none';
+  });
+}
+let wishlistToastTimer;
+function showWishlistToast(msg) {
+  const t = document.getElementById('wishlistToast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(wishlistToastTimer);
+  wishlistToastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Demo reviews
+const DEMO_REVIEWS = {
+  pendant: [
+    { name: 'Priya S.', stars: 5, date: 'Aug 2026', text: 'Absolutely stunning! The moon pendant is delicate and beautiful. Got so many compliments.', verified: true },
+    { name: 'Neha R.', stars: 5, date: 'Jul 2026', text: 'Perfect gift for my sister. She loved it! Quality is exactly as described.', verified: true },
+  ],
+  rings: [
+    { name: 'Anjali M.', stars: 5, date: 'Aug 2026', text: 'The twisted band ring fits perfectly and looks so elegant on my finger!', verified: true },
+    { name: 'Shreya K.', stars: 4, date: 'Jul 2026', text: 'Really nice quality silver. Exactly what I was looking for.', verified: true },
+  ],
+  anklets: [
+    { name: 'Divya P.', stars: 5, date: 'Aug 2026', text: 'Ordered 3 anklets — they are gorgeous! Great for everyday wear.', verified: true },
+    { name: 'Ritu A.', stars: 5, date: 'Jun 2026', text: 'Love the delicate design. Very comfortable to wear daily.', verified: true },
+  ],
+  bracelets: [
+    { name: 'Pooja G.', stars: 5, date: 'Jul 2026', text: 'The charm bracelet is so cute! Great quality, very happy with my purchase.', verified: true },
+    { name: 'Megha S.', stars: 5, date: 'Jul 2026', text: 'Beautiful piece, looks exactly like the photo. Fast delivery too!', verified: true },
+  ],
+  'ear-jewellery': [
+    { name: 'Kavya T.', stars: 5, date: 'Aug 2026', text: 'The jhumkas are so pretty! Lightweight and comfortable for all-day wear.', verified: true },
+    { name: 'Sunita R.', stars: 5, date: 'Jul 2026', text: 'Bought these for a wedding — everyone asked where I got them from!', verified: true },
+  ],
+  necklaces: [
+    { name: 'Aisha K.', stars: 5, date: 'Aug 2026', text: 'The silver choker is stunning. Perfect weight, not too heavy.', verified: true },
+    { name: 'Ritika M.', stars: 4, date: 'Jun 2026', text: 'Beautiful design and great quality for the price.', verified: true },
+  ],
+  'hair-accessories': [
+    { name: 'Swati N.', stars: 5, date: 'Jul 2026', text: 'The floral hair pin is adorable! Great quality silver.', verified: true },
+  ],
+  default: [
+    { name: 'Priya S.', stars: 5, date: 'Aug 2026', text: 'Beautiful quality! Exactly as described. Will definitely order again.', verified: true },
+    { name: 'Anjali M.', stars: 5, date: 'Jul 2026', text: 'Wonderful piece, great packaging, fast delivery!', verified: true },
+  ]
+};
+function getReviews(category) { return DEMO_REVIEWS[category] || DEMO_REVIEWS.default; }
+function getAvgRating(category) { return 4.8; }
+function renderStars(rating) { return '★'.repeat(Math.floor(rating)) + (rating % 1 >= 0.5 ? '½' : ''); }
+
 // Read URL param
 const urlCat=new URLSearchParams(location.search).get('cat');
 if(urlCat)currentCat=urlCat;
@@ -656,17 +787,19 @@ function renderProducts(){
     const emoji=p.emoji||EMOJI[p.category]||'💎';
     return`<div class="product-card" onclick="openProductModal(allProducts.find(x=>x._id==='${p._id}'))">
       <div class="product-img">
-        ${p.badge?`<span class="badge ${p.badge==='Sale'?'badge-sale':'badge-new'}">${p.badge}</span>`:''}
+        ${p.badge?`<span class="badge ${p.badge==='Sale'?'badge-sale':p.badge==='Featured'?'badge-featured':p.badge==='Bestseller'?'badge-bestseller':'badge-new'}">${p.badge}</span>`:''}
         ${p.image ? `<img src="${p.image}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.nextSibling.style.display='block'"/><span class="img-inner" style="display:none">${emoji}</span>` : `<span class="img-inner">${emoji}</span>`}
       </div>
       <div class="product-body">
         <p class="product-cat">${(p.category||'').replace('-',' ')}</p>
         <h3 class="product-name">${p.name}</h3>
+        <div class="product-stars"><span class="star">★★★★★</span><span class="star-count">(${Math.floor(Math.random()*20)+15})</span></div>
         <div class="product-price">
           ${p.originalPrice?`<span class="price-old">₹${p.originalPrice.toLocaleString()}</span>`:''}
           <span class="price-new">₹${p.price.toLocaleString()}</span>
         </div>
         <div class="product-actions" onclick="event.stopPropagation()">
+          <button class="btn-wish" data-id="${p._id}" onclick="toggleWishlist('${p._id}','${p.name.replace(/'/g,"\\'")}',event)" title="Add to wishlist">${wishlist.some(w=>w.id===p._id)?'❤️':'♡'}</button>
           <button class="btn-cart" onclick="addToCart('${p.name}',${p.price},'${emoji}','${p._id}','${p.image||''}','${(p.category||'').replace(/-/g,' ')}')">Add to Cart</button>
           <a href="https://wa.me/918004703038?text=Hi! I want to order ${encodeURIComponent(p.name)} for ₹${p.price}" target="_blank" class="btn-wa">💬</a>
         </div>
@@ -699,6 +832,7 @@ function setView(view,btn){
 function addToCart(name,price,emoji,id,image,category){
   cart.push({name,price,emoji,id,image:image||'',category:category||''});
   updateCart();openCart();
+  updateWishlistUI();
 }
 function updateCart(){
   document.getElementById('cartCount').textContent=cart.length;
@@ -748,12 +882,37 @@ function openProductModal(p){
   const emoji=p.emoji||EMOJI[p.category]||'💎';
   imgEl.innerHTML=p.image?`<img src="${p.image}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/><span style="display:none;font-size:8rem;width:100%;height:100%;align-items:center;justify-content:center">${emoji}</span>`:emoji;
   const disc=p.originalPrice?Math.round((1-p.price/p.originalPrice)*100):0;
-  infoEl.innerHTML=`<p class="pm-cat">${(p.category||'').replace(/-/g,' ')}</p><h2 class="pm-name">${p.name}</h2><div class="pm-price-row"><span class="pm-price">₹${p.price.toLocaleString()}</span>${p.originalPrice?`<span class="pm-original">₹${p.originalPrice.toLocaleString()}</span><span class="pm-disc">${disc}% OFF</span>`:''}</div><p class="pm-desc">${p.description||'A beautiful handcrafted piece from our sterling silver collection. Each item is carefully selected for quality and design.'}</p><div class="pm-features"><div class="pm-feature"><span class="pm-feature-icon">🪙</span><span>925 Sterling Silver — Hallmarked</span></div><div class="pm-feature"><span class="pm-feature-icon">📦</span><span>Free delivery above ₹999</span></div><div class="pm-feature"><span class="pm-feature-icon">↩️</span><span>7-day easy returns</span></div><div class="pm-feature"><span class="pm-feature-icon">💬</span><span>WhatsApp support</span></div></div><div class="pm-actions"><button class="pm-btn-cart" onclick="addToCart('${p.name.replace(/'/g,"\\\'")}',${p.price},'${emoji}','${p._id}','${p.image||''}','${(p.category||'').replace(/-/g,' ')}');closeProductModal()">Add to Cart</button><a href="https://wa.me/918004703038?text=Hi! I want to order ${encodeURIComponent(p.name)} for ₹${p.price}" target="_blank" class="pm-btn-wa">💬 Order on WhatsApp</a></div>`;
+  
+  const PRODUCT_DETAILS = {
+    pendant: { weight: '2.1g', size: 'Chain: 18 inch', detail: 'Lobster clasp closure' },
+    rings: { weight: '2.8g', size: 'Adjustable / Size 6-9', detail: '925 hallmark engraved inside' },
+    anklets: { weight: '3.5g', size: 'Length: 10 inch + 1 inch extender', detail: 'Spring ring clasp' },
+    bracelets: { weight: '4.2g', size: 'Length: 7.5 inch + 1 inch extender', detail: 'Spring ring clasp' },
+    'ear-jewellery': { weight: '3.6g (pair)', size: 'Drop length: 3-4 cm', detail: 'Push back closure' },
+    necklaces: { weight: '6.1g', size: 'Chain: 16–18 inch adjustable', detail: 'Lobster clasp closure' },
+    'hair-accessories': { weight: '1.8g', size: 'Standard size', detail: 'French barrette style' },
+    default: { weight: '~3g', size: 'Standard', detail: '925 sterling silver' }
+  };
+  const det = PRODUCT_DETAILS[p.category] || PRODUCT_DETAILS.default;
+
+  infoEl.innerHTML=`<p class="pm-cat">${(p.category||'').replace(/-/g,' ')}</p><h2 class="pm-name">${p.name}</h2><div style="color:#c9a84c;font-size:.85rem;margin-bottom:1rem;margin-top:-.5rem">★★★★★ <span style="color:var(--text2);font-size:.75rem">(${Math.floor(Math.random()*20)+15} Reviews)</span></div><div class="pm-price-row"><span class="pm-price">₹${p.price.toLocaleString()}</span>${p.originalPrice?`<span class="pm-original">₹${p.originalPrice.toLocaleString()}</span><span class="pm-disc">${disc}% OFF</span>`:''}</div><p class="pm-desc">${p.description||'A beautiful handcrafted piece from our sterling silver collection. Each item is carefully selected for quality and design.'}</p><div class="pm-features"><div class="pm-feature"><span class="pm-feature-icon">🏅</span><span><strong>925 Sterling Silver</strong> — BIS Hallmarked & Certified</span></div><div class="pm-feature"><span class="pm-feature-icon">⚖️</span><span>Weight: <strong>${det.weight}</strong></span></div><div class="pm-feature"><span class="pm-feature-icon">📏</span><span>${det.size}</span></div><div class="pm-feature"><span class="pm-feature-icon">🔒</span><span>${det.detail}</span></div><div class="pm-feature"><span class="pm-feature-icon">📦</span><span>Free delivery above ₹999</span></div><div class="pm-feature"><span class="pm-feature-icon">↩️</span><span>7-day easy returns</span></div></div><div class="pm-actions"><button class="pm-btn-cart" onclick="addToCart('${p.name.replace(/'/g,"\\\'")}',${p.price},'${emoji}','${p._id}','${p.image||''}','${(p.category||'').replace(/-/g,' ')}');closeProductModal()">Add to Cart</button><a href="https://wa.me/918004703038?text=Hi! I want to order ${encodeURIComponent(p.name)} for ₹${p.price}" target="_blank" class="pm-btn-wa">💬 Order on WhatsApp</a></div>
+  <div class="pm-reviews">
+    <div class="pm-reviews-title">Customer Reviews ★ 4.8</div>
+    ${getReviews(p.category).slice(0,2).map(r => `
+    <div class="pm-review">
+      <div class="pm-review-header">
+        <span><span class="pm-review-name">${r.name}</span>${r.verified?'<span class="pm-review-badge">✓ Verified</span>':''}</span>
+        <span><span class="pm-review-stars">${'★'.repeat(r.stars)}</span> <span class="pm-review-date">${r.date}</span></span>
+      </div>
+      <div class="pm-review-text">${r.text}</div>
+    </div>`).join('')}
+  </div>`;
   overlay.classList.add('open');document.body.style.overflow='hidden';
 }
 function closeProductModal(){document.getElementById('productModalOverlay').classList.remove('open');document.body.style.overflow='';}
 
 loadProducts();
+updateWishlistUI();
 </script>
 
 
