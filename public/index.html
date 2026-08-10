@@ -967,7 +967,7 @@ nav{padding:0;gap:0;justify-content:flex-start;flex-direction:column;align-items
 .gift-usp-item span{font-size:1rem;}
 @media(max-width:900px){.gifting-section{grid-template-columns:1fr;gap:2.5rem;text-align:center;}.gifting-section .section-header{text-align:center;}.gifting-section .section-header p{margin:0 auto;}.gift-usp-item{font-size:.72rem;}.gifting-usp{justify-content:center;}}
 @media(max-width:520px){.gifting-occasions{grid-template-columns:1fr;}.occasion-card{padding:1rem 1.25rem;}}
-
+</style>
 
 <!-- GIFTING SECTION -->
 <section class="gifting-section">
@@ -1312,7 +1312,7 @@ let currentFilter='all';
 
 async function loadProducts(){
   try{
-    const controller = new AbortController(); setTimeout(() => controller.abort(), 2000);
+    const controller = new AbortController(); setTimeout(() => controller.abort(), 8000);
     const res=await fetch('/api/products', { signal: controller.signal });
     if(!res.ok) throw new Error('API error');
     const data=await res.json();
