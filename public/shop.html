@@ -306,8 +306,9 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
 .os-btn-track:hover{border-color:var(--gold);color:var(--text);}
 
 /* FLASH SALE BANNER */
-.flash-banner{position:fixed;top:0;left:0;width:100%;z-index:2000;background:var(--flash,#1a0a0a);color:#f0ebe3;padding:5px 0;text-align:center;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;}
+.flash-banner{position:fixed;top:0;left:0;width:100%;z-index:2000;background:var(--flash,#1a0a0a);color:#f0ebe3;padding:5px 0;text-align:center;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;transition:transform .4s cubic-bezier(.4,0,.2,1);}
 .flash-banner a{color:var(--gold-accent,#c9a84c);text-decoration:none;margin-left:.5rem;font-weight:600;}
+
 
 
 
@@ -396,28 +397,6 @@ nav{padding:0;gap:0;justify-content:flex-start;flex-direction:column;align-items
 .page-header{padding-top:80px;}
 }
 
-/* Wishlist */
-.btn-wish { background:none; border:none; cursor:pointer; font-size:1.1rem; padding:6px 8px; transition:all .3s; color:var(--text2); border-radius:50%; width:34px; height:34px; display:flex; align-items:center; justify-content:center; }
-.btn-wish:hover { transform:scale(1.2); }
-.btn-wish.wished { color:#e74c3c; animation:heartPop .3s cubic-bezier(.4,0,.2,1); }
-@keyframes heartPop { 0%{transform:scale(1)} 50%{transform:scale(1.4)} 100%{transform:scale(1.1)} }
-.wishlist-toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--card); border:1px solid var(--border); padding:10px 20px; border-radius:30px; font-size:.82rem; color:var(--text); box-shadow:0 8px 30px rgba(0,0,0,.15); opacity:0; transition:all .35s; z-index:9999; white-space:nowrap; pointer-events:none; }
-.wishlist-toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
-/* Star ratings on cards */
-.product-stars { display:flex; align-items:center; gap:3px; margin-bottom:.4rem; }
-.star { color:#c9a84c; font-size:.75rem; }
-.star-count { font-size:.7rem; color:var(--text2); margin-left:2px; }
-/* Reviews section in modal */
-.pm-reviews { margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border); }
-.pm-reviews-title { font-size:.7rem; letter-spacing:.2em; text-transform:uppercase; color:var(--silver); margin-bottom:.75rem; }
-.pm-review { padding:.6rem 0; border-bottom:1px solid var(--border); }
-.pm-review:last-child { border-bottom:none; }
-.pm-review-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:.25rem; }
-.pm-review-name { font-size:.8rem; font-weight:500; }
-.pm-review-stars { color:#c9a84c; font-size:.75rem; }
-.pm-review-date { font-size:.65rem; color:var(--text2); }
-.pm-review-text { font-size:.8rem; color:var(--text2); line-height:1.6; }
-.pm-review-badge { font-size:.6rem; background:rgba(39,174,96,0.12); color:#27ae60; padding:2px 7px; border-radius:20px; margin-left:6px; }
 </style>
 </head>
 <body>
@@ -454,7 +433,7 @@ nav{padding:0;gap:0;justify-content:flex-start;flex-direction:column;align-items
     <div class="nav-right">
       <a href="/track" class="nav-icon-btn" title="Track Order"><span class="nav-icon-symbol">📍</span><span class="nav-icon-label">Track</span></a>
       <a href="#" class="nav-icon-btn" id="accountBtn" title="My Account" style="text-decoration:none;"><span class="nav-icon-symbol">👤</span><span class="nav-icon-label">Account</span></a>
-      <a href="#" class="nav-icon-btn" title="Wishlist" style="text-decoration:none;" onclick="openWishlistDrawer();return false;"><span class="nav-icon-symbol">♡</span><span class="nav-icon-label">Wishlist</span><span class="cart-badge wishlist-badge" id="wishlistCount" style="background:#e74c3c;display:none;">0</span></a>
+      <a href="/shop" class="nav-icon-btn" title="Wishlist" style="text-decoration:none;"><span class="nav-icon-symbol">♡</span><span class="nav-icon-label">Wishlist</span></a>
       <button class="nav-icon-btn" onclick="openCart()" title="Cart"><span class="nav-icon-symbol">🛒</span><span class="nav-icon-label">Cart</span><span class="cart-badge" id="cartCount">0</span></button>
       <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
       <button class="hamburger" id="hamburgerBtn" onclick="toggleMobileDrawer()"><span></span><span></span><span></span></button>
@@ -476,7 +455,6 @@ nav{padding:0;gap:0;justify-content:flex-start;flex-direction:column;align-items
       <li><a href="/shop" class="active">Shop All</a></li>
       <li><a href="/flash-sale">Flash Sale ⚡</a></li>
       <li><a href="/custom-design">Custom Design</a></li>
-      <li><a href="/faq">FAQ</a></li>
       <li><a href="/about">About</a></li>
       <li><a href="#" onclick="openContactModal();return false;">Contact</a></li>
     </ul>
@@ -502,6 +480,7 @@ nav{padding:0;gap:0;justify-content:flex-start;flex-direction:column;align-items
         <button class="nav-search-btn" onclick="var q=this.previousElementSibling.value.trim();if(q)window.location.href='/shop?search='+encodeURIComponent(q);">🔍</button>
       </div>
     </div>
+    <a href="/" class="mobile-nav-item" style="color:var(--text);font-weight:500;">🏠 Home</a>
     <a href="/shop" class="mobile-nav-item">Shop All</a>
     <div class="mobile-nav-divider">Collections</div>
     <a href="/shop?cat=pendant" class="mobile-nav-item">Pendant</a>
@@ -514,7 +493,6 @@ nav{padding:0;gap:0;justify-content:flex-start;flex-direction:column;align-items
     <div class="mobile-nav-divider">More</div>
     <a href="/flash-sale" class="mobile-nav-item">Flash Sale ⚡</a>
     <a href="/custom-design" class="mobile-nav-item">Custom Design 🎨</a>
-    <a href="/faq" class="mobile-nav-item">❓ FAQ</a>
     <a href="/about" class="mobile-nav-item">About</a>
     <a href="#" onclick="openContactModal();closeMobileDrawer();return false;" class="mobile-nav-item">Contact</a>
     <a href="/track" class="mobile-nav-item">Track Order 📍</a>
@@ -874,7 +852,15 @@ function closeMobileDrawer(){
 }
 // Scroll effects
 let lastScroll=0;
-window.addEventListener('scroll',()=>{const nav=document.getElementById('mainNav');const st=window.scrollY;if(st>60)nav.classList.add('scrolled');else nav.classList.remove('scrolled');if(st>400&&st>lastScroll)nav.classList.add('nav-hidden');else nav.classList.remove('nav-hidden');lastScroll=st;});
+window.addEventListener('scroll',()=>{const nav=document.getElementById('mainNav');
+  const banner=document.querySelector('.flash-banner');const st=window.scrollY;if(st>60)nav.classList.add('scrolled');else nav.classList.remove('scrolled');if(st>150&&st>lastScroll){
+    nav.classList.add('nav-hidden');
+    if(banner) banner.style.transform='translateY(-100%)';
+  }else if(st<lastScroll){
+    nav.classList.remove('nav-hidden');
+    if(banner) banner.style.transform='';
+  }
+  lastScroll=st<=0?0:st;});
 // Product Modal
 function openProductModal(p){
   if(!p)return;

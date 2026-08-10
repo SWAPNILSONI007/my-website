@@ -427,8 +427,9 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
 .os-btn-track:hover{border-color:var(--gold);color:var(--text);}
 
 /* FLASH SALE BANNER */
-.flash-banner{position:fixed;top:0;left:0;width:100%;z-index:2000;background:var(--flash,#1a0a0a);color:#f0ebe3;padding:5px 0;text-align:center;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;}
+.flash-banner{position:fixed;top:0;left:0;width:100%;z-index:2000;background:var(--flash,#1a0a0a);color:#f0ebe3;padding:5px 0;text-align:center;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;transition:transform .4s cubic-bezier(.4,0,.2,1);}
 .flash-banner a{color:var(--gold-accent,#c9a84c);text-decoration:none;margin-left:.5rem;font-weight:600;}
+
 
 
 
@@ -516,17 +517,6 @@ nav{padding:0;gap:0;justify-content:flex-start;flex-direction:column;align-items
 .hero{padding-top:80px;}
 .page-header{padding-top:80px;}
 }
-/* GIFTING SECTION */
-.gifting-section { padding:80px 5%; text-align:center; background:var(--bg2); }
-.gifting-occasions { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; margin:2.5rem 0; }
-.occasion-card { background:var(--card); border:1px solid var(--border); padding:1.5rem 1.25rem; border-radius:8px; cursor:pointer; transition:all .3s; min-width:140px; flex:1; max-width:160px; }
-.occasion-card:hover { transform:translateY(-6px); box-shadow:0 12px 40px rgba(201,168,76,0.15); border-color:rgba(201,168,76,0.4); }
-.occasion-emoji { font-size:2rem; margin-bottom:.5rem; }
-.occasion-title { font-family:'Playfair Display',serif; font-size:1rem; font-weight:400; margin-bottom:.25rem; }
-.occasion-desc { font-size:.75rem; color:var(--text2); }
-.gifting-usp { display:flex; gap:1.5rem; justify-content:center; flex-wrap:wrap; margin-top:1.5rem; padding:1.25rem; background:var(--card); border:1px solid var(--border); border-radius:8px; max-width:600px; margin-inline:auto; }
-.gift-usp-item { display:flex; align-items:center; gap:.4rem; font-size:.8rem; color:var(--text2); }
-.gift-usp-item span { font-size:1rem; }
 
 </style>
 </head>
@@ -577,7 +567,7 @@ nav{padding:0;gap:0;justify-content:flex-start;flex-direction:column;align-items
     <div class="nav-right">
       <a href="/track" class="nav-icon-btn" title="Track Order"><span class="nav-icon-symbol">📍</span><span class="nav-icon-label">Track</span></a>
       <a href="#" class="nav-icon-btn" id="accountBtn" title="My Account" style="text-decoration:none;"><span class="nav-icon-symbol">👤</span><span class="nav-icon-label">Account</span></a>
-      <a href="#" class="nav-icon-btn" title="Wishlist" style="text-decoration:none;" onclick="openWishlistDrawer();return false;"><span class="nav-icon-symbol">♡</span><span class="nav-icon-label">Wishlist</span><span class="cart-badge wishlist-badge" id="wishlistCount" style="background:#e74c3c;display:none;">0</span></a>
+      <a href="/shop" class="nav-icon-btn" title="Wishlist" style="text-decoration:none;"><span class="nav-icon-symbol">♡</span><span class="nav-icon-label">Wishlist</span></a>
       <button class="nav-icon-btn" onclick="openCart()" title="Cart"><span class="nav-icon-symbol">🛒</span><span class="nav-icon-label">Cart</span><span class="cart-badge" id="cartCount">0</span></button>
       <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
       <button class="hamburger" id="hamburgerBtn" onclick="toggleMobileDrawer()"><span></span><span></span><span></span></button>
@@ -599,7 +589,6 @@ nav{padding:0;gap:0;justify-content:flex-start;flex-direction:column;align-items
       <li><a href="/shop">Shop All</a></li>
       <li><a href="/flash-sale">Flash Sale ⚡</a></li>
       <li><a href="/custom-design">Custom Design</a></li>
-      <li><a href="/faq">FAQ</a></li>
       <li><a href="/about">About</a></li>
       <li><a href="#" onclick="openContactModal();return false;">Contact</a></li>
     </ul>
@@ -625,6 +614,7 @@ nav{padding:0;gap:0;justify-content:flex-start;flex-direction:column;align-items
         <button class="nav-search-btn" onclick="var q=this.previousElementSibling.value.trim();if(q)window.location.href='/shop?search='+encodeURIComponent(q);">🔍</button>
       </div>
     </div>
+    <a href="/" class="mobile-nav-item" style="color:var(--text);font-weight:500;">🏠 Home</a>
     <a href="/shop" class="mobile-nav-item">Shop All</a>
     <div class="mobile-nav-divider">Collections</div>
     <a href="/shop?cat=pendant" class="mobile-nav-item">Pendant</a>
@@ -637,7 +627,6 @@ nav{padding:0;gap:0;justify-content:flex-start;flex-direction:column;align-items
     <div class="mobile-nav-divider">More</div>
     <a href="/flash-sale" class="mobile-nav-item">Flash Sale ⚡</a>
     <a href="/custom-design" class="mobile-nav-item">Custom Design 🎨</a>
-    <a href="/faq" class="mobile-nav-item">❓ FAQ</a>
     <a href="/about" class="mobile-nav-item">About</a>
     <a href="#" onclick="openContactModal();closeMobileDrawer();return false;" class="mobile-nav-item">Contact</a>
     <a href="/track" class="mobile-nav-item">Track Order 📍</a>
@@ -962,6 +951,23 @@ nav{padding:0;gap:0;justify-content:flex-start;flex-direction:column;align-items
 .cd-cta-feat{display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:rgba(240,235,227,0.7);letter-spacing:.05em;}
 .cd-cta-feat span{font-size:1.2rem;}
 </style>
+<style>
+/* GIFTING SECTION */
+.gifting-section{padding:80px 5%;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;}
+.gifting-section .section-header{margin-bottom:0;}
+.gifting-section .section-header h2{margin-bottom:.75rem;}
+.gifting-occasions{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;}
+.occasion-card{background:var(--card);border:1px solid var(--border);padding:1.25rem 1.5rem;cursor:pointer;transition:all .3s;display:flex;align-items:center;gap:1rem;}
+.occasion-card:hover{border-color:var(--gold-accent);transform:translateY(-2px);box-shadow:0 8px 24px var(--shadow);}
+.occasion-emoji{font-size:1.6rem;flex-shrink:0;}
+.occasion-title{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:400;margin-bottom:.15rem;}
+.occasion-desc{font-size:.75rem;color:var(--text2);}
+.gifting-usp{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.5rem;}
+.gift-usp-item{display:flex;align-items:center;gap:.4rem;font-size:.78rem;color:var(--text2);background:var(--bg2);border:1px solid var(--border);padding:6px 14px;border-radius:20px;}
+.gift-usp-item span{font-size:1rem;}
+@media(max-width:900px){.gifting-section{grid-template-columns:1fr;gap:2.5rem;text-align:center;}.gifting-section .section-header{text-align:center;}.gifting-section .section-header p{margin:0 auto;}.gift-usp-item{font-size:.72rem;}.gifting-usp{justify-content:center;}}
+@media(max-width:520px){.gifting-occasions{grid-template-columns:1fr;}.occasion-card{padding:1rem 1.25rem;}}
+
 
 <!-- GIFTING SECTION -->
 <section class="gifting-section">
@@ -1085,10 +1091,17 @@ function toggleTheme(){
 let lastScroll=0;
 window.addEventListener('scroll',()=>{
   const nav=document.getElementById('mainNav');
+  const banner=document.querySelector('.flash-banner');
   const st=window.scrollY;
   if(st>60) nav.classList.add('scrolled'); else nav.classList.remove('scrolled');
-  if(st>400 && st>lastScroll) nav.classList.add('nav-hidden'); else nav.classList.remove('nav-hidden');
-  lastScroll=st;
+  if(st>150&&st>lastScroll){
+    nav.classList.add('nav-hidden');
+    if(banner) banner.style.transform='translateY(-100%)';
+  }else if(st<lastScroll){
+    nav.classList.remove('nav-hidden');
+    if(banner) banner.style.transform='';
+  }
+  lastScroll=st<=0?0:st;
 });
 
 // Mobile Drawer

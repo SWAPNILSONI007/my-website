@@ -171,6 +171,7 @@ const mobileDrawerHTML = `<!-- Mobile Drawer -->
         <button class="nav-search-btn" onclick="var q=this.previousElementSibling.value.trim();if(q)window.location.href='/shop?search='+encodeURIComponent(q);">🔍</button>
       </div>
     </div>
+    <a href="/" class="mobile-nav-item" style="color:var(--text);font-weight:500;">🏠 Home</a>
     <a href="/shop" class="mobile-nav-item">Shop All</a>
     <div class="mobile-nav-divider">Collections</div>
     <a href="/shop?cat=pendant" class="mobile-nav-item">Pendant</a>

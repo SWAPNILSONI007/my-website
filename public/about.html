@@ -197,8 +197,9 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
 .checkout-success-icon{font-size:3.5rem;color:#27ae60;margin-bottom:1rem;}
 
 /* FLASH SALE BANNER */
-.flash-banner{position:fixed;top:0;left:0;width:100%;z-index:2000;background:var(--flash,#1a0a0a);color:#f0ebe3;padding:5px 0;text-align:center;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;}
+.flash-banner{position:fixed;top:0;left:0;width:100%;z-index:2000;background:var(--flash,#1a0a0a);color:#f0ebe3;padding:5px 0;text-align:center;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;transition:transform .4s cubic-bezier(.4,0,.2,1);}
 .flash-banner a{color:var(--gold-accent,#c9a84c);text-decoration:none;margin-left:.5rem;font-weight:600;}
+
 
 
 
@@ -370,6 +371,7 @@ nav{padding:0;gap:0;justify-content:flex-start;flex-direction:column;align-items
         <button class="nav-search-btn" onclick="var q=this.previousElementSibling.value.trim();if(q)window.location.href='/shop?search='+encodeURIComponent(q);">🔍</button>
       </div>
     </div>
+    <a href="/" class="mobile-nav-item" style="color:var(--text);font-weight:500;">🏠 Home</a>
     <a href="/shop" class="mobile-nav-item">Shop All</a>
     <div class="mobile-nav-divider">Collections</div>
     <a href="/shop?cat=pendant" class="mobile-nav-item">Pendant</a>
@@ -462,13 +464,19 @@ function closeMobileDrawer(){
 let lastScroll=0;
 window.addEventListener('scroll',()=>{
   const nav=document.getElementById('mainNav');
+  const banner=document.querySelector('.flash-banner');
   if(!nav) return;
   const st=window.scrollY;
   if(st>60)nav.classList.add('scrolled');
   else nav.classList.remove('scrolled');
-  if(st>400&&st>lastScroll)nav.classList.add('nav-hidden');
-  else nav.classList.remove('nav-hidden');
-  lastScroll=st;
+  if(st>150&&st>lastScroll){
+    nav.classList.add('nav-hidden');
+    if(banner) banner.style.transform='translateY(-100%)';
+  }else if(st<lastScroll){
+    nav.classList.remove('nav-hidden');
+    if(banner) banner.style.transform='';
+  }
+  lastScroll=st<=0?0:st;
 });
 function toggleMobile(){document.getElementById('mobileMenu').classList.toggle('open');}
 
