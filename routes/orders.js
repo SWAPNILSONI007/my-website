@@ -17,13 +17,12 @@ const auth = (req, res, next) => {
   }
 };
 
-// In-memory fallback for local testing when MongoDB is down
-let memoryOrders = [];
 
 // Create order
 router.post('/', async (req, res) => {
   try {
-    let { customerId, customerName, customerEmail, customerMobile, customerAddress, customerLandmark, customerCity, customerState, customerPin, items, totalAmount, paymentMethod, paymentId, razorpayOrderId, paymentStatus } = req.body;
+    let { customerId, customerName, customerEmail, customerMobile, customerAddress, customerLandmark, customerCity, customerState, customerPin, items, totalAmount, paymentMethod, paymentId, razorpayOrderId, paymentStatus, giftWrap, giftMessage } = req.body;
+
     if (!customerName || !customerMobile || !customerAddress || !items || items.length === 0) {
       return res.status(400).json({ success: false, message: 'Missing required fields' });
     }
@@ -31,43 +30,48 @@ router.post('/', async (req, res) => {
     if (customerEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) {
       return res.status(400).json({ success: false, message: 'Invalid email format' });
     }
-    
-    // Fallback if DB disconnected
+
+    // If MongoDB is not connected, return an error — do not silently lose the order
     if (mongoose.connection.readyState !== 1) {
-      console.log('MongoDB disconnected, using in-memory fallback for order.');
-      const newOrder = { 
-        _id: 'ORD-' + Math.floor(Math.random() * 90000 + 10000), 
-        customerId: customerId || null,
-        customerName, customerEmail: customerEmail || '', customerMobile, customerAddress, customerLandmark: customerLandmark || '', customerCity, customerState: customerState || '', customerPin, items, totalAmount,
-        paymentMethod: paymentMethod || 'COD',
-        paymentId: paymentId || '',
-        razorpayOrderId: razorpayOrderId || '',
-        paymentStatus: paymentStatus || 'Pending',
-        status: 'Pending', createdAt: new Date() 
-      };
-      memoryOrders.unshift(newOrder);
-      return res.json({ success: true, orderId: newOrder._id, order: newOrder });
+      console.error('❌ MongoDB not connected — refusing to save order to prevent data loss.');
+      return res.status(503).json({ success: false, message: 'Our database is temporarily unavailable. Please try again in a moment or order via WhatsApp at +91 8004703038.' });
     }
 
     const orderData = {
-      customerName, customerEmail: customerEmail || '', customerMobile, customerAddress, customerLandmark: customerLandmark || '', customerCity, customerState: customerState || '', customerPin, items, totalAmount,
-      paymentMethod: paymentMethod || 'COD', paymentId: paymentId || '', razorpayOrderId: razorpayOrderId || '', paymentStatus: paymentStatus || 'Pending'
+      customerName,
+      customerEmail: customerEmail || '',
+      customerMobile,
+      customerAddress,
+      customerLandmark: customerLandmark || '',
+      customerCity,
+      customerState: customerState || '',
+      customerPin,
+      items,
+      totalAmount,
+      paymentMethod: paymentMethod || 'COD',
+      paymentId: paymentId || '',
+      razorpayOrderId: razorpayOrderId || '',
+      paymentStatus: paymentStatus || 'Pending',
+      giftWrap: giftWrap || false,
+      giftMessage: giftMessage || ''
     };
     if (customerId) orderData.customerId = customerId;
 
     const order = new Order(orderData);
     await order.save();
-    res.json({ success: true, orderId: order._id, order });
+    res.json({ success: true, orderId: order._id, orderNumber: order.orderNumber, order });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ success: false, message: 'Server error' });
+    res.status(500).json({ success: false, message: 'Server error placing order' });
   }
 });
 
 // Admin: Get all orders
 router.get('/', async (req, res) => {
   try {
-    if (mongoose.connection.readyState !== 1) return res.json(memoryOrders);
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({ error: 'Database temporarily unavailable' });
+    }
     const orders = await Order.find().sort({ createdAt: -1 });
     res.json(orders);
   } catch (err) {
@@ -79,8 +83,7 @@ router.get('/', async (req, res) => {
 router.get('/my-orders', auth, async (req, res) => {
   try {
     if (mongoose.connection.readyState !== 1) {
-      const myOrders = memoryOrders.filter(o => String(o.customerId) === req.customer.id || o.customerEmail === req.customer.email);
-      return res.json(myOrders);
+      return res.status(503).json({ error: 'Database temporarily unavailable' });
     }
     const orders = await Order.find({ 
       $or: [{ customerId: req.customer.id }, { customerEmail: req.customer.email }] 
@@ -119,9 +122,7 @@ router.post('/track', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     if (mongoose.connection.readyState !== 1) {
-      const order = memoryOrders.find(o => o._id === req.params.id);
-      if (order) { order.status = req.body.status; return res.json({ success: true, order }); }
-      return res.status(404).json({ success: false, message: 'Not found in memory' });
+      return res.status(503).json({ success: false, message: 'Database temporarily unavailable' });
     }
     const order = await Order.findByIdAndUpdate(req.params.id, { status: req.body.status }, { new: true });
     res.json({ success: true, order });

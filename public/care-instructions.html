@@ -11,8 +11,8 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);transition:background .4s,color .4s;}
 /* NAV — Premium */
-nav{position:fixed;top:26px;width:100%;z-index:1000;background:var(--nav-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);height:72px;display:flex;align-items:center;padding:0 5%;gap:2rem;transition:all .4s cubic-bezier(.4,0,.2,1);}
-nav.scrolled{height:60px;box-shadow:0 4px 30px var(--shadow);}
+nav{position:fixed;top:0;width:100%;z-index:1000;background:var(--nav-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;flex-direction:column;height:auto;padding:0;gap:0;align-items:stretch;transition:all .4s cubic-bezier(.4,0,.2,1);}
+nav.scrolled{box-shadow:0 4px 30px var(--shadow);}
 nav.nav-hidden{transform:translateY(-100%);}
 .logo{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:400;color:var(--text);text-decoration:none;letter-spacing:.05em;flex-shrink:0;transition:all .3s;}
 .logo:hover{opacity:.8;}
@@ -204,7 +204,7 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
 
 
 /* ====== NAV V2 — Multi-Row Premium ====== */
-nav{position:fixed;top:26px;width:100%;z-index:1000;background:var(--nav-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;flex-direction:column;height:auto;padding:0;gap:0;align-items:stretch;transition:all .4s cubic-bezier(.4,0,.2,1);}
+nav{position:fixed;top:0;width:100%;z-index:1000;background:var(--nav-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;flex-direction:column;height:auto;padding:0;gap:0;align-items:stretch;transition:all .4s cubic-bezier(.4,0,.2,1);}
 nav.scrolled{height:auto;box-shadow:0 4px 30px var(--shadow);}
 nav.nav-hidden{transform:translateY(-100%);}
 
@@ -618,9 +618,17 @@ async function submitOrder(){
   btn.textContent = 'Processing...'; btn.disabled = true;
   try {
     const totalAmount = cart.reduce((s,i)=>s+i.price,0);
+    const navUser = JSON.parse(localStorage.getItem('navUser') || 'null');
     const res = await fetch('/api/orders', {
       method: 'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ customerName:name, customerMobile:mobile, customerAddress:address, customerCity:city, customerPin:pin, items:cart, totalAmount })
+      body: JSON.stringify({
+        customerId: navUser && navUser.id ? navUser.id : null,
+        customerName:name, customerEmail:email||'', customerMobile:mobile,
+        customerAddress:address, customerLandmark:landmark||'',
+        customerCity:city, customerState:state||'', customerPin:pin,
+        items:cart, totalAmount,
+        paymentMethod:'COD', paymentId:'', razorpayOrderId:'', paymentStatus:'Pending'
+      })
     });
     const data = await res.json();
     if(data.success){
@@ -628,6 +636,7 @@ async function submitOrder(){
       document.getElementById('checkoutBody').style.display='none';
       document.getElementById('checkoutFoot').style.display='none';
       document.getElementById('checkoutSuccess').style.display='block';
+      if(data.order) sendOwnerWhatsApp(data);
     } else {
       alert('Error placing order: ' + (data.message || 'Unknown error'));
       btn.textContent = 'Place Order (Cash on Delivery)'; btn.disabled = false;

@@ -39,8 +39,8 @@ html{scroll-behavior:smooth;}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);transition:background .4s,color .4s;}
 
 /* NAV — Premium */
-nav{position:fixed;top:26px;width:100%;z-index:1000;background:var(--nav-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);height:72px;display:flex;align-items:center;padding:0 5%;gap:2rem;transition:all .4s cubic-bezier(.4,0,.2,1);}
-nav.scrolled{height:60px;box-shadow:0 4px 30px var(--shadow);}
+nav{position:fixed;top:26px;width:100%;z-index:1000;background:var(--nav-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;flex-direction:column;height:auto;padding:0;gap:0;align-items:stretch;transition:all .4s cubic-bezier(.4,0,.2,1);}
+nav.scrolled{top:0;box-shadow:0 4px 30px var(--shadow);}
 nav.nav-hidden{transform:translateY(-100%);}
 .logo{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:400;color:var(--text);text-decoration:none;letter-spacing:.05em;flex-shrink:0;transition:all .3s;}
 .logo:hover{opacity:.8;}
@@ -435,7 +435,7 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
 
 /* ====== NAV V2 — Multi-Row Premium ====== */
 nav{position:fixed;top:26px;width:100%;z-index:1000;background:var(--nav-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;flex-direction:column;height:auto;padding:0;gap:0;align-items:stretch;transition:all .4s cubic-bezier(.4,0,.2,1);}
-nav.scrolled{height:auto;box-shadow:0 4px 30px var(--shadow);}
+nav.scrolled{top:0;height:auto;box-shadow:0 4px 30px var(--shadow);}
 nav.nav-hidden{transform:translateY(-100%);}
 
 /* — Main Row — */
@@ -1206,8 +1206,8 @@ function tick(){
 }
 setInterval(tick,1000);tick();
 
-// Cart
-let cart=[];
+// Cart — persisted in localStorage so it survives page navigation
+let cart = JSON.parse(localStorage.getItem('silviyara_cart') || '[]');
 
 // ── Wishlist ──────────────────────────────────────────────────────────────
 let wishlist = JSON.parse(localStorage.getItem('silviyara_wishlist') || '[]');
@@ -1287,9 +1287,10 @@ function renderStars(rating) { return '★'.repeat(Math.floor(rating)) + (rating
 
 function addToCart(name,price,emoji,id,image,category){
   cart.push({name,price,emoji,id,image:image||'',category:category||''});
-  updateCart();openCart();
+  saveCart(); updateCart();openCart();
   updateWishlistUI();
 }
+function saveCart(){ try{ localStorage.setItem('silviyara_cart', JSON.stringify(cart)); }catch(e){} }
 function updateCart(){
   document.getElementById('cartCount').textContent=cart.length;
   const body=document.getElementById('cartBody');
@@ -1307,7 +1308,7 @@ function updateCart(){
   document.getElementById('cartTotal').textContent='₹'+cart.reduce((s,i)=>s+i.price,0).toLocaleString();
   foot.style.display='block';
 }
-function removeFromCart(i){cart.splice(i,1);updateCart();}
+function removeFromCart(i){cart.splice(i,1);saveCart(); updateCart();}
 function openCart(){document.getElementById('cartOverlay').classList.add('open');document.getElementById('cartSidebar').classList.add('open');}
 function closeCart(){document.getElementById('cartOverlay').classList.remove('open');document.getElementById('cartSidebar').classList.remove('open');}
 function checkoutWA(){
@@ -1569,7 +1570,7 @@ function showSuccess(orderId, orderData){
   }
   // Send WhatsApp notification to owner
   if(orderData) sendOwnerWhatsApp(orderData);
-  cart=[]; updateCart();
+  cart = []; saveCart(); updateCart();
 }
 function showFailure(message, paymentId){
   document.getElementById('checkoutBody').style.display='none';

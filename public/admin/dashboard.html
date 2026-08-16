@@ -381,28 +381,31 @@ textarea{resize:vertical;min-height:80px;}
     <div id="panel-orders" class="panel">
       <div class="panel-head">
         <div class="panel-title">📦 Orders</div>
-        <div class="panel-subtitle">All customer orders — update status to track deliveries.</div>
+        <div class="panel-subtitle">All customer orders — update status to track deliveries. <span id="new-orders-badge" style="display:none;background:#e74c3c;color:#fff;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;margin-left:8px;animation:pulse 1s infinite;">🔔 New orders!</span></div>
       </div>
       <div class="table-card" style="overflow-x:auto;">
-        <div class="table-header">
+        <div class="table-header" style="flex-wrap:wrap;gap:10px;">
           <h3>All Orders</h3>
-          <div style="display:flex;gap:8px;align-items:center;">
-            <select id="pay-filter" class="filter-select" onchange="loadOrders()">
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <!-- 🔍 Search bar -->
+            <input type="text" id="order-search" class="filter-select" placeholder="🔍 Search name, phone, order ID..." style="width:220px;padding:6px 10px;" oninput="filterOrders()">
+            <select id="pay-filter" class="filter-select" onchange="filterOrders()">
               <option value="all">All Payments</option>
               <option value="Razorpay">💳 Online Only</option>
               <option value="COD">🏠 COD Only</option>
               <option value="Paid">✅ Paid Only</option>
               <option value="Pending">⏳ Unpaid Only</option>
             </select>
-            <select id="order-filter" class="filter-select" onchange="loadOrders()">
+            <select id="order-filter" class="filter-select" onchange="filterOrders()">
               <option value="all">All Status</option>
-              <option value="Pending">Pending</option>
-              <option value="Processing">Processing</option>
-              <option value="Shipped">Shipped</option>
-              <option value="Delivered">Delivered</option>
-              <option value="Cancelled">Cancelled</option>
+              <option value="Pending">🕐 Pending</option>
+              <option value="Processing">⚙️ Processing</option>
+              <option value="Shipped">🚚 Shipped</option>
+              <option value="Delivered">✅ Delivered</option>
+              <option value="Cancelled">❌ Cancelled</option>
             </select>
             <button class="btn btn-outline btn-sm" onclick="loadOrders()">🔄 Refresh</button>
+            <span id="orders-count-badge" style="font-size:12px;color:var(--text3);"></span>
           </div>
         </div>
         <table style="min-width:1000px;">
@@ -852,73 +855,126 @@ async function updateCustomDesignStatus(id, newStatus) {
   }
 }
 
-// ─── Orders ───────────────────────────────────────────────────
+// ─── Orders ─────────────────────────────────────────────────────
+let _lastOrderCount = null;
+
 async function loadOrders(){
   const tbody=document.getElementById('orders-table');
-  const filterVal = document.getElementById('order-filter')?.value || 'all';
-  const payFilter = document.getElementById('pay-filter')?.value || 'all';
   tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:20px;">Loading...</td></tr>`;
   try{
-    const orders=await fetch('/api/orders').then(r=>r.json());
+    const res = await fetch('/api/orders', { headers: { 'x-admin-token': localStorage.getItem('Silviyara_admin_token') }});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const orders = await res.json();
+    if(!Array.isArray(orders)) throw new Error('Unexpected response');
     window.adminOrders = orders;
-    let filtered = filterVal === 'all' ? orders : orders.filter(o=>o.status === filterVal);
-    if(payFilter === 'Razorpay') filtered = filtered.filter(o=>o.paymentMethod==='Razorpay');
-    else if(payFilter === 'COD') filtered = filtered.filter(o=>o.paymentMethod!=='Razorpay');
-    else if(payFilter === 'Paid') filtered = filtered.filter(o=>o.paymentStatus==='Paid');
-    else if(payFilter === 'Pending') filtered = filtered.filter(o=>o.paymentStatus!=='Paid');
-    if(!filtered.length){
-      tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:30px;">No orders found</td></tr>`;
-      return;
+
+    if(_lastOrderCount !== null && orders.length > _lastOrderCount){
+      const badge = document.getElementById('new-orders-badge');
+      if(badge) badge.style.display='inline-block';
+      setTimeout(()=>{ if(badge) badge.style.display='none'; }, 10000);
     }
-    tbody.innerHTML=filtered.map(o=>{
-      const statusClass='status-'+o.status.toLowerCase();
-      const payMethod=o.paymentMethod||'COD';
-      const payStatus=o.paymentStatus||'Pending';
-      const payMethodBadge=payMethod==='Razorpay'?`<span class="pay-badge-rzp">💳 Razorpay</span>`:`<span class="pay-badge-cod">🏠 COD</span>`;
-      const payStatusBadge=payStatus==='Paid'?`<span class="pay-badge-paid">✅ Paid</span>`:payStatus==='Failed'?`<span style="background:rgba(231,76,60,0.12);color:#e74c3c;display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;">❌ Failed</span>`:`<span class="pay-badge-pending">⏳ Unpaid</span>`;
-      const waMsg=`Hi ${o.customerName}! Your Silviyara Jewels order (${o.items.map(i=>i.name).join(', ')}) of ₹${o.totalAmount} is being processed. We'll share tracking details soon. Thank you! 🙏`;
-      const date=new Date(o.createdAt);
-      const dateStr=date.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
-      const timeStr=date.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
-      return `
-      <tr>
-        <td>
-          <div style="font-family:Georgia,serif;font-size:13px;font-weight:600;">${dateStr}</div>
-          <div style="font-size:11px;color:var(--text3);">${timeStr}</div>
-          <div style="font-size:10px;color:var(--text3);margin-top:2px;word-break:break-all;">${String(o._id).slice(-8)}</div>
-        </td>
-        <td>
-          <div style="font-weight:600;font-size:14px;">${o.customerName}</div>
-          ${o.customerEmail?`<div style="font-size:11px;color:#5b21b6;margin-top:2px;">✉ ${o.customerEmail}</div>`:''}
-          <div style="font-size:12px;color:var(--text2);margin-top:2px;">📞 ${o.customerMobile}</div>
-          <div style="font-size:11px;color:var(--text3);margin-top:3px;max-width:200px;line-height:1.4;">${o.customerAddress}${o.customerLandmark?', '+o.customerLandmark:''}<br>${o.customerCity}${o.customerState?', '+o.customerState:''} — ${o.customerPin}</div>
-        </td>
-        <td><div style="font-size:12px;line-height:1.6;color:var(--text2);">${o.items.map(i=>`${i.emoji||'💎'} ${i.name}${i.sku?` <code style="font-size:9px;background:var(--tag-bg);padding:1px 4px;border-radius:2px;color:var(--gold);">${i.sku}</code>`:''}<span style="color:var(--text3);"> — ₹${i.price?.toLocaleString()}</span>`).join('<br>')}</div></td>
-        <td><strong style="font-size:15px;">₹${o.totalAmount.toLocaleString()}</strong></td>
-        <td>
-          <div style="display:flex;flex-direction:column;gap:4px;">
-            ${payMethodBadge}${payStatusBadge}
-            ${o.paymentId?`<div style="font-size:9px;color:var(--text3);word-break:break-all;max-width:100px;">ID: ${o.paymentId}</div>`:''}
-          </div>
-        </td>
-        <td>
-          <select class="filter-select" style="width:128px;" onchange="updateOrderStatus('${o._id}',this.value,this)">
-            <option value="Pending" ${o.status==='Pending'?'selected':''}>🕐 Pending</option>
-            <option value="Processing" ${o.status==='Processing'?'selected':''}>⚙️ Processing</option>
-            <option value="Shipped" ${o.status==='Shipped'?'selected':''}>🚚 Shipped</option>
-            <option value="Delivered" ${o.status==='Delivered'?'selected':''}>✅ Delivered</option>
-            <option value="Cancelled" ${o.status==='Cancelled'?'selected':''}>❌ Cancelled</option>
-          </select>
-        </td>
-        <td>
-          <a href="https://wa.me/91${o.customerMobile.replace(/\D/g,'')}?text=${encodeURIComponent(waMsg)}" target="_blank" style="display:block;background:#25d366;color:#fff;text-align:center;padding:6px 10px;font-size:11px;text-decoration:none;border-radius:3px;font-weight:600;margin-bottom:4px;">💬 WhatsApp</a>
-          <button onclick="generateInvoice('${o._id}')" style="display:block;width:100%;background:var(--gold);color:#111;border:none;text-align:center;padding:6px 10px;font-size:11px;border-radius:3px;font-weight:600;cursor:pointer;transition:all 0.2s;margin-bottom:4px;">📄 Invoice</button>
-          <button onclick="copyOrderDetails('${o._id}')" style="display:block;width:100%;border:1px solid var(--border2);background:var(--tag-bg);color:var(--text2);text-align:center;padding:6px 10px;font-size:11px;border-radius:3px;font-weight:600;cursor:pointer;transition:all 0.2s;">📋 Copy Details</button>
-        </td>
-      </tr>`;
-    }).join('');
-  }catch(e){tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;color:#e74c3c;padding:30px;">Error loading orders</td></tr>`;}
+    _lastOrderCount = orders.length;
+
+    filterOrders();
+  }catch(e){
+    tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;color:#e74c3c;padding:30px;">Error loading orders.</td></tr>`;
+  }
 }
+
+function filterOrders(){
+  const tbody = document.getElementById('orders-table');
+  const orders = window.adminOrders || [];
+  const filterVal = document.getElementById('order-filter')?.value || 'all';
+  const payFilter = document.getElementById('pay-filter')?.value || 'all';
+  const searchVal = (document.getElementById('order-search')?.value || '').toLowerCase().trim();
+
+  let filtered = orders;
+
+  if(filterVal !== 'all') filtered = filtered.filter(o=>o.status === filterVal);
+  if(payFilter === 'Razorpay') filtered = filtered.filter(o=>o.paymentMethod==='Razorpay');
+  else if(payFilter === 'COD') filtered = filtered.filter(o=>o.paymentMethod!=='Razorpay');
+  else if(payFilter === 'Paid') filtered = filtered.filter(o=>o.paymentStatus==='Paid');
+  else if(payFilter === 'Pending') filtered = filtered.filter(o=>o.paymentStatus!=='Paid');
+
+  if(searchVal) {
+    filtered = filtered.filter(o=>
+      (o.customerName||'').toLowerCase().includes(searchVal) ||
+      (o.customerMobile||'').includes(searchVal) ||
+      (o.orderNumber||'').toLowerCase().includes(searchVal) ||
+      String(o._id).slice(-8).toLowerCase().includes(searchVal)
+    );
+  }
+
+  const countBadge = document.getElementById('orders-count-badge');
+  if(countBadge) countBadge.textContent = `Showing ${filtered.length} of ${orders.length} orders`;
+
+  if(!filtered.length){
+    tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:30px;">No orders found.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML=filtered.map(o=>{
+    const statusClass='status-'+o.status.toLowerCase();
+    const payMethod=o.paymentMethod||'COD';
+    const payStatus=o.paymentStatus||'Pending';
+    const payMethodBadge=payMethod==='Razorpay'?`<span class="pay-badge-rzp">💳 Razorpay</span>`:`<span class="pay-badge-cod">🏠 COD</span>`;
+    const payStatusBadge=payStatus==='Paid'?`<span class="pay-badge-paid">✅ Paid</span>`:payStatus==='Failed'?`<span style="background:rgba(231,76,60,0.12);color:#e74c3c;display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;">❌ Failed</span>`:`<span class="pay-badge-pending">⏳ Unpaid</span>`;
+    const waMsg=`Hi ${o.customerName}! Your Silviyara Jewels order (${o.items.map(i=>i.name).join(', ')}) of ₹${o.totalAmount} is being processed. We'll share tracking details soon. Thank you! 🙏`;
+    const date=new Date(o.createdAt);
+    const dateStr=date.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+    const timeStr=date.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+    const orderDisplayId = o.orderNumber || ('#'+String(o._id).slice(-8).toUpperCase());
+    const giftWrapNote = o.giftWrap ? `<div style="font-size:10px;color:#c9a84c;margin-top:2px;">🎁 Gift wrap${o.giftMessage?' — '+o.giftMessage:''}</div>` : '';
+    return `
+    <tr>
+      <td>
+        <div style="font-family:Georgia,serif;font-size:13px;font-weight:600;">${dateStr}</div>
+        <div style="font-size:11px;color:var(--text3);">${timeStr}</div>
+        <div style="font-size:11px;color:var(--gold);margin-top:3px;font-weight:600;">${orderDisplayId}</div>
+      </td>
+      <td>
+        <div style="font-weight:600;font-size:14px;">${o.customerName}</div>
+        ${o.customerEmail?`<div style="font-size:11px;color:#5b21b6;margin-top:2px;">✉ ${o.customerEmail}</div>`:''}
+        <div style="font-size:12px;color:var(--text2);margin-top:2px;">📞 ${o.customerMobile}</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:3px;max-width:200px;line-height:1.4;">${o.customerAddress}${o.customerLandmark?', '+o.customerLandmark:''}<br>${o.customerCity}${o.customerState?', '+o.customerState:''} — ${o.customerPin}</div>
+      </td>
+      <td><div style="font-size:12px;line-height:1.6;color:var(--text2);">${o.items.map(i=>`${i.emoji||'💎'} ${i.name}${i.sku?` <code style="font-size:9px;background:var(--tag-bg);padding:1px 4px;border-radius:2px;color:var(--gold);">${i.sku}</code>`:''}<span style="color:var(--text3);"> — ₹${i.price?.toLocaleString()}</span>`).join('<br>')}${giftWrapNote}</div></td>
+      <td><strong style="font-size:15px;">₹${o.totalAmount.toLocaleString()}</strong></td>
+      <td>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          ${payMethodBadge}${payStatusBadge}
+          ${o.paymentId?`<div style="font-size:9px;color:var(--text3);word-break:break-all;max-width:100px;">ID: ${o.paymentId}</div>`:''}
+        </div>
+      </td>
+      <td>
+        <select class="filter-select" style="width:130px;" onchange="updateOrderStatus('${o._id}',this.value,this)">
+          <option value="Pending" ${o.status==='Pending'?'selected':''}>🕐 Pending</option>
+          <option value="Processing" ${o.status==='Processing'?'selected':''}>⚙️ Processing</option>
+          <option value="Shipped" ${o.status==='Shipped'?'selected':''}>🚚 Shipped</option>
+          <option value="Delivered" ${o.status==='Delivered'?'selected':''}>✅ Delivered</option>
+          <option value="Cancelled" ${o.status==='Cancelled'?'selected':''}>❌ Cancelled</option>
+        </select>
+      </td>
+      <td>
+        <a href="https://wa.me/91${o.customerMobile.replace(/\D/g,'')}?text=${encodeURIComponent(waMsg)}" target="_blank" style="display:block;background:#25d366;color:#fff;text-align:center;padding:6px 10px;font-size:11px;text-decoration:none;border-radius:3px;font-weight:600;margin-bottom:4px;">💬 WhatsApp</a>
+        <button onclick="generateInvoice('${o._id}')" style="display:block;width:100%;background:var(--gold);color:#111;border:none;text-align:center;padding:6px 10px;font-size:11px;border-radius:3px;font-weight:600;cursor:pointer;transition:all 0.2s;margin-bottom:4px;">📄 Invoice</button>
+        <button onclick="copyOrderDetails('${o._id}')" style="display:block;width:100%;border:1px solid var(--border2);background:var(--tag-bg);color:var(--text2);text-align:center;padding:6px 10px;font-size:11px;border-radius:3px;font-weight:600;cursor:pointer;transition:all 0.2s;">📋 Copy Details</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+let _ordersAutoRefresh = null;
+function startOrdersAutoRefresh(){
+  if(_ordersAutoRefresh) return;
+  _ordersAutoRefresh = setInterval(()=>{
+    if(document.getElementById('panel-orders')?.classList.contains('active')){
+      loadOrders();
+    }
+  }, 30000);
+}
+startOrdersAutoRefresh();
+
 
 async function updateOrderStatus(id, status, selectEl){
   try{
@@ -934,7 +990,8 @@ function copyOrderDetails(orderId){
   if(!window.adminOrders) return;
   const o=window.adminOrders.find(ord=>ord._id===orderId);
   if(!o) return;
-  const text=`Name: ${o.customerName}\nMobile: ${o.customerMobile}\nAddress: ${o.customerAddress}\nLandmark: ${o.customerLandmark||'N/A'}\nCity: ${o.customerCity}\nState: ${o.customerState||'N/A'}\nPIN: ${o.customerPin}`;
+  const orderNum = o.orderNumber || ('#'+String(o._id).slice(-8).toUpperCase());
+  const text=`Order: ${orderNum}\nName: ${o.customerName}\nMobile: ${o.customerMobile}\nAddress: ${o.customerAddress}\nLandmark: ${o.customerLandmark||'N/A'}\nCity: ${o.customerCity}\nState: ${o.customerState||'N/A'}\nPIN: ${o.customerPin}`;
   navigator.clipboard.writeText(text).then(()=>alert('✅ Delivery details copied!')).catch(err=>alert('❌ Failed: '+err));
 }
 

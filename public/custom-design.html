@@ -23,8 +23,8 @@ html[data-theme="dark"]{background:#0e0d0c;}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);transition:background .4s,color .4s;}
 
 /* NAV */
-nav{position:fixed;top:26px;width:100%;z-index:1000;background:var(--nav-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);height:72px;display:flex;align-items:center;padding:0 5%;gap:2rem;transition:all .4s cubic-bezier(.4,0,.2,1);}
-nav.scrolled{height:60px;box-shadow:0 4px 30px var(--shadow);}
+nav{position:fixed;top:0;width:100%;z-index:1000;background:var(--nav-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;flex-direction:column;height:auto;padding:0;gap:0;align-items:stretch;transition:all .4s cubic-bezier(.4,0,.2,1);}
+nav.scrolled{box-shadow:0 4px 30px var(--shadow);}
 nav.nav-hidden{transform:translateY(-100%);}
 .logo{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:400;color:var(--text);text-decoration:none;letter-spacing:.05em;flex-shrink:0;transition:all .3s;}
 .logo:hover{opacity:.8;}
@@ -269,7 +269,7 @@ textarea.cmodal-form-input{min-height:88px;resize:vertical;}
 
 
 /* ====== NAV V2 — Multi-Row Premium ====== */
-nav{position:fixed;top:26px;width:100%;z-index:1000;background:var(--nav-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;flex-direction:column;height:auto;padding:0;gap:0;align-items:stretch;transition:all .4s cubic-bezier(.4,0,.2,1);}
+nav{position:fixed;top:0;width:100%;z-index:1000;background:var(--nav-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;flex-direction:column;height:auto;padding:0;gap:0;align-items:stretch;transition:all .4s cubic-bezier(.4,0,.2,1);}
 nav.scrolled{height:auto;box-shadow:0 4px 30px var(--shadow);}
 nav.nav-hidden{transform:translateY(-100%);}
 
